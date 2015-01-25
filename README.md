@@ -12,3 +12,11 @@ Java8StreamTest - consists of two Java8 main classes, one for performance testin
     NullOutputStream and no reading is done. My tests with these classes demonstrated IntStream
     performance is statistically more than 5 times faster on average and has a significantly
     larger mean/stddev ratio on average compared to imperative for loop performance.
+
+FactorialTailCall is a Scala sbt project illustrating how a non tail recursive function can
+    be converted into one that is for compiler optimization to avoid a StackOverflowError exception.
+    It also demonstrates the ease of using Scala BigInt and sbt project configuration with a .scala
+    configuration file and the git assembly plugin. After building the assembly jar, running it on
+    my laptop computed the factorial of 100K in 5 seconds (with output redirected to a file). This
+    project is configured for Scala 2.10.4 and sbt 0.13.7 and should work with later versions of
+    scala and some earlier versions of sbt
