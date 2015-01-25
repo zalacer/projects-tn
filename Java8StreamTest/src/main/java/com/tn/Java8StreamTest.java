@@ -38,7 +38,7 @@ public class Java8StreamTest {
 
         System.out.println("Java8 Stream Test");
 
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 3; j++) {
             runtest(false);
         }
 
