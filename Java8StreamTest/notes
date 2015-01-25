@@ -1,0 +1,23 @@
+StreamTest.ForLoopTest
+min    = 120479.00 ns
+max    = 128511.00 ns
+mean   = 122710.00 ns
+stddev = 3339.26 ns
+
+min    = 0.00 ns
+max    = 129850.00 ns
+mean   = 11008.21 ns
+stddev = 35160.76 ns
+
+Java8 Stream Test
+min    = 1784.00 ns
+max    = 11602.00 ns
+mean   = 2677.31 ns
+stddev = 1211.77 ns
+
+Java8 Stream Test
+min    = 1338.00 ns
+max    = 12494.00 ns
+mean   = 2164.21 ns
+stddev = 1168.33 ns
+
