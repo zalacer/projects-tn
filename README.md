@@ -19,4 +19,8 @@ FactorialTailCall is a Scala sbt project illustrating how a non tail recursive f
     configuration file and the git assembly plugin. After building the assembly jar, running it on
     my laptop computed the factorial of 100K in 5 seconds (with output redirected to a file). This
     project is configured for Scala 2.10.4 and sbt 0.13.7 and should work with later versions of
-    scala and some earlier versions of sbt
+    scala and some earlier versions of sbt.
+    
+JAX-RSdemo1 is a demo RESTful web service project implemented using JAX-RS and Apache CXF. This is
+    a Maven Java project exported from Eclipse. A review of RESTful web services and instructions for
+    building a RESTful web services project in Eclipse are in JAX-RSdemo1/RESTful-Web-Services.pdf.
