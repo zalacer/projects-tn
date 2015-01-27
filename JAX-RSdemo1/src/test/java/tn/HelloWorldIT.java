@@ -1,4 +1,4 @@
-package com.vulab.code.web;
+package tn;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,12 +15,14 @@ import org.codehaus.jackson.map.MappingJsonFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import tn.JsonBean;
+
 public class HelloWorldIT {
     private static String endpointUrl;
 
     @BeforeClass
     public static void beforeClass() {
-        endpointUrl = "http://localhost:8080/V16-CustomerProductRESTWS-20140507";
+        endpointUrl = "http://localhost:8080/JAX-RSdemo1";
         //endpointUrl = System.getProperty("service.url");
     }
 

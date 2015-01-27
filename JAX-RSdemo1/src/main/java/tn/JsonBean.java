@@ -1,4 +1,4 @@
-package com.vulab.code.web;
+package tn;
 
 
 public class JsonBean {
