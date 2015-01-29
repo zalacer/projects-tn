@@ -4,11 +4,11 @@ import scala.math.BigInt
 
 object FactorialTailCallDemo {
   
-  def factorial(n: BigInt) = {
+  def factorial(i: BigInt) = {
     @scala.annotation.tailrec
-    def factorialTailCall(m: BigInt, n: BigInt) : BigInt =
-      if(n == 1) m else factorialTailCall(m * n, n - 1)
-    factorialTailCall(1, n)
+    def factorialTailCall(a: BigInt, i: BigInt) : BigInt =
+      if(n == 1) a else factorialTailCall(a * i, i - 1)
+    factorialTailCall(1, i)
   }
   
   def main(args: Array[String]) = {
@@ -20,11 +20,9 @@ object FactorialTailCallDemo {
         } else {
           println(factorial(BigInt(args(i))))
         }
-          
-        }
+      }
     } catch {
         case x: Exception => x.printStackTrace    
     }    
   }
-  
 }
