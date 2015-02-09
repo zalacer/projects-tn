@@ -2,7 +2,7 @@
 
 This is a collection of demo projects for reference.
 
-###Java8StreamTest - consists of two Java8 main classes, one for performance testing of IntStream
+Java8StreamTest - consists of two Java8 main classes, one for performance testing of IntStream
     and the other to test performance of the imperative for loop. First build the project with
     Maven to generate an executable jar or import it into Eclipse or other compatible IDE and
     export an executable jar. Then run the jar for each class separately on a quiescent system
