@@ -2,12 +2,12 @@ package tn
 
 import scala.math.BigInt
 
-object FactorialTailCallDemo {
+object FactorialTailCall {
   
   def factorial(i: BigInt) = {
     @scala.annotation.tailrec
     def factorialTailCall(a: BigInt, i: BigInt) : BigInt =
-      if(n == 1) a else factorialTailCall(a * i, i - 1)
+      if(i == 1) a else factorialTailCall(a * i, i - 1)
     factorialTailCall(1, i)
   }
   
