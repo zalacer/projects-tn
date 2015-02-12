@@ -24,3 +24,6 @@ This is a collection of demo projects for reference.
 **JAX-RSdemo1** is a demo RESTful web service project implemented using JAX-RS and Apache CXF. This is
     a Maven Java project exported from Eclipse. A review of RESTful web services and instructions for
     building a RESTful web services project in Eclipse are in JAX-RSdemo1/RESTful-Web-Services.pdf.
+    
+**OverrideTest** is a Java project demonstrating class method hiding    
+
