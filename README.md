@@ -29,3 +29,5 @@ This is a collection of demo projects for reference.
 
 **ScalaFunctionsAsArgsDemo** is a Scala project demonstrating functions as arguments.
 
+**SendBCCMail** is a Java project demonstrating how to send only BCC mail with javax.mail.
+
