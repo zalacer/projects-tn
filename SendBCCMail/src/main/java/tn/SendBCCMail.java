@@ -1,5 +1,7 @@
 package tn;
 
+/* based on http://sanjaal.com/java/tag/java-internet-address-example/ */
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.*;
