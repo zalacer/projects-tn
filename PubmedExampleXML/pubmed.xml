@@ -1,0 +1,198 @@
+<!DOCTYPE ArticleSet PUBLIC "-//NLM//DTD PubMed 2.6//EN"
+"http://www.ncbi.nlm.nih.gov/corehtml/query/static/PubMed.dtd">
+<ArticleSet>
+     <Article>
+        <Journal>
+            <PublisherName>Nature Publishing Group</PublisherName>
+            <JournalTitle>Nature Chemical Biology</JournalTitle>
+            <Issn>1552-4450</Issn>
+            <Volume>4</Volume>
+            <Issue>2</Issue>
+            <PubDate PubStatus="ppublish">
+                <Year>2008</Year>
+                <Month>February</Month>
+            </PubDate>
+        </Journal>
+        <ArticleTitle>High-content single-cell drug screening with
+phosphospecific flow cytometry</ArticleTitle>
+        <FirstPage>132</FirstPage>
+        <LastPage>142</LastPage> 
+  <ELocationID EIdType="pii">nchembio.2007.59</ELocationID> 
+  <ELocationID EIdType="doi">10.1038/nchembio.2007.59</ELocationID>
+        <Language>EN</Language>
+        <AuthorList>
+            <Author>
+                <FirstName>Peter</FirstName> 
+                <MiddleName>O</MiddleName>
+                <LastName>Krutzik</LastName> 
+          <Suffix>Jr</Suffix>
+                <Affiliation>
+Department of Microbiology and Immunology,
+Baxter Laboratory in Genetic Pharmacology, Stanford University, 
+269 Campus Drive, Stanford, California 94305, USA. 
+                </Affiliation>
+            </Author>
+            <Author>
+                <FirstName>Janelle M</FirstName>
+                <LastName>Crane</LastName>
+            </Author>
+            <Author>
+                <CollectiveName>Cancer Genome Project</CollectiveName>
+            </Author>            
+            <Author>
+                <FirstName>Matthew R</FirstName>
+                <LastName>Clutter</LastName>
+            </Author>
+            <Author>
+                <FirstName>Garry P</FirstName>
+                <LastName>Nolan</LastName>
+            </Author>
+            <Author>
+                <CollectiveName>North American Barley
+Genome Project</CollectiveName>
+            </Author>            
+        </AuthorList>
+        <GroupList>
+           <Group>
+              <GroupName>Cancer Genome Project</GroupName>
+                 <IndividualName>
+                    <FirstName>John</FirstName>
+                    <LastName>Smith</LastName>
+                 </IndividualName>
+                 <IndividualName>
+                    <FirstName>Jane</FirstName>
+                    <LastName>Smith</LastName>
+                 </IndividualName>
+        </Group>
+           <Group>
+              <GroupName>North American Barley Genome Project</GroupName>
+                 <IndividualName>
+                    <FirstName>John Jacob</FirstName>
+                    <LastName>Han</LastName>
+                 </IndividualName>
+                 <IndividualName>
+                    <FirstName>Laura</FirstName>
+                    <LastName>Clancy</LastName>
+                 </IndividualName>
+        </Group>
+        </GroupList>
+        <ArticleIdList>
+            <ArticleId IdType="pii">nchembio.2007.59</ArticleId>
+            <ArticleId IdType="doi">10.1038/nchembio.2007.59</ArticleId>
+        </ArticleIdList>
+        <History>
+            <PubDate PubStatus="received">
+                <Year>2007</Year>
+                <Month>06</Month>
+                <Day>15</Day>
+            </PubDate>
+            <PubDate PubStatus="accepted">
+                <Year>2007</Year>
+                <Month>10</Month>
+                <Day>30</Day>
+            </PubDate>
+            <PubDate PubStatus="aheadofprint">
+                <Year>2007</Year>
+                <Month>December</Month>
+                <Day>23</Day>
+            </PubDate>
+        </History>
+        <Abstract>
+Drug screening is often limited to cell-free assays involving
+purified enzymes, but it is arguably best applied against systems
+that represent disease states or complex physiological cellular
+networks. Here, we describe a high-content, cell-based drug
+discovery platform based on phosphospecific flow cytometry, 
+or phosphoflow, that enabled screening for inhibitors against
+multiple endogenous kinase signaling pathways in heterogeneous
+primary cell populations at the single-cell level. From a library
+of small-molecule natural products, we identified pathway-selective
+inhibitors of Jak-Stat and MAP kinase signaling. Dose-response
+experiments in primary cells confirmed pathway selectivity, 
+but importantly also revealed differential inhibition of cell
+types and new druggability trends across multiple compounds. 
+Lead compound selectivity was confirmed in vivo in mice. Phosphoflow
+therefore provides a unique platform that can be applied throughout
+the drug discovery process, from early compound screening to in
+vivo testing and clinical monitoring of drug efficacy.
+        </Abstract>
+        <ObjectList>
+            <Object Type="NCBI:pubchem-substance">
+                <Param Name="id">46391334</Param>
+            </Object>
+            <Object Type="NCBI:pubchem-substance">
+                <Param Name="id">46391335</Param>
+            </Object>
+            <Object Type="NCBI:pubchem-substance">
+                <Param Name="id">46391336</Param>
+            </Object>
+         </ObjectList>
+    </Article> 
+    <Article>     
+        <Journal>
+            <PublisherName>Nature Publishing Group</PublisherName>
+            <JournalTitle>Nature Chemical Biology</JournalTitle>
+            <Issn>1552-4450</Issn>
+            <Volume>4</Volume>
+            <Issue>2</Issue>
+            <PubDate PubStatus="ppublish">
+                <Year>2008</Year>
+                <Month>February</Month>
+            </PubDate>
+        </Journal>
+        <ArticleTitle>Site selectivity of platinum
+anticancer therapeutics</ArticleTitle> 
+        <FirstPage>110</FirstPage>
+        <LastPage>112</LastPage>
+        <Language>EN</Language>
+        <AuthorList>
+            <Author>
+                <FirstName>Bin</FirstName>
+                <LastName>Wu</LastName>
+                <Affiliation>
+Division of Structural and Computational Biology,
+School of Biological Sciences, Nanyang Technological University,
+60 Nanyang Drive,Singapore 637551, Singapore. 
+                </Affiliation>
+            </Author>
+            <Author>
+                <FirstName>Peter</FirstName>
+                <LastName>Dr&amp;ouml;ge</LastName>
+            </Author>
+            <Author>
+                <FirstName>Curt A</FirstName>
+                <LastName>Davey</LastName>
+            </Author>
+        </AuthorList>
+        <ArticleIdList>
+            <ArticleId IdType="pii">nchembio.2007.58</ArticleId>
+            <ArticleId IdType="doi">10.1038/nchembio.2007.58</ArticleId>
+        </ArticleIdList>
+        <History>
+            <PubDate PubStatus="received">
+                <Year>2007</Year>
+                <Month>06</Month>
+                <Day>07</Day>
+            </PubDate>
+            <PubDate PubStatus="accepted">
+                <Year>2007</Year>
+                <Month>10</Month>
+                <Day>26</Day>
+            </PubDate>
+            <PubDate PubStatus="aheadofprint">
+                <Year>2007</Year>
+                <Month>December</Month>
+                <Day>23</Day>
+            </PubDate>
+        </History>
+        <Abstract>
+X-ray crystallographic and biochemical investigation
+of the reaction of cisplatin and oxaliplatin with nucleosome core
+particle and naked DNA reveals that histone octamer association can
+modulate DNA platination. Adduct formation also occurs at specific
+histone methionine residues, which could serve as a nuclear platinum
+reservoir influencing adduct transfer to DNA. Our findings suggest
+that the nucleosome center may provide a favorable target for the
+design of improved platinum anticancer drugs. </Abstract>
+</Article>
+</ArticleSet>
