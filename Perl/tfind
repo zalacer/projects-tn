@@ -1,0 +1,186 @@
+#!/usr/bin/perl
+
+# tfind - find files less than n seconds old
+# usage: tfind [ --atime i --ctime j --mtime k ] path
+
+use strict;
+use warnings;
+use File::Find;
+# for use in File::Find::find &wanted calls
+use vars qw/*name/;
+*name   = *File::Find::name;
+use Getopt::Long;
+
+my $prog = $0;
+$prog =~ s,(?:[^\0]*/)*([^\0]+),$1,;
+my $usage = "
+$prog finds files in path that have been modified, changed or 
+accessed within a given number of seconds. The bundled find
+utilities only detect time changes to the nearest day.  However,
+it can be useful for monitoring to find files modified, changed
+or accessed  within shorter time periods.
+
+Usage: $prog [ --help --atime i --ctime j --mtime k ] path
+
+Options
+
+ --atime i    true if file was accessed within the last i seconds,
+                where i must be a postive integer or 0
+ --ctime j    true if the files status was changed within the last
+                j seconds, where j must be a positve integer or 0
+ --mtime k    true if the files data was modified within the last
+                k seconds, where k must be a positive integer or 0
+ --help       shows this help screen
+
+Examples
+
+tfind --atime 2 dir      prints names of files  in dir accessed
+                           within the last 2 seconds
+tfind --ctime 600 dir    prints names of files in dir with status 
+                           changes in the last 10 minutes
+tfind --mtime 3600 dir   prints names of files in dir modified
+                           within the last hour
+tfind --atime 2 --ctime 600 --mtime 3600 dir   
+                         prints names of files in dir meeting all
+                           three conditions
+";
+
+my $opt_help    = '';
+my $opt_atime   = '';
+my $opt_mtime   = '';
+my $opt_ctime   = '';
+
+GetOptions (
+  "help"        => \$opt_help,
+  "atime=s"     => \$opt_atime,
+  "ctime=s"     => \$opt_ctime,
+  "mtime=s"     => \$opt_mtime );
+
+if ($opt_help) {
+  print "$usage\n";
+  exit;
+}
+
+unless (@ARGV == 1) {
+  print "$usage\n";
+  exit;
+}
+
+my $path = shift;
+
+my $atime_mark = 0;
+my $ctime_mark = 0;
+my $mtime_mark = 0;
+
+($opt_atime,$atime_mark) = testoption("atime",$opt_atime);
+($opt_ctime,$ctime_mark) = testoption("ctime",$opt_ctime);
+($opt_mtime,$mtime_mark) = testoption("mtime",$opt_mtime);
+
+my $findstr;
+
+if (!$opt_atime && !$opt_ctime && !$opt_mtime) {
+    exit;
+} else {
+    $findstr = '
+find(\&wanted, $path);
+
+sub wanted {
+  my $start = time;
+  my ($fsdev,$inode,$mode,$nlink,$uid,$gid,$devid,$size,
+    $atime,$mtime,$ctime,$blksize,$blocks) = lstat $_;';
+
+  } if (!$opt_atime && !$opt_ctime && $opt_mtime) {
+        $findstr .= '
+  if (($start - $mtime) < $mtime_mark) {
+    print "$name\n";
+  }
+}
+';
+    } elsif ($opt_atime && !$opt_ctime && !$opt_mtime) {
+        $findstr .= '
+  if (($start - $atime) < $atime_mark) {
+    print "$name\n";
+  }
+}
+';
+    } elsif (!$opt_atime && $opt_ctime && !$opt_mtime) {
+        $findstr .= '
+  if (($start - $ctime) < $ctime_mark) {
+    print "$name\n";
+  }
+}
+';
+    } elsif ($opt_atime && !$opt_ctime && $opt_mtime) {
+        $findstr .= '
+  if ((($start - $atime) < $atime_mark) &&
+      (($start - $mtime) < $mtime_mark)) {
+    print "$name\n";
+  }
+}
+';
+    } elsif (!$opt_atime && $opt_ctime && $opt_mtime) {
+        $findstr .= '
+  if ((($start - $ctime) < $ctime_mark) &&
+      (($start - $mtime) < $mtime_mark)) {
+    print "$name\n";
+  }
+}
+';
+    } elsif ($opt_atime && $opt_ctime && !$opt_mtime) {
+        $findstr .= '
+  if ((($start - $atime) < $atime_mark) &&
+      (($start - $ctime) < $ctime_mark)) {
+    print "$name\n";
+  }
+}
+';
+    } elsif ($opt_atime && $opt_ctime && $opt_mtime) {
+        $findstr .= '
+  if ((($start - $atime) < $atime_mark) &&
+      (($start - $ctime) < $ctime_mark) &&
+      (($start - $mtime) < $mtime_mark)) {
+    print "$name\n";
+  }
+}
+';
+    } else {
+        print "$prog: logical error in options values:
+  opt_atime = $opt_atime
+  opt_ctime = $opt_ctime
+  opt_mtime = $opt_mtime\n";
+        exit 2;
+  }
+
+eval $findstr;
+
+sub testoption {
+  my $opt = $_[0];
+  my $optarg = $_[1];
+  my @out;
+
+  if ($optarg || ($optarg =~ /^\s*[+-]?0\s*$/)) {
+    $optarg = trim($optarg);
+    if (($optarg =~ /^[+-]?\d+$/) && ($optarg >= 0)) {
+      $out[0] = 1;
+      $out[1] = $optarg;
+      return @out;
+    } else {
+        print "$opt argument \"$optarg\" is not a positive integer or 0.\n";
+        exit;
+    }
+  } else {
+      $out[0] = 0;
+      $out[1] = 0;
+      return @out;
+  }
+}
+
+sub trim {
+    my @out = @_;
+    for (@out) {
+        s/^\s+//;
+        s/\s+$//;
+    }
+    return wantarray ? @out : $out[0];
+}
+
