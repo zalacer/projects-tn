@@ -1,0 +1,1395 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	
+
+
+
+
+
+
+
+
+ 
+
+<script language="JavaScript" src="/script/jquery-latest.js"></SCRIPT>
+<script language="JavaScript" src="/script/hrBar.js"></SCRIPT>
+<script type="text/javascript" src="/script/jquery-1.4.2.min.js"></script>  
+<script type="text/javascript">
+ 
+ 	$().ready(function(){
+
+		//메인 메뉴 토글 활성화
+		
+		if($('#gnb')){
+			$('#gnb > ul > li > a ').mouseover(activeMainMenu);
+			$('#gnb > ul > li > a ').focus(activeMainMenu);
+		}	
+
+ 	});
+
+	function activeMainMenu(){
+		$('#gnb > ul > li').removeClass('hover');
+		$('#gnb > ul > li').removeClass('on');
+		$(this).parent().addClass('hover');
+	}	
+		
+</script>
+
+
+
+
+<script language="JavaScript" type="text/JavaScript">
+<!--
+
+//document.oncontextmenu = function anonymous() { alert('마우스 오른쪽 버튼은 사용하실 수 없습니다'); return false } ;
+
+//document.onselectstart = function anonymous() { return false } ;
+
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+
+function MM_showHideLayers() { //v6.0
+  var i,p,v,obj,args=MM_showHideLayers.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v=='hide')?'hidden':v; }
+    obj.visibility=v; }
+}
+function MM_showHideLayers2() {
+  var i,p,v,obj,args=MM_showHideLayers2.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+	if (obj.style) { obj=obj.style; v=(v=='show')?'':(v=='none')?'none':v; }
+	obj.display=v;}
+}
+function MM_openBrWindow(theURL,winName,features) { //v2.0
+
+  window.open(theURL,winName,features);
+
+}
+// 엔터 클릭시 실행되는 펑션 각 페이지에서 필요한 매소드 재정의
+function Load()
+{
+    if(event.keyCode==13)
+    {   
+       	enterDown();
+    }
+}
+
+function enterDown()
+{
+	//searchStr에 포커스가 있으면 검색 실행
+	//goSearch();
+}
+
+// KeyUp 이벤트
+function keyUp()
+{
+	return;
+}
+
+// 검색결과 페이지
+function goSearch()
+{
+	var forms = document.searchForm;
+	
+	if( forms.searchStr.value == null || forms.searchStr.value == "" )
+	{
+		alert("검색어를 입력하세요");
+		forms.searchStr.focus();
+		return false;
+	} 
+	
+	window.open("", "search", "width=720 height=600 scrollbars=yes");
+	forms.method = "POST";
+	forms.target = "search";
+	forms.action = "/search.do";
+	forms.submit();
+}
+
+
+
+
+
+
+
+
+
+//================= 미니리스트 마우스오버 =====================
+function selMiniList(listID, listNum)
+{
+	for(i=1;i<10;i++)
+	{
+		var id = listID+i;
+		if(document.getElementById(id) != null)
+			document.getElementById(id).style.display = "none";
+	}
+	var id = listID+listNum;
+	document.getElementById(id).style.display = "block";
+}
+//================= 미니리스트 마우스오버 =====================
+
+
+
+//================= 탭버튼 =====================
+
+/************************************
+*	buttonType	=	img / text		*
+*	contentYN	=	Y / N			*
+*	id			=	id값			*
+************************************/
+
+
+
+
+
+//================= 팝업관련 =====================
+function getCookieKL( name ) 
+{
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length ) 
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) 
+		{
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) ); 
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break; 
+	}
+	return ""; 
+}
+//리스트팝업존 메인에서만 열리도록 설정
+var openPopCount = "N";
+var openPopL = "N";
+var openPopN = "N";
+
+openPopCount = "Y";
+function popupList()
+{
+	if(getCookieKL("jakjeonA") != "popupA")
+		window.open("/popupA.do?popType=A", "popupA", "width=357 height=477");
+}
+//================= 팝업관련 =====================
+
+
+
+
+
+
+
+
+//================= 개인정보보호등 =====================
+function privacy()
+{
+	if(!confirm("개인정보처리방침을 여시겠습니까?"))
+		return;
+	window.open("/priPrivacy.do", "privacy", "width=710 height=600 scrolls=no");
+}
+function email() 
+{
+	if(!confirm("이메일주소수집거부을 여시겠습니까?"))
+		return;
+	window.open("/email.do", "email", "width=710 height=600 scrolls=no");
+}
+function copyright()
+{
+	if(!confirm("저작권지침 및 신고을 여시겠습니까?"))
+		return;
+	window.open("/copyright.do", "copyright", "width=710 height=600 scrolls=no");
+}
+function priPrivacy()
+{
+	if(!confirm("개인정보처리방침을 여시겠습니까?"))
+		return;
+	window.open("/priPrivacy.do", "priPrivacy", "width=710 height=600 scrolls=no");
+}
+//================= 개인정보보호등 =====================
+	
+
+
+
+
+
+
+
+
+
+//================= 교육기부 ============================
+function eduLink(){
+	document.getElementById("eduLink").style.display="none";
+	document.getElementById("eduLink2").style.display="block";
+	document.getElementById("eduLink3").style.display="block";
+}
+//================= 교육기부 ============================
+
+	
+
+
+
+
+
+
+
+
+//================= 메뉴관련 =====================
+function leftMenuView(idx)
+{ 
+	var str = "" + idx;
+
+	for(i=100; i<150; i++)
+	{
+		if(document.getElementById("LMenu" + i))
+		{
+			hide_menu = document.getElementById("LMenu"+i);
+			// 3자리 이상 idx일때 양끝 하나씩 잘라낸것과 일치하는것은 바로 상위 메뉴이므로 감추지 않는다.
+			if(str.length >= 3 && isPrnt(str, i))
+			{
+				hide_menu.style.display = 'block';
+			}
+			else
+			{
+				hide_menu.style.display = 'none';
+			}
+		}
+	}
+	subMenu = document.getElementById("LMenu"+idx);
+	if(subMenu != null)
+		subMenu.style.display = 'block'; 
+}
+
+function isPrnt(str, idx)
+{
+	var subStr = str.substring(1,str.length-1);
+	if(parseInt(subStr) == idx)
+		return true;
+
+	if(subStr.length >= 3 && isPrnt(subStr, idx))
+		return true;
+
+	return false;
+}
+
+function viewSiteMap(url){
+ 	if(document.getElementById("layerSiteMap").style.visibility == "hidden") 
+ 	{
+  		document.getElementById("layerSiteMap").style.visibility = "visible";
+  		document.getElementById("SiteMapFrm").src =url;  
+ 	}
+ 	else
+ 	{
+  		document.getElementById("layerSiteMap").style.visibility = "hidden";
+ 	}
+}
+
+var prevIdx = 0;
+function subMenuView(idx)
+{ 
+	hide_menu = document.getElementById("subMenu"+prevIdx);
+	if(hide_menu != null && hide_menu.style.display  == 'block')
+		hide_menu.style.display = 'none';
+				
+	subMenu = document.getElementById("subMenu"+idx);
+	if(subMenu != null)
+	{
+		subMenu.style.display = 'block'; 
+		prevIdx = idx
+	}
+}
+
+//================= 메뉴관련 =====================
+function isValidSN(jumin1, jumin2)
+{
+	var ssn1 = jumin1;
+	var ssn2 = jumin2;
+	var ssn=ssn1+ssn2;
+	a = new Array(13);
+	for (var i=0; i < 13; i++) 
+	{
+		a[i] = parseInt(ssn.charAt(i));
+	}
+	var k = 11 - (((a[0] * 2) + (a[1] * 3) + (a[2] * 4) + (a[3] * 5) + (a[4] * 6) + (a[5] * 7) + (a[6] * 8) + (a[7] * 9) + (a[8] * 2) + (a[9] * 3) + (a[10] * 4) + (a[11] * 5)) % 11);
+	if (k > 9)
+	{
+		k -= 10;
+	}
+	if (k == a[12])
+		return true;
+	else
+		return false;	
+}
+function goLogin()
+{
+	var forms = document.tmpForm;
+	
+	forms.target = "tmpFrm";
+	forms.action = "/login/login/loginPop.jsp";
+	//window.open("/sub/call/mem/contents/login.jsp","","location=no width=600 height=300");
+	//forms.action = "/sub/mem/contents/login.jsp";
+	forms.submit();
+}
+function goJoin()
+{
+	var forms = document.tmpForm;
+
+	forms.target = "tmpFrm";
+	forms.action = "/login/login/JoinPop.jsp";
+	//window.open("/sub/call/mem/contents/login.jsp","","location=no width=600 height=300");
+	//forms.action = "/sub/mem/contents/login.jsp";
+	forms.submit();
+}
+function tempLogin(usrID, usrPW)
+{
+	var forms = document.tmpForm;
+	forms.ciKey.value = usrID;
+	forms.certiKey.value = usrPW;
+	forms.action = "/login.do";	
+	forms.submit();
+}
+
+function goMsg()
+{
+	//alert("서비스 준비중입니다");
+	var forms = document.tmpForm;
+
+	forms.target = "tmpFrm";
+	forms.action = "/msg.do";
+	forms.submit();
+	
+}
+
+function siteMap()
+{
+	window.open("/sitemap.do","login","width=900 height=620 scrollbars=yes");
+}
+
+function chgInfo()
+{
+	var forms = document.tmpForm;
+	
+	forms.target = "tmpFrm";
+	forms.action = "/login/login/chgInfoPop.jsp";
+	forms.submit();
+}
+
+//학교 교가 
+function playMugic(num){
+	var url =  + "/UserFiles/" + sysID + "/pullo.mp3";
+		if(num == "1"){
+				ie_player.FileName = url;
+				ie_player.AutoStart = true;
+				ie_player.play()
+		}else{
+				ie_player.FileName = url;
+				ie_player.AutoStart = true;
+				ie_player.stop()
+		}
+	}
+
+// 자료관리자등에서 사용할 직원찾기
+function empSrch(reqUsrID, reqUsrNM, reqDeptCD, reqDeptNM, reqEMail, reqPhone)
+{
+	var url = "/sub/dje/dataMng/empSrch.jsp?usrID="+reqUsrID+"&usrNM="+reqUsrNM+"&deptCD="+reqDeptCD+"&deptNM="+reqDeptNM+"&email="+reqEMail+"&phone="+reqPhone;
+	window.open(url, "empSrch", "width=550, height=500, scrollbars=yes");
+}
+
+// 권한설정 창 오픈
+function popupAuth(url, ele)
+{
+	var cnts = eval("document."+ele).value;
+	url = url+"?Ele="+ele+"&Cnts="+cnts;
+
+	window.open(url, '','width=400,height=400, scrollbars=yes, resizable=yes');
+}
+
+//템플릿설정 창 오픈
+function popupTemp(url, ele)
+{	
+	var cnts = eval("document.authForm."+ele).value;
+	url = url+"?Ele="+ele+"&Cnts="+cnts;
+	
+	window.open(url, '','width=1000,height=540, scrollbars=yes, resizable=yes');
+}
+
+function allSrch(reqUsrID, reqUsrNM, reqDeptCD, reqDeptNM, reqEMail, reqPhone)
+{
+	var url = "/sub/dje/dataMng/allSrch.jsp?usrID="+reqUsrID+"&usrNM="+reqUsrNM+"&deptCD="+reqDeptCD+"&deptNM="+reqDeptNM+"&email="+reqEMail+"&phone="+reqPhone;
+	window.open(url, "empSrch", "width=550, height=500, scrollbars=yes");
+}
+
+// 스트링의 str1에 해당하는 문자열을 str2로 바꾼다.
+// 사용법.
+// var str = 문자열.replaceAll("a", "1");  <-- 문자열 내에서 'a'를 찾아 전부 '1'로 바꾸라는 의미
+String.prototype.replaceAll = function(str1, str2)
+{
+  	var temp_str = "";
+
+  	if (this.trim() != "" && str1 != str2)
+  	{
+    	temp_str = this.trim();
+
+   	 	while (temp_str.indexOf(str1) > -1)
+    	{
+      		temp_str = temp_str.replace(str1, str2);
+    	}
+  	}
+  return temp_str;
+}
+
+// 문자열을 한번 바꾼다.
+function replace(msrc,sstr,rstr) {
+       var idx,sleft,sright;
+
+       msrc+="";
+       sstr+="";
+       rstr+="";
+       idx=msrc.indexOf(sstr);
+       if (idx > -1) {
+              sleft = msrc.substring(0,idx) + rstr;
+              sright = msrc.substring(idx+sstr.length);
+              return sleft + replace(sright,sstr,rstr);
+       } else {
+              return msrc;
+       }
+}
+
+//================= 날짜 선택 =====================
+  function Popup_Date(reqRY, reqCallBack)
+  {
+    var wWidth = 300;
+    var wHeight = 300;
+    var wTop = ((screen.height - 100) - wHeight) / 2 ;
+    var wLeft = (screen.width - wWidth) / 2;
+
+    var wTarget = 'KLFRAME_CALENDAR';
+    var wAddr =  '/script/calendar/main.jsp';
+
+    wAddr = wAddr + '?R=' + reqRY
+    wAddr = wAddr + '&T=S'
+	if(reqCallBack != null)
+		wAddr += '&CallBack=' + reqCallBack;
+
+    wNewWin = window.open(wAddr, wTarget,'toolbar=no,menubar=no,location=no,directories=no,status=no,scrollbars=no,resizable=yes,width='+wWidth+',height='+wHeight+',top='+wTop+',left='+wLeft+'');
+    wNewWin.focus();
+  }
+  
+  function Popup_Period(reqR, reqIdx)
+  {
+    var wWidth = 300;
+    var wHeight = 300;
+    var wTop = ((screen.height - 100) - wHeight) / 2 ;
+    var wLeft = (screen.width - wWidth) / 2;
+
+    var wTarget = 'KLFRAME_CALENDAR';
+    var wAddr =  '/script/calendar/main.jsp';
+
+    wAddr = wAddr + '?R=' + reqR
+    wAddr = wAddr + '&Idx=' + reqIdx
+    wAddr = wAddr + '&T=P'
+
+    wNewWin = window.open(wAddr, wTarget,'toolbar=no,menubar=no,location=no,directories=no,status=no,scrollbars=no,resizable=yes,width='+wWidth+',height='+wHeight+',top='+wTop+',left='+wLeft+'');
+    wNewWin.focus();
+  }
+  //================= 날짜 선택 =====================
+
+//================= 팝업창 컨트롤 관련 =====================
+function setCookieKL( name, value, expiredays ) 
+{
+	var todayDate = new Date();
+	todayDate.setDate( todayDate.getDate() + expiredays );
+	document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+}
+
+function getCookieKL( name ) 
+{
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length ) 
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) 
+		{
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) ); 
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break; 
+	}
+	return ""; 
+}
+
+function open_layer(frameName, name, seq)
+{
+	document.all[name].style.visibility = "visible";
+	eval("document."+frameName).location.replace('/popupL.do?popType=L&seq='+seq);
+} 
+
+function closeLayer(name)
+{
+	document.all[name].style.visibility = "hidden";
+}
+
+function closeLayerDay(name)
+{
+	document.all[name].style.visibility = "hidden";
+	setCookieKL( name, "done" , 1);
+}
+
+function closeWin(name)
+{
+	self.close();
+}
+
+function closeWinDay(name)
+{
+	self.close();
+	setCookieKL( name, "done" , 1);
+}
+//================= 팝업창 컨트롤 관련 =====================
+
+// 프레임 사이즈 조절
+function selfResize(reqDiv, reqFrm)
+{ 
+	dataobj = document.getElementById(reqDiv) //
+
+    dataobj.style.top=0 
+    dataobj.style.left=0 
+
+    pagelength=dataobj.offsetHeight
+    pagewidth=dataobj.offsetWidth
+
+    parent.document.getElementById(reqFrm).height=pagelength  
+    parent.document.getElementById(reqFrm).width=pagewidth 
+} 
+
+// 우편번호 검색
+function openZipcode(reqZip, reqAddr1)
+{
+	var url = "/sub/common/zipcode.jsp?zipNM="+reqZip+"&addrNM="+reqAddr1;
+	window.open(url,'','width=450,height=350,scrollbars=yes');
+}
+
+
+// 필수입력오류체크
+function cmnErrCertChk(reqForm, reqName, reqFoucs)
+{
+	if(reqForm.value == "")
+	{
+		alert(reqName +" 입력해주세요");
+		reqForm.value = "";
+		if(reqForm != null && reqFoucs != "N")
+			reqForm.focus();
+		return false;
+	}
+	return true;
+}
+
+// 숫자입력오류체크
+function numErrChk(reqForm)
+{
+	if(isNaN(reqForm.value) || reqForm.value=="")
+	{
+		alert("숫자만 입력할수 있습니다");
+		reqForm.value = "0";
+		reqForm.focus();
+		return false;
+	}
+	return true;
+}
+	
+function CheckEMail (emailStr) 
+{  
+	// 전자메일 패턴. 사용자이름@도메인 의 형식을 검사함  
+	var emailPat=/^(.+)@(.+)$/;
+	// 포함되지 말아야할 특수문자들 ( ) < > @ , ; : \ " . [ ]  
+	var specialChars="\\(\\)<>@,;:\\\\\\\"\\.\\[\\]";  
+	// 포함될 수 있는 특수문자들 (나머지)  
+	var validChars="\[^\\s" + specialChars + "\]";  
+	// 아래의 경우는 사용자 이름에 따옴표가 있는 경우. RFC표준사항임  
+	var quotedUser="(\"[^\"]*\")"; 
+	// 도메인 대신 IP를 사용할 수있음  
+	// 예를 들어 laday@[210.120.253.10]은 올바른 메일 주소 "[", "]"이 반드시 필요 
+	var ipDomainPat=/^\[(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\]$/;  
+	// 기본적인 아토믹에 해당됨  
+	var atom=validChars + '+';  
+	// 사용자로 사용될 수 있는 문자를 나타냄  
+	var word="(" + atom + "|" + quotedUser + ")";  
+	// 사용자의 패턴을 나타냄. 위의 워드가 .단위로 여러개 올 수있음  
+	var userPat=new RegExp("^" + word + "(\\." + word + ")*$");  
+	// 아래의 것은 일반적인 도메인 패턴에 해당됨  
+	var domainPat=new RegExp("^" + atom + "(\\." + atom +")*$");  
+	// @을 기준으로 사용자와 도메인으로 나눔. 편의를 위함  
+	var matchArray=emailStr.match(emailPat);  
+	if (matchArray==null) 
+	{    
+	// 두개 이상 또는 @이 아예 없는 경우   
+		alert("메일주소 형식이 잘못되어 있습니다 (공백 및 @과 .을 확인해 보세요)");    
+		return false; 
+	}  
+	var user=matchArray[1];  
+	var domain=matchArray[2];  
+	// 사용자 부분이 제대로 되었는지 검사  
+	if (user.match(userPat)==null) 
+	{    
+		alert("메일 아이디가 올바르지 않습니다");    
+		return false;  
+	} 
+	// 도메인 부분이 IP로 되어 있는 경우 
+	var IPArray=domain.match(ipDomainPat);  
+	if (IPArray!=null) 
+	{    
+		for (var i=1;i<=4;i++) 
+		{      
+			if (IPArray[i]>255) 
+			{        
+				alert("IP 주소 형식이 올바르지 않습니다");        
+				return false;      
+			}    
+		}    
+		return true;  
+	}  
+	// 도메인 이름이 심볼릭 네임인 경우 올바르지 않음  
+	var domainArray=domain.match(domainPat);  
+	if (domainArray==null) 
+	{    
+		alert("도메인 형식이 올바르지 않습니다");   
+		return false; 
+	}  
+	// 도메인 형식 검사에 통과했더라도, 마지막 세개 또는 두개의 문자(com, net, kr등등)  
+	// 까지 올바른지 검사. 최상위 도메인은 반드시 세글자 아니면 두 글자임  
+	var atomPat=new RegExp(atom,"g");  
+	var domArr=domain.match(atomPat);  
+	var len=domArr.length;  
+	if (domArr[domArr.length-1].length<2 ||    domArr[domArr.length-1].length>3) 
+	{    
+		alert("도메인 주소의 마지막 필드는 반드시 세글자 도메인 또는 두글자 나라이어야 합니다.");    
+		return false; 
+	}  
+	// 호스트이름이 있는지 검사  
+	if (len<2) 
+	{    
+		alert("호스트 이름이 존재하지 않습니다. 호스트 이름은 반드시 2글자 이상이어야 합니다");    
+		return false;  
+	}  
+	
+	return true;
+}	
+//-->
+
+ var nowZoom = 100; // 현재비율
+ var maxZoom = 500; // 최대비율(500으로하면 5배 커진다)
+ var minZoom = 100; // 최소비율
+
+ // +, - 키를 입력하면 화면 확대, 축소를 한다.
+ document.onkeypress = getKey;
+
+ function getKey(keyStroke) {
+	  isNetscape = (document.layers);
+	  eventChooser = (isNetscape) ? keyStroke.which : event.keyCode;
+	  which = String.fromCharCode(eventChooser).toLowerCase();
+	  which2 = eventChooser;
+
+	  var el = event.srcElement;
+
+	  if ((el.tagName != "INPUT") && (el.tagName != "TEXTAREA")) {
+	   if (which == "+") {
+	    zoomIn();
+	   } else if (which == "-") {
+	    zoomOut();
+	   }
+	  }
+	 }
+ 
+ //화면 기본.
+ function zoomInit() {
+  if (nowZoom < maxZoom) {
+   nowZoom = 100;
+  } else {
+   return;
+  }
+
+  document.body.style.zoom = nowZoom + "%";
+ }	 
+
+ //화면 키운다.
+ function zoomIn() {
+  if (nowZoom < maxZoom) {
+   nowZoom += 5; //25%씩 커진다.
+  } else {
+   return;
+  }
+
+  document.body.style.zoom = nowZoom + "%";
+ }
+
+
+ //화면 줄인다.
+ function zoomOut() {
+  if (nowZoom > minZoom) {
+   nowZoom -= 5; //25%씩 작아진다.
+  } else {
+   return;
+  }
+
+  document.body.style.zoom = nowZoom + "%";
+ }
+   function goPrint() {
+	 window.print(); 
+  }
+
+ // 메뉴바로가기
+ function quickMenu(obj)
+ {
+	var strUrlMenu = obj.options[obj.selectedIndex].value;
+	if(strUrlMenu != "")
+		location.href = strUrlMenu;
+ }
+ //사이트바로가기
+ function quickSite(obj)
+ {
+	var strUrlSite = obj.options[obj.selectedIndex].value;
+	if(strUrlSite != "")
+		window.open(strUrlSite);
+ }
+ 
+ //iframe 백그라운 설정
+ onload = function() {
+  var theframes = document.getElementsByTagName('iframe');
+  for(var i = 0; i < theframes.length; i++)
+  {
+   theframes[i].setAttribute("allowTransparency", "ture");
+  }
+ }
+ 
+function chkMenuAuth(auth){
+	if( auth == "2" )
+		alert("회원만 열람할 수 있는 메뉴입니다. 회원가입후 이용하세요.");
+	else if (auth == "3" )
+		alert("교직원만 열람할 수 있는 메뉴입니다. 교직원 로그인 후 이용하세요.");
+	else if (auth == "1" )
+		alert("실명인증후 열람할 수 있는 메뉴입니다. 아이핀 로그인 후 이용하세요.");
+	else if (auth == "4" )
+		alert("메뉴열람 권한이 없습니다.");
+}
+
+//파일다운로드
+function fileDown(fileNM, filePath)
+{
+	var forms = document.fileDownForm;
+	forms.saveName.value = fileNM;
+	forms.filePath.value = filePath;
+	forms.action ="/boardCnts/fileDown.do";
+	forms.submit();
+}
+
+
+
+
+
+
+//팝업존 스탑 
+function stopPopup() {
+   clearInterval(popupInt);
+}
+
+
+
+
+//팝업존 스탑 
+function stopBanner() {
+   clearInterval(popupInt);
+}
+
+$(document).ready( function() {$("thumbImg").css("display","block"); } );
+
+</script>
+<iframe name="tmpFrm" src="" width="0" height="0" title='로그인프레임'></iframe>
+<form name="tmpForm" method="POST">
+	<input type="hidden" name="rtUrl" value="http://jakjeon.icems.kr:80" />
+	<input type="hidden" name="sessID" value="QvqdV3YL7kVThq0Jq2yCXHgY7TXfTvQSTwT1P9RMDxQlk0FnRr9L!1147851454!1438095435224" />
+	<input type="hidden" name="neisCD" value="E100001715" />
+	<input type="hidden" name="ciKey" value="" />
+	<input type="hidden" name="certiKey" value="" /> 
+</form>
+
+<form name="fileDownForm" method="POST">
+	<input type="hidden" name="saveName" />
+	<input type="hidden" name="filePath" />
+</form>
+
+
+
+
+
+
+	<script language="JavaScript" src="/script/call.js"></SCRIPT>
+	<LINK href="/css/common.css" rel="stylesheet" type="text/css"  media="screen"/>
+	<LINK href="/css/template/00457/common.css" rel="stylesheet" type="text/css"/>
+	<title>작전중학교 홈페이지에 오신것을 환영합니다</title>
+</head>
+	<body onKeyDown="javascript:Load()">
+      <div class="menu_blind">
+         <ul>
+             <li><a href="#header" title="메뉴 바로가기">메뉴 바로가기</a></li>
+            <li><a href="#wrap" title="본몬내용 바로가기" >본몬내용 바로가기</a></li>
+            <li><a href="#footer_wrap" title="하단링크 바로가기">하단링크 바로가기</a></li>
+         </ul>
+      </div>
+		
+
+
+
+
+
+
+
+<LINK href="/sub/common/popup/css/popup.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+
+$(document).ready(function()
+{
+$("#show").click(function()
+{
+if( openPopCount != null && openPopCount == "Y" )
+popupList();
+if( openPopL != null && openPopL == "Y" )
+popupLopen();
+if( openPopN != null && openPopN == "Y" )
+popupNopen();
+$("#pop_header").hide(500);
+});
+$("#hide").click(function()
+{
+$("#pop_header").hide(500);
+});
+});
+
+</script>
+<div id="pop_header" >
+		<div class="pop_wrap" >
+			<p class="p_txt_2">작전중학교 공지 팝업이 11건이 존재합니다.</p>
+			<ul class="btn">
+				<li><a href="#pop_header" id="show">팝업실행</a></li>
+				<li><a href="#pop_header" id="hide">취소</a></li>
+			</ul>
+		</div>
+		<div class="pop_wrap_no">
+		<p style="font-family:맑은 고딕;"><b>Window 10</b>의 <b>엣지</b> 브라우저를 사용하시는 분은 <b>‘자동으로 IE11전환모드를 선택’</b> 하여 주시기 바랍니다.</p>
+		</div>
+
+	</div>
+
+<div id="wrap">
+
+
+
+
+
+
+<!-- 메인메뉴 -->
+<div id="header">
+	<div id="btn_inchen">
+		<a href="http://seobu.ice.go.kr/" target="_blank" title="교육청바로가기"><img src="/images/comm/schl/btn_edu_west.png" alt="인천광역시 서부교육청"/></a>
+	</div>
+	<div id="zoomIO">
+		<a href="#zoomIn" onClick="javascript:zoomIn();"><img src="/images/comm/schl/btn_plus.png" alt="확대"/></a>
+		<a href="#zoomInit" onClick="javascript:zoomInit();"><img src="/images/comm/schl/btn_basic.png" alt="기본" /></a>
+		<a href="#zoomOut" onClick="javascript:zoomOut();" ><img src="/images/comm/schl/btn_minus.png" alt="축소"/></a>
+	</div>
+	<h1><a href="/main.do"><img src="/images/template/00457/common/logo.gif"  alt="작전중학교" /></a></h1>
+   <hr />
+	<ul class="top_menu">
+			
+			<li><a href="/main.do" title="홈">홈</a></li>
+			
+			<li><a href="http://ptlogin.icemaster.kr/join1.do" title="회원가입">회원가입</a></li>
+			
+			
+			
+			<li><a href="#login" onClick="javascript:goLogin()" title="새창이동">로그인</a></li>
+			
+			<li><a href="#siteMap" onClick="javascript:siteMap()" title="새창이동">사이트맵</a></li>
+        </ul>
+        <hr />
+		<div id="M_visual">
+			<img src="/upload/sysImg/jakjeon/1387785896396.jpg" alt="작전중학교 홈페이지에 오신것을 환영합니다." />             
+            <!--바로가기-->
+            <ul class="M_link_wrap">
+                <li class="M_link01"><a href="/cafeSSO.do" title="학급홈피">학급홈피</a></li>
+                <li class="M_link02"><a href="" title="학부모 서비스">학부모<br />서비스</a></li>
+                <li class="M_link03"><a href="" title="학생서비스">학생서비스</a></li>         
+				<li class="M_link04"><a href="http://tongil.moe.go.kr" target="_blank" title="인터넷통일학교">인터넷<br />통일학교</a></li>    
+            </ul>
+            <!--바로가기-->
+    		<hr />        
+        </div>
+        <!--//비쥬얼-->
+        <hr />
+		<div class='menu'>
+	<div id='gnb'>
+		<ul class='depth2'>
+				<li id='mo_01' class='m_h1'><a href='/sub/info.do?m=0101&s=jakjeon'><span>학교소개</span></a>
+					<div class='sub'>
+						<ul class='sub_01'>
+							<li><img src='/images/template/00457/common/sub_menu_l_bg.gif' alt='학교장 인사말' onerror="this.style.display='none'" /></li>
+							<li><a href='/sub/info.do?m=0101&s=jakjeon'><span>학교장 인사말</span></a></li>
+							<li><a href='/sub/info.do?m=0102&s=jakjeon'><span>학교 연혁</span></a></li>
+							<li><a href='/sub/info.do?m=0103&s=jakjeon'><span>교육 목표</span></a></li>
+							<li><a href='/sub/info.do?m=0104&s=jakjeon'><span>학교현황</span></a></li>
+							<li><a href='/sub/info.do?m=0105&s=jakjeon'><span>학교 상징</span></a></li>
+							<li><a href='/sub/info.do?m=0106&s=jakjeon'><span>학교특색사업</span></a></li>
+							<li><a href='/sub/info.do?m=0107&s=jakjeon'><span>교직원 소개</span></a></li>
+							<li><a href='/road.do?x=37.5337338&y=126.7293631&m=0108&s=jakjeon'><span>찾아오시는 길</span></a></li>
+							<li><img src='/images/template/00457/common/sub_menu_r_bg.gif'  alt='찾아오시는 길' onerror="this.style.display='none'" /></li>
+						</ul>
+					</div>
+				</li>
+				<li id='mo_02' class='m_h2'><a href='/boardCnts/list.do?boardID=41701&m=0201&s=jakjeon'><span>알림마당</span></a>
+					<div class='sub'>
+						<ul class='sub_02'>
+							<li><img src='/images/template/00457/common/sub_menu_l_bg.gif' alt='클린신고센터' onerror="this.style.display='none'" /></li>
+							<li><a href='/boardCnts/list.do?boardID=203174&m=0210&s=jakjeon'><span>클린신고센터</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41701&m=0201&s=jakjeon'><span>공지사항</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41702&m=0202&s=jakjeon'><span>학교소식(홍보마당)</span></a></li>
+							<li><a href='/schdList.do?m=0203&s=jakjeon'><span>연간학사일정</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41703&m=0204&s=jakjeon'><span>월중행사</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41704&m=0205&s=jakjeon'><span>가정통신문</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41705&m=0206&s=jakjeon'><span>정보공시</span></a></li>
+							<li><a href='/foodList.do?m=020701&s=jakjeon'><span>급식마당</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41707&m=0208&s=jakjeon'><span>수영부</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41708&m=0209&s=jakjeon'><span>교원능력개발평가</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=252045&m=0211&s=jakjeon'><span>학교평가</span></a></li>
+							<li><img src='/images/template/00457/common/sub_menu_r_bg.gif'  alt='학교평가' onerror="this.style.display='none'" /></li>
+						</ul>
+					</div>
+				</li>
+				<li id='mo_03' class='m_h3'><a href='/boardCnts/list.do?boardID=41709&m=0301&s=jakjeon'><span>학생마당</span></a>
+					<div class='sub'>
+						<ul class='sub_03'>
+							<li><img src='/images/template/00457/common/sub_menu_l_bg.gif' alt='과제물제출' onerror="this.style.display='none'" /></li>
+							<li><a href='/reportList/main.do?m=0309&s=jakjeon'><span>과제물제출</span></a></li>
+							<li><a href='/vote/vsList.do?m=031001&s=jakjeon'><span>온라인투표</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41709&m=0301&s=jakjeon'><span>학습자료실</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41710&m=0302&s=jakjeon'><span>기출문제자료실</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41711&m=0303&s=jakjeon'><span>봉사활동</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41712&m=0304&s=jakjeon'><span>정보통신윤리교육</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41713&m=0305&s=jakjeon'><span>칭찬합시다</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41714&m=0306&s=jakjeon'><span>학교폭력예방교육</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41715&m=0307&s=jakjeon'><span>토요프로그램</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=203255&m=03080101&s=jakjeon'><span>청소년단체</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=256425&m=031101&s=jakjeon'><span>푸른하늘지킴이</span></a></li>
+							<li><img src='/images/template/00457/common/sub_menu_r_bg.gif'  alt='푸른하늘지킴이' onerror="this.style.display='none'" /></li>
+						</ul>
+					</div>
+				</li>
+				<li id='mo_04' class='m_h4'><a href='/boardCnts/list.do?boardID=41716&m=0401&s=jakjeon'><span>방과후학교마당</span></a>
+					<div class='sub'>
+						<ul class='sub_04'>
+							<li><img src='/images/template/00457/common/sub_menu_l_bg.gif' alt='게시판' onerror="this.style.display='none'" /></li>
+							<li><a href='/boardCnts/list.do?boardID=41716&m=0401&s=jakjeon'><span>게시판</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41717&m=0402&s=jakjeon'><span>자료실</span></a></li>
+							<li><img src='/images/template/00457/common/sub_menu_r_bg.gif'  alt='자료실' onerror="this.style.display='none'" /></li>
+						</ul>
+					</div>
+				</li>
+				<li id='mo_05' class='m_h5'><a href='/boardCnts/list.do?boardID=41718&m=0501&s=jakjeon'><span>학부모마당</span></a>
+					<div class='sub'>
+						<ul class='sub_05'>
+							<li><img src='/images/template/00457/common/sub_menu_l_bg.gif' alt='공지사항' onerror="this.style.display='none'" /></li>
+							<li><a href='/boardCnts/list.do?boardID=41718&m=0501&s=jakjeon'><span>공지사항</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41719&m=0502&s=jakjeon'><span>학교운영위원회</span></a></li>
+							<li><a href='javascript:chkMenuAuth(2)'><span>영수증출력</span></a></li>
+							<li><img src='/images/template/00457/common/sub_menu_r_bg.gif'  alt='영수증출력' onerror="this.style.display='none'" /></li>
+						</ul>
+					</div>
+				</li>
+				<li id='mo_06' class='m_h6'><a href='/boardCnts/list.do?boardID=41720&m=0601&s=jakjeon'><span>진로상담마당</span></a>
+					<div class='sub'>
+						<ul class='sub_06'>
+							<li><img src='/images/template/00457/common/sub_menu_l_bg.gif' alt='공지사항' onerror="this.style.display='none'" /></li>
+							<li><a href='/boardCnts/list.do?boardID=41720&m=0601&s=jakjeon'><span>공지사항</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41721&m=0602&s=jakjeon'><span>자료실</span></a></li>
+							<li><img src='/images/template/00457/common/sub_menu_r_bg.gif'  alt='자료실' onerror="this.style.display='none'" /></li>
+						</ul>
+					</div>
+				</li>
+				<li id='mo_07' class='m_h7'><a href='/boardCnts/list.do?boardID=41722&m=0701&s=jakjeon'><span>행정마당</span></a>
+					<div class='sub'>
+						<ul class='sub_07'>
+							<li><img src='/images/template/00457/common/sub_menu_l_bg.gif' alt='학교재정정보공개방' onerror="this.style.display='none'" /></li>
+							<li><a href='/boardCnts/list.do?boardID=41722&m=0701&s=jakjeon'><span>학교재정정보공개방</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41723&m=0702&s=jakjeon'><span>신용카드사용알림</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41724&m=0703&s=jakjeon'><span>행정자료실</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41725&m=0704&s=jakjeon'><span>민원신청</span></a></li>
+							<li><img src='/images/template/00457/common/sub_menu_r_bg.gif'  alt='민원신청' onerror="this.style.display='none'" /></li>
+						</ul>
+					</div>
+				</li>
+				<li id='mo_08' class='m_h8'><a href='/sub/info.do?m=0801&s=jakjeon'><span>연구학교</span></a>
+					<div class='sub'>
+						<ul class='sub_08'>
+							<li><img src='/images/template/00457/common/sub_menu_l_bg.gif' alt='운영개요' onerror="this.style.display='none'" /></li>
+							<li><a href='/sub/info.do?m=0801&s=jakjeon'><span>운영개요</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41726&m=0802&s=jakjeon'><span>운영자료실</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41727&m=0803&s=jakjeon'><span>사진자료실</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=41728&m=0804&s=jakjeon'><span>수업 VOD</span></a></li>
+							<li><img src='/images/template/00457/common/sub_menu_r_bg.gif'  alt='수업 VOD' onerror="this.style.display='none'" /></li>
+						</ul>
+					</div>
+				</li>
+				<li id='mo_52' class='m_h9'><a href='/sub/info.do?m=5201&s=jakjeon'><span>정보공개</span></a>
+					<div class='sub'>
+						<ul class='sub_09'>
+							<li><img src='/images/template/00457/common/sub_menu_l_bg.gif' alt='정보공개제도' onerror="this.style.display='none'" /></li>
+							<li><a href='/sub/info.do?m=5201&s=jakjeon'><span>정보공개제도</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=47550&m=5202&s=jakjeon'><span>사전정보공개</span></a></li>
+							<li><a href='/boardCnts/list.do?boardID=47750&m=5203&s=jakjeon'><span>정보목록</span></a></li>
+							<li><a href='http://www.open.go.kr' target='_blank'><span>정보공개청구</span></a></li>
+							<li><a href='/piaList.do?m=5205&s=jakjeon'><span>공공데이터개방</span></a></li>
+							<li><img src='/images/template/00457/common/sub_menu_r_bg.gif'  alt='공공데이터개방' onerror="this.style.display='none'" /></li>
+						</ul>
+					</div>
+				</li>
+				<li id='mo_09' class='m_h10'><a href='/boardCnts/list.do?boardID=202308&amp;m=0901&s=jakjeon'><span>교육비지원</span></a>
+					<div class='sub'>
+						<ul class='sub_10'>
+							<li><img src='/images/template/00457/common/sub_menu_l_bg.gif' alt='교육비 지원 안내' onerror="this.style.display='none'" /></li>
+							<li><a href='/boardCnts/list.do?boardID=202308&m=0901&s=jakjeon'><span>교육비 지원 안내</span></a></li>
+							<li><img src='/images/template/00457/common/sub_menu_r_bg.gif'  alt='교육비 지원 안내' onerror="this.style.display='none'" /></li>
+						</ul>
+					</div>
+				</li>
+		</ul>
+	</div>
+	</div>
+
+</div>
+<hr />
+
+      
+       
+<!-- /메인메뉴끝 -->
+
+
+			
+
+
+
+
+
+
+
+
+
+
+<script>
+// 팝업존 타이머
+var iPopupCnt = 0;
+popupInt = setInterval("movePopup('R')", 5000);
+// 배너 타이머
+var iBannerCnt = 0;
+bannerInt = setInterval("moveBanner('R')", 10000);
+function movePopup(reqDir)
+{
+	if(reqDir == "L")
+	{
+		if(iPopupCnt == 0) iPopupCnt = 1;
+		else
+			iPopupCnt--;
+	}
+	else
+	{
+		if(iPopupCnt == 1) iPopupCnt = 0;
+		else
+			iPopupCnt++;
+	}
+	for(var i=0;i<2;i++)
+	{
+		if(document.getElementById('popup'+i) != null) document.getElementById('popup'+i).style.display='none';
+	}
+	if(document.getElementById('popup'+iPopupCnt) != null) document.getElementById('popup'+iPopupCnt).style.display='block';
+	clearInterval(popupInt);
+	popupInt = setInterval("movePopup('R')", 5000);
+}
+function moveBanner(reqDir)
+{
+	if(reqDir == "L")
+	{
+		if(iBannerCnt == 0) iBannerCnt = 6;
+		else
+			iBannerCnt--;
+	}
+	else
+	{
+		if(iBannerCnt == 6) iBannerCnt = 0;
+		else
+			iBannerCnt++;
+	}
+	for(var i=0;i<7;i++)
+	{
+		document.getElementById('banner'+i).style.display='none';
+	}
+	document.getElementById('banner'+iBannerCnt).style.display='block';
+	clearInterval(bannerInt);
+	bannerInt = setInterval("moveBanner('R')", 10000);
+}
+
+//배너 스탑
+function stopBanner() {
+	clearInterval(bannerInt);
+}
+
+//팝업존 스탑 
+function stopPopup() {
+	clearInterval(popupInt);
+}
+
+
+
+
+//텝버튼 변경 
+function bntChange(reqTemp,reqNum)
+{
+	for(var i=1;i<5;i++)
+	{
+		var id = ""+reqTemp+i;
+		if(document.getElementById(id) != null)
+		document.getElementById(id).className = 'h2_tab off';
+	}
+	document.getElementById(""+reqTemp+reqNum).className = 'h2_tab on';
+}
+
+
+function showAllBanner()
+{
+   document.getElementById("all_banner_wrap").style.display='block';
+}
+//전체 배너 닫기
+function hideAllBanner()
+{
+   document.getElementById("all_banner_wrap").style.display='none';
+}
+</script>
+<!-- 레이어 팝업 -->
+
+<script>
+ openPopN = 'Y'; 
+ function popupNopen() { 
+	if ( getCookieKL( 'popup14971' ) != 'done' ) 
+		window.open('/popupN.do?seq=14971&popType=N', 'popup14971', 'width=400 height=584 top=100 left=150') 
+	if ( getCookieKL( 'popup14827' ) != 'done' ) 
+		window.open('/popupN.do?seq=14827&popType=N', 'popup14827', 'width=500 height=682 top=0 left=0') 
+	if ( getCookieKL( 'popup14551' ) != 'done' ) 
+		window.open('/popupN.do?seq=14551&popType=N', 'popup14551', 'width=600 height=875 top=0 left=0') 
+	if ( getCookieKL( 'popup14487' ) != 'done' ) 
+		window.open('/popupN.do?seq=14487&popType=N', 'popup14487', 'width=295 height=479 top=0 left=0') 
+	if ( getCookieKL( 'popup14159' ) != 'done' ) 
+		window.open('/popupN.do?seq=14159&popType=N', 'popup14159', 'width=608 height=868 top=0 left=0') 
+	if ( getCookieKL( 'popup15429' ) != 'done' ) 
+		window.open('/popupN.do?seq=15429&popType=N', 'popup15429', 'width=550 height=680 top=0 left=0') 
+ } </script>
+
+
+
+    <!--컨텐츠-->
+    <div id="contents">
+    
+        <!--왼쪽영역-->
+    	<div id="left_area"> 
+        
+        	<!--팝업존-->
+            <div id="popup">
+            	<h2 class="h2_title">팝업존</h2>
+				<ul class="popup_btn">
+					<li><a href="#pre" onclick="javascript:movePopup('L'); return false;" title="왼쪽"><img src="/images/template/00000/banner/btnLeft_6/btn_ban_01.gif" alt="이전" /></a></li>
+					<li><a href="#stop" onClick="javascript:stopPopup();" title="정지"><img src="/images/template/00000/banner/btnLeft_6/btn_ban_03.gif" alt="정지" /></a></li>
+					<li><a href="#next" onclick="javascript:movePopup('R'); return false;" title="오른쪽"><img src="/images/template/00000/banner/btnLeft_6/btn_ban_02.gif" alt="다음" /></a></li>
+				</ul>
+                <p><div id='popup0' style='display:block' class='pop_img'>	<table border='0' cellspacing='0' cellpadding='0' summary='' > 	<tr><td><a href='http://www.facebook.com/icehongbo' target='_self'><img alt='null' src='/upload/popupImg/ALL/1437526068232.jpg' width='245' height='120' /></a>	</td></tr></table></div><div id='popup1' style='display:none' class='pop_img'>	<table border='0' cellspacing='0' cellpadding='0' summary='' > 	<tr><td><a href='http://www.ice.go.kr/sub/info.do?m=0212' target='_self'><img alt='110수화(화상) 채팅상담 안내' src='/upload/popupImg/ALL/1385689144693.jpg' width='245' height='120' /></a>	</td></tr></table></div></p>
+            </div>
+        	<!--//팝업존-->
+            <hr />          
+            <!--바로가기-->
+            <ul class="link_wrap">
+                <li class="link01"><a href="http://book.ice.go.kr/r/reading/search/schoolCodeSetting.jsp?schoolCode=368&returnUrl=" target="_blank" title="독서교육종합">독서교육종합<br />지원시스템</a></li>
+                <li class="link02"><a href="#" title="e-교과서">e-교과서</a></li>
+                <li class="link03"><a href="#" title="청소년 상담복지센터">청소년<br />상담복지센터</a></li>
+                <li class="link04"><a href="#" title="방과후학교">방과후학교</a></li>       
+            </ul>
+            <!--바로가기-->
+    		<hr />         
+            
+                  
+    	</div>
+        <!--//왼쪽영역-->
+        
+        <!--가운데영역-->
+        <div id="center_area">    
+            
+            <!--공지사항-->
+            <ul class="notice">
+                <li>
+                    <h2 id="tb1" class="h2_tab on"><a href="#bnt" onClick="javascript:bntChange('tb', '1');javascript:selMiniList('divList', '1');" title="공지사항">공지사항</a></h2>                    
+                    <div id="divList1">
+                        <ul>
+                            <div id='list1' style='display:block'>
+<iframe id='list1_ifr' width='390px' height='126px' src='/minilist.do?miniS=jakjeon&type=L&boardID=41701&m=0201&rem=none' marginwidth='0' marginheight='0' frameborder='no' scrolling='no' title='미니리스트' ></iframe>
+</div>
+
+                        </ul>
+                		<a href="/boardCnts/list.do?boardID=41701&m=0201&s=jakjeon" class="more" title="더보기">더보기</a>
+                    </div>                    
+                </li>
+                <li>
+                    <h2 id="tb2" class="h2_tab off"><a href="#bnt" onClick="javascript:bntChange('tb', '2');javascript:selMiniList('divList', '2');" title="가정통신문">가정통신문</a></h2>
+                    <div id="divList2" style="display: none;">
+                        <ul>
+                            <div id='list2' style='display:block'>
+<iframe id='list2_ifr' width='390px' height='126px' src='/minilist.do?miniS=jakjeon&type=L&boardID=41704&m=0205&rem=none' marginwidth='0' marginheight='0' frameborder='no' scrolling='no' title='미니리스트' ></iframe>
+</div>
+
+                        </ul>
+                		<a href="/boardCnts/list.do?boardID=41704&m=0205&s=jakjeon" class="more" title="더보기">더보기</a>
+                    </div>                    
+                </li>
+            </ul>   
+            <!--//공지사항-->
+            <hr />            
+            <!--학교앨범-->
+            <div class="photo_gallery">
+                <h2 class="h2_title">학교소식</h2>
+                <a href="/boardCnts/list.do?boardID=41702&m=0202&s=jakjeon" class="more" title="더보기">더보기</a>
+                <div id='gallery1' style='display:block'>
+<iframe id='gallery1_ifr' width='390px' height='100px' src='/minilist.do?miniS=jakjeon&type=P&boardID=41702&m=0202&rem=none' marginwidth='0' marginheight='0' frameborder='no' scrolling='no' title='미니리스트' ></iframe>
+</div>
+
+            </div>
+            <!--//학교앨범-->
+            <hr />                   
+        </div>
+        <!--//가운데영역-->
+                        
+        <!--오른쪽영역-->
+        <div id="right_area">             
+            <!--행사일정-->
+            <div class="schedule">
+                <h2 class="h2_title">학교일정</h2>
+                <a href="/schdList.do?m=0203&s=jakjeon" class="more" title="더보기">더보기</a>                 
+                <!--달력-->
+                <div class="calendar2">
+                    <div id='cal1'>
+<iframe id='cal1_ifr' width='243px' height='135px' src='/calendar.do?calType=LW&calWidth=243&calHeight=110&tempID=00457' marginwidth='0' marginheight='0' frameborder='no' scrolling='no' title='행사일정'></iframe>
+</div>
+
+                </div>
+                <!--//달력-->                 
+            </div>
+            <!--//행사일정-->
+            <hr />            
+                                
+            <!--바로가기-->
+            <ul class="link_wrap">
+                <li class="link05"><a href="http://www.schoolinfo.go.kr/index.jsp" target="_blank" title="학교알리미">학교<br />알리미</a></li>
+                <li class="link06"><a href="http://cyber.edu-i.org/ngedu/mainPage.action?decorator=main&confirm=true" target="_blank" title="인천e스쿨">인천e스쿨</a></li>       
+                <li class="link07"><a href="http://www.neis.go.kr/pas_mms_nv99_001.do" target="_blank" title="학부모 만족도조사">학부모<br />만족도조사</a></li>       
+                <li class="link08"><a href="http://www.neis.go.kr/pas_mms_nv99_001.do" target="_blank" title="학생만족도조사">학생<br />만족도조사</a></li>            
+            </ul>
+            <!--바로가기-->
+    		<hr />
+        </div>
+        <!--//오른쪽영역-->         
+                
+<!--사이트링크-->
+    <div id="site_area">
+        <h2><a href="#allBanner" onClick="javascript:showAllBanner();" title="전체보기"><img src="/images/template/00142/main/banner_tit.gif" alt="관련기관배너모음" /></a></h2>
+		<ul class="banner_btn">
+			<li><a href="#pre" onClick="javascript:moveBanner('L');" title="이전"><img src="/images/template/00000/banner/btnLeft_6/btn_ban_01.gif" alt="이전" /></a></li>
+			<li><a href="#stop" onClick="javascript:stopBanner();" title="정지"><img src="/images/template/00000/banner/btnLeft_6/btn_ban_03.gif" alt="정지" /></a></li>
+			<li><a href="#next" onClick="javascript:moveBanner('R');" title="다음"><img src="/images/template/00000/banner/btnLeft_6/btn_ban_02.gif" alt="다음" /></a></li>
+		</ul>
+		<ul class='banner_img'><div id='banner0' ><li><a href='http://www.youth.go.kr' target='_blank'><img src='/upload/bannerImg/jakjeon/1387439503270.png' width='150' height='37' alt='청소년활동정보서비스' /></a></li><li><a href='http://hyonuri.edukor.org/' target='_blank'><img src='/upload/bannerImg/jakjeon/1396513657219.jpg' width='150' height='37' alt='효누리행복누리' /></a></li><li><a href='http://if-blog.tistory.com/5138' target='_blank'><img src='/upload/bannerImg/ALL/1435105107549.jpg' width='150' height='37' alt='맞춤형 교육급여' /></a></li><li><a href='http://blog.naver.com/moeblog/220395017466' target='_blank'><img src='/upload/bannerImg/ALL/1435023197228.PNG' width='150' height='37' alt='메르스 학부모 안심채널' /></a></li><li><a href='http://www.schoolhealth.kr' target='_blank'><img src='/upload/bannerImg/ALL/1433987806487.PNG' width='150' height='37' alt='학생건강정보센터' /></a></li></div><div id='banner1' style='display:none'><li><a href='/UserFiles/all/공공아이핀 재인증 안내.hwp' target='_blank'><img src='/upload/bannerImg/ALL/1430355387771.gif' width='150' height='37' alt='공공아이핀 재인증 안내' /></a></li><li><a href='http://incheon.ssif.or.kr/incheon.do?method=main&amp;target=main' target='_blank'><img src='/upload/bannerImg/ALL/1415580555967.GIF' width='150' height='37' alt='인천광역시 학교안전공제회' /></a></li><li><a href='http://www.safemap.go.kr' target='_blank'><img src='/upload/bannerImg/dongmak/1414486498522.PNG' width='150' height='37' alt='생활안전지도' /></a></li><li><a href='http://www.privacy.go.kr/nns/ntc/selectBoardArticle.do?nttId=5751&amp;bbsId=BBSMSTR_000000000001&amp;bbsTyCode=BBST03&amp;bbsAttrbCode=BBSA03&amp;authFlag=Y&amp;pageIndex=1' target='_blank'><img src='/upload/bannerImg/ALL/1410849462377.gif' width='150' height='37' alt='개인정보보호 교육 안내' /></a></li><li><a href='http://www.schoolinfo.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1404707146405.jpg' width='150' height='37' alt='학교정보공시 학교알리미' /></a></li></div><div id='banner2' style='display:none'><li><a href='http://www.airkorea.or.kr' target='_blank'><img src='/upload/bannerImg/ALL/1404092641795.PNG' width='150' height='37' alt='대한민국의 공기를 생중계합니다. 우리동네 대기질 앱 서비스 개시' /></a></li><li><a href='http://eduse.ice.go.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1363521683549.jpg' width='150' height='37' alt='학교시설사용예약관리시스템' /></a></li><li><a href='http://www.crezone.net/main_new.do' target='_blank'><img src='/upload/bannerImg/naminchon/1351044811361.gif' width='150' height='37' alt='창의체험 통합정보넷' /></a></li><li><a href='http://www.ebsmath.co.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1377584392642.gif' width='150' height='37' alt='EBS math' /></a></li><li><a href='http://oneclick.law.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1366267455743.gif' width='150' height='37' alt='찾기쉬운 생활법령정보 우리 생활에 꼭 필요한 법령 그동안 어렵고 답답하셨죠' /></a></li></div><div id='banner3' style='display:none'><li><a href='http://www.greeninet.or.kr' target='_blank'><img src='/upload/bannerImg/ALL/1367390269451.jpg' width='150' height='37' alt='청소년 인터넷 안전망 그린 i net' /></a></li><li><a href='https://www.cyber1388.kr:447/new/index.asp' target='_blank'><img src='/upload/bannerImg/ALL/1352177364959.gif' width='150' height='37' alt='1388 헬프콜 청소년전화' /></a></li><li><a href='http://www.youth.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1376641382843.jpg' width='150' height='37' alt='청소년활동통보서비스 청소년활동정보확인' /></a></li><li><a href='http://www.textbook114.com' target='_blank'><img src='/upload/bannerImg/bugwang/1381124582767.PNG' width='150' height='37' alt='교과서민원바로처리센터 Textbook information One-stop Service' /></a></li><li><a href='http://www.safe182.go.kr' target='_blank'><img src='/upload/bannerImg/iansan/1363523289776.bmp' width='150' height='37' alt='117 학교폭력 신고센터 www.safe182.go.kr' /></a></li></div><div id='banner4' style='display:none'><li><a href='http://www.youth.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1377851804599.png' width='150' height='37' alt='청소년활동정보서비스 e청소년' /></a></li><li><a href='http://www.juso.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1384243697634.gif' width='150' height='37' alt='도로명주소 안내' /></a></li><li><a href='http://www.110.go.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1385685756349.jpg' width='150' height='37' alt='정부민원안내콜센터 전국어디서나 110' /></a></li><li><a href='http://www.acrc.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1364953741930.jpg' width='150' height='37' alt='국민권익위원회 고충처리 부패방지 행정심판' /></a></li><li><a href='http://www.cyber.incheon.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1347727626250.gif' width='150' height='37' alt='시민과 함께하는 인천사이버교육센터' /></a></li></div><div id='banner5' style='display:none'><li><a href='http://www.parents.go.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1347727588627.gif' width='150' height='37' alt='학부모On누리' /></a></li><li><a href='http://www.withyouth.go.kr/index.html' target='_blank'><img src='/upload/bannerImg/ALL/1347728682329.gif' width='150' height='37' alt='청소년참여포탈 WITH YOUTH' /></a></li><li><a href='http://cyber.edu-i.org/' target='_blank'><img src='/upload/bannerImg/ALL/1347728788216.gif' width='150' height='37' alt='인천광역시교육청 인천교육과학연구원 인천e스쿨' /></a></li><li><a href='http://www.mosf.go.kr/pr/20121210ebook/e-GCF.html' target='_blank'><img src='/upload/bannerImg/ALL/1359014633740.gif' width='150' height='37' alt='GCF 녹색기후기금(GCF) 대학민국 송도 출범 글로벌 녹생성장을 이끌겠습니다' /></a></li><li><a href='http://www.careernet.re.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1354152286548.jpg' width='150' height='37' alt='CareerNet  한국직업능력개발원 커리어넷' /></a></li></div><div id='banner6' style='display:none'><li><a href='http://afterschool.ice.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1362357835386.gif' width='150' height='37' alt='인천광역시교육청 방과후학교지원센터' /></a></li><li><a href='http://www.stopbullying.or.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1353384213842.JPG' width='150' height='37' alt='stopBullying 학교폭력예방 종합포털사이트' /></a></li><li><a href='http://incheon.ssif.or.kr' target='_blank'><img src='/upload/bannerImg/ALL/1360744440512.png' width='150' height='37' alt='학교폭력 선치료비 지원 후구상시스템(032-433-2487)' /></a></li><li><a href='http://www.스마트보안관.kr' target='_blank'><img src='/upload/bannerImg/ALL/1357181665840.gif' width='150' height='37' alt='우리아이 스마트폰 지킴이 스마트보안관' /></a></li><li><a href='http://www.all.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1381481454770.gif' width='150' height='37' alt='모든 곳의 배움을 차곡차곡 담는 평생학습계좌' /></a></li></div><div id='banner7' style='display:none'><li><a href='http://www.mospa.go.kr/frt/sub/a07/sos/screen.do' target='_blank'><img src='/upload/bannerImg/ALL/1359598191185.gif' width='150' height='37' alt='SOS국민안심서비스 어린이 여성 범죄 휴대폰으로 지킨다' /></a></li><li><a href='/UserFiles/all/jaenan_hwp.hwp' target='_blank'><img src='/upload/bannerImg/ALL/1359013089296.gif' width='150' height='37' alt='재난알리미 앱 전국 어디에서나 이동 중에도 재난문자를 받을 수 있어요' /></a></li><li><a href='http://www.youth.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1387334474625.png' width='150' height='37' alt='이동·숙박형 청소년활동 사전신고제 배너 게시 안내' /></a></li><li><a href='http://hyonuri.edukor.org/' target='_blank'><img src='/upload/bannerImg/jakjeon/1396513657219.jpg' width='150' height='37' alt='효누리행복누리' /></a></li><li><a href='http://if-blog.tistory.com/5138' target='_blank'><img src='/upload/bannerImg/ALL/1435105107549.jpg' width='150' height='37' alt='맞춤형 교육급여' /></a></li></div></ul>
+	</div>
+    <!--//사이트링크-->
+    <hr />
+     <!--전체 배너-->
+   <div id="all_banner_wrap" style="display:none;position:absolute; left:300px; top:50px; z-index:100;" >
+      <img src="/images/template/00142/common/all_banner_t.png" alt="위" />
+       <div id="all_banner">
+           <h2><img src="/images/template/00142/common/all_banner_tit.gif" alt="배너전체보기" /> 
+           <a href="#hideAllBanner" onClick="javascript:hideAllBanner()" class="btn_close">
+           <img src="/images/template/00142/common/btn_close.gif" alt="닫기" /></a></h2>
+          <div id ="all_ban">
+              <ul class='banner_img'><li><a href='http://www.youth.go.kr' target='_blank'><img src='/upload/bannerImg/jakjeon/1387439503270.png' width='130' height='40' alt='청소년활동정보서비스' /></a></li><li><a href='http://hyonuri.edukor.org/' target='_blank'><img src='/upload/bannerImg/jakjeon/1396513657219.jpg' width='130' height='40' alt='효누리행복누리' /></a></li><li><a href='http://if-blog.tistory.com/5138' target='_blank'><img src='/upload/bannerImg/ALL/1435105107549.jpg' width='130' height='40' alt='맞춤형 교육급여' /></a></li><li><a href='http://blog.naver.com/moeblog/220395017466' target='_blank'><img src='/upload/bannerImg/ALL/1435023197228.PNG' width='130' height='40' alt='메르스 학부모 안심채널' /></a></li><li><a href='http://www.schoolhealth.kr' target='_blank'><img src='/upload/bannerImg/ALL/1433987806487.PNG' width='130' height='40' alt='학생건강정보센터' /></a></li><li><a href='/UserFiles/all/공공아이핀 재인증 안내.hwp' target='_blank'><img src='/upload/bannerImg/ALL/1430355387771.gif' width='130' height='40' alt='공공아이핀 재인증 안내' /></a></li><li><a href='http://incheon.ssif.or.kr/incheon.do?method=main&amp;target=main' target='_blank'><img src='/upload/bannerImg/ALL/1415580555967.GIF' width='130' height='40' alt='인천광역시 학교안전공제회' /></a></li><li><a href='http://www.safemap.go.kr' target='_blank'><img src='/upload/bannerImg/dongmak/1414486498522.PNG' width='130' height='40' alt='생활안전지도' /></a></li><li><a href='http://www.privacy.go.kr/nns/ntc/selectBoardArticle.do?nttId=5751&amp;bbsId=BBSMSTR_000000000001&amp;bbsTyCode=BBST03&amp;bbsAttrbCode=BBSA03&amp;authFlag=Y&amp;pageIndex=1' target='_blank'><img src='/upload/bannerImg/ALL/1410849462377.gif' width='130' height='40' alt='개인정보보호 교육 안내' /></a></li><li><a href='http://www.schoolinfo.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1404707146405.jpg' width='130' height='40' alt='학교정보공시 학교알리미' /></a></li><li><a href='http://www.airkorea.or.kr' target='_blank'><img src='/upload/bannerImg/ALL/1404092641795.PNG' width='130' height='40' alt='대한민국의 공기를 생중계합니다. 우리동네 대기질 앱 서비스 개시' /></a></li><li><a href='http://eduse.ice.go.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1363521683549.jpg' width='130' height='40' alt='학교시설사용예약관리시스템' /></a></li><li><a href='http://www.crezone.net/main_new.do' target='_blank'><img src='/upload/bannerImg/naminchon/1351044811361.gif' width='130' height='40' alt='창의체험 통합정보넷' /></a></li><li><a href='http://www.ebsmath.co.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1377584392642.gif' width='130' height='40' alt='EBS math' /></a></li><li><a href='http://oneclick.law.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1366267455743.gif' width='130' height='40' alt='찾기쉬운 생활법령정보 우리 생활에 꼭 필요한 법령 그동안 어렵고 답답하셨죠' /></a></li><li><a href='http://www.greeninet.or.kr' target='_blank'><img src='/upload/bannerImg/ALL/1367390269451.jpg' width='130' height='40' alt='청소년 인터넷 안전망 그린 i net' /></a></li><li><a href='https://www.cyber1388.kr:447/new/index.asp' target='_blank'><img src='/upload/bannerImg/ALL/1352177364959.gif' width='130' height='40' alt='1388 헬프콜 청소년전화' /></a></li><li><a href='http://www.youth.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1376641382843.jpg' width='130' height='40' alt='청소년활동통보서비스 청소년활동정보확인' /></a></li><li><a href='http://www.textbook114.com' target='_blank'><img src='/upload/bannerImg/bugwang/1381124582767.PNG' width='130' height='40' alt='교과서민원바로처리센터 Textbook information One-stop Service' /></a></li><li><a href='http://www.safe182.go.kr' target='_blank'><img src='/upload/bannerImg/iansan/1363523289776.bmp' width='130' height='40' alt='117 학교폭력 신고센터 www.safe182.go.kr' /></a></li><li><a href='http://www.youth.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1377851804599.png' width='130' height='40' alt='청소년활동정보서비스 e청소년' /></a></li><li><a href='http://www.juso.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1384243697634.gif' width='130' height='40' alt='도로명주소 안내' /></a></li><li><a href='http://www.110.go.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1385685756349.jpg' width='130' height='40' alt='정부민원안내콜센터 전국어디서나 110' /></a></li><li><a href='http://www.acrc.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1364953741930.jpg' width='130' height='40' alt='국민권익위원회 고충처리 부패방지 행정심판' /></a></li><li><a href='http://www.cyber.incheon.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1347727626250.gif' width='130' height='40' alt='시민과 함께하는 인천사이버교육센터' /></a></li><li><a href='http://www.parents.go.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1347727588627.gif' width='130' height='40' alt='학부모On누리' /></a></li><li><a href='http://www.withyouth.go.kr/index.html' target='_blank'><img src='/upload/bannerImg/ALL/1347728682329.gif' width='130' height='40' alt='청소년참여포탈 WITH YOUTH' /></a></li><li><a href='http://cyber.edu-i.org/' target='_blank'><img src='/upload/bannerImg/ALL/1347728788216.gif' width='130' height='40' alt='인천광역시교육청 인천교육과학연구원 인천e스쿨' /></a></li><li><a href='http://www.mosf.go.kr/pr/20121210ebook/e-GCF.html' target='_blank'><img src='/upload/bannerImg/ALL/1359014633740.gif' width='130' height='40' alt='GCF 녹색기후기금(GCF) 대학민국 송도 출범 글로벌 녹생성장을 이끌겠습니다' /></a></li><li><a href='http://www.careernet.re.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1354152286548.jpg' width='130' height='40' alt='CareerNet  한국직업능력개발원 커리어넷' /></a></li><li><a href='http://afterschool.ice.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1362357835386.gif' width='130' height='40' alt='인천광역시교육청 방과후학교지원센터' /></a></li><li><a href='http://www.stopbullying.or.kr/' target='_blank'><img src='/upload/bannerImg/ALL/1353384213842.JPG' width='130' height='40' alt='stopBullying 학교폭력예방 종합포털사이트' /></a></li><li><a href='http://incheon.ssif.or.kr' target='_blank'><img src='/upload/bannerImg/ALL/1360744440512.png' width='130' height='40' alt='학교폭력 선치료비 지원 후구상시스템(032-433-2487)' /></a></li><li><a href='http://www.스마트보안관.kr' target='_blank'><img src='/upload/bannerImg/ALL/1357181665840.gif' width='130' height='40' alt='우리아이 스마트폰 지킴이 스마트보안관' /></a></li><li><a href='http://www.all.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1381481454770.gif' width='130' height='40' alt='모든 곳의 배움을 차곡차곡 담는 평생학습계좌' /></a></li><li><a href='http://www.mospa.go.kr/frt/sub/a07/sos/screen.do' target='_blank'><img src='/upload/bannerImg/ALL/1359598191185.gif' width='130' height='40' alt='SOS국민안심서비스 어린이 여성 범죄 휴대폰으로 지킨다' /></a></li><li><a href='/UserFiles/all/jaenan_hwp.hwp' target='_blank'><img src='/upload/bannerImg/ALL/1359013089296.gif' width='130' height='40' alt='재난알리미 앱 전국 어디에서나 이동 중에도 재난문자를 받을 수 있어요' /></a></li><li><a href='http://www.youth.go.kr' target='_blank'><img src='/upload/bannerImg/ALL/1387334474625.png' width='130' height='40' alt='이동·숙박형 청소년활동 사전신고제 배너 게시 안내' /></a></li></ul> 
+           </div>   
+       </div>
+       <img src="/images/template/00142/common/all_banner_b.png" alt="아래" />
+   </div>
+   <!--//전체 배너 끝-->
+        <hr />  
+         
+    </div>
+    <!--//컨텐츠-->
+    <hr />
+			<div id="footer_wrap">
+			
+
+
+
+
+
+<div id="footer">
+	<h2 class="blind">하단링크</h2>
+	<ul class="link">
+		<li><a href="#privacy" onClick="javascript:priPrivacy()" title="개인정보처리방침"><span class="font_orange" >개인정보처리방침</span></a></li>
+		<li><a href="#copyright" onClick="javascript:copyright()" title="저작권지침 및 신고">저작권지침 및 신고</a></li>
+		<li><a href="#email" onClick="javascript:email()" title="이메일주소수집거부">이메일주소수집거부</a></li>
+		<li><a href="/sub/info.do?page=9999&m=35" title="110화상수화통역서비스"><font color="blue">110화상수화통역서비스</font></a></li>
+		<li><a href="http://www.ice.go.kr/main/nanum/intro.html" target="_blank" title="교육기부"><font color="blue">교육기부</font></a></li>
+	</ul>
+	<hr />
+	<address>(407-060) 인천광역시 계양구 주부토로 448번길 16 (작전동, 작전중학교) Tel: 032-556-1844  Fax: 032-556-1848 </address>
+	<p class="copy">Copyright ⓒ 작전중학교. All right Reserved. </p>
+</div>
+
+
+			</div>
+		</div>
+	</body>
+</html>
+
