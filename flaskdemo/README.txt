@@ -16,5 +16,5 @@ executed from outside the outer flaskdemo containing directory.
 20150808
 
 Added demo of reading configuration file:
-    configuration file is flaskdemo/flaskdemo/config.py
-    and it is read by flaskdemo/flaskdemo/views.py
+    configuration file is flaskdemo/config.py
+    and it is read by flaskdemo/views.py
