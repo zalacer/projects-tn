@@ -1,6 +1,10 @@
 
 from flask import Flask, request, render_template
 from flaskdemo import app
+from flaskdemo import config
+
+app.config['SQLALCHEMY_DATABASE_URI'] = config.database_uri
+print("app.config['SQLALCHEMY_DATABASE_URI'] =", app.config['SQLALCHEMY_DATABASE_URI'])
 
 @app.route('/greeting/')
 def echo():
