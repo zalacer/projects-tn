@@ -37,3 +37,7 @@ This is a collection of demo projects for reference.
 
 **PubmedExampleXML** contains pubmed.xml which is the example used in the XML tutorial at http://www.stat.berkeley.edu/~statcur/Workshop2/Presentations/XML.pdf
 
+**UniversalToString** is a Java class with a static universalToString method that works for all Java classes including
+those with cyclic dependendies. Any Java class's toString method can be configured simply to return universalToString(this).
+It's been tested with arrays, collections, enums, maps and user defined classes.
+
