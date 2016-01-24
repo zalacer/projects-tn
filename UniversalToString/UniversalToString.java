@@ -15,17 +15,17 @@ import java.util.Set;
 
 
 // A static universal toString method for Java is included below and has signature
-// universalToString(Object obj, boolean oneLine, boolean simpleName).
+//   universalToString(Object obj, boolean oneLine, boolean simpleName).
 // This is a wrapper for _universalToString that in turn calls specialized methods to 
 // handle arrays, collections and maps. Handling of enums and other object types is built 
 // into _universalToString. universalToString prints objects with cyclic references in 
-// closed form, follows the formatting convention suggested in the text for subclass 
-// toString inclusion and uses traditional toString style for collections and maps, but 
-// with expanded object descriptions instead of just a hashcode, while it greatly  
-// enhances toString for enums by including all instance variables instead of only the 
-// name. With this universal toString method all class toString methods can simply return
-// universalToString(this, oneLine, simpleName) for some choice of the last two boolean
-// arguments depending on preferences.
+// closed form, follows the formatting convention suggested in texts of Cay S. Horstmann  
+// for subclass toString inclusion and uses traditional toString style for collections 
+// and maps, but with expanded object descriptions instead of just a hashcode, while it   
+// greatly enhances toString for enums by including all instance variables instead of only  
+// the name. With this universal toString method toString methods of all Java classes can  
+// simply return universalToString(this, oneLine, simpleName) for some choice of the last
+// two boolean arguments depending on preferences.
 
 public class UniversalToString {
 
