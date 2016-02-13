@@ -609,7 +609,6 @@ public class UniversalToString {
     }
 
     Class<?> compType = obj.getClass().getComponentType();
-//    String name = simpleName ? compType.getSimpleName() : compType.getName();
     String name = getType(obj, simpleName);
     if (Array.getLength(obj) == 0) return name+"[]";
     String pre = name+"[";
@@ -742,9 +741,7 @@ public class UniversalToString {
     @SuppressWarnings("unchecked")
     Collection<Object> co = (Collection<Object>) obj;
     Object[] oa = co.toArray(); 
-//    Class<? extends Object> compType = arrayCompType(oa);
     String compClassName = getType(obj, simpleName);
-//    String compClassName = simpleName ? compType.getSimpleName() : compType.getName();
     String fullTypedName = colClassName+compClassName;
     if (oa.length == 0) return fullTypedName+"()";
     StringBuilder sb = new StringBuilder();
@@ -787,7 +784,6 @@ public class UniversalToString {
     }
  
     String className, pre, post, con, k, v;
-//    String indent, sep;
     Object ko, vo;
     StringBuilder sb = new StringBuilder();
     StringBuilder sb1 = new StringBuilder();
@@ -798,10 +794,7 @@ public class UniversalToString {
     Object[] oa = co.keySet().toArray();
     Class<? extends Object> c = obj.getClass();
     className = simpleName ? c.getSimpleName() : c.getName();
-    
-//    Class<? extends Object>[]  mts = mapTypes(co);
-//    String kClassName = simpleName ? mts[0].getSimpleName() : mts[0].getName();
-//    String vClassName = simpleName ? mts[1].getSimpleName() : mts[1].getName();
+  
     String mapType = getType(obj, simpleName);
     if (oa.length == 0) return className+mapType+"{}";
     pre = className+mapType+"{";
@@ -858,8 +851,6 @@ public class UniversalToString {
         // try with keys in oneLine format and and values in multiline format
         kvsEachOnOneLine = true;
         sb1.delete(0, sb1.length());
-//        int tsMaxLineLength = Integer.MIN_VALUE;
-//        int firstLineLength = 0;
         for(int j = 0; j < oa.length; j++) {
           vo = co.get(oa[j]);
           v = _universalToString(vo, simpleName, false, newHashes());
@@ -960,8 +951,6 @@ public class UniversalToString {
     q = q.replaceAll("\n", "\n"+space(i));
     return q;
   }
-  
-
   
   public static boolean hasElements(Object o) {
     Class<?> c = o.getClass();
