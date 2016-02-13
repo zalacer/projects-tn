@@ -1,0 +1,144 @@
+
+20160213
+
+UniversalToString README
+
+UniversalToString contains static methods and classes for representing 
+Java primitives and Objects as Strings. It handles circular references 
+and its universalToString() methods can generally be used to produce
+toString() output for arbitrary Java objects. There is a series of 
+these methods with varying number of argument parameters. All of them 
+wrap _universalToString which directly processes most ordinary objects
+and enums while calling specialized methods for arrays, collections  
+and maps when needed. All development and testing of this class was 
+done with Java version 1.8.0_66, JVM configuration including -Xmx2048m  
+and -Dfile.encoding=UTF-8, Eclipse version Mars.1 (Release 4.5.1) 
+configured at Java compiler compliance level 1.8 and no 3rd party
+library dependencies.
+
+The arguments of _universalToString are:
+
+Object obj - the object to be represented; primitives are autoboxed.
+
+boolean simpleName - controls use of class.getSimpleName() vs.
+  class.getName() to represent object types.
+  
+boolean oneLine - controls format preference as single or multiline, 
+    however there are degrees of multilining parameter formats and 
+    for arrays and collections an attempt is made to represent 
+    parameters of these types concisely within one line depending on
+    their element types and providing max line length isn't exceeded.
+    
+Map<Integer, Triple<Integer, String, String>>... h - is an array of
+   data crucial to resolving circular references and also improves
+   performance through field value lookup. Only the first element is
+   used and in this map the keys are object hashcodes and in the Triple
+   the Integer is the number of times a field was referenced after it 
+   was assigned a name, the first String is the field name and the last 
+   String is a String representation of the field value.
+
+Of these arguments, the map h is generated during processing and 
+is not included in the wrapper methods. Of the latter, one has only 
+an obj parameter with oneLine and simpleName defaulting  to true
+and h omitted; another adds oneLine as an argument with the same 
+default for simpleName; and the third adds simpleName as an
+argument. The first two try generating a String representation of
+a primitive or object with oneLine set to true, then if that exceeds
+maxLength _universalToString retries execution with oneLine set to 
+false. The third allows oneLine to be explicitly set to false, 
+however that may be overridden by the methods for processing arrays, 
+Collections and Maps in order to achieve more compact results.
+
+Regarding output format:
+
+1. The max line length given by the global private static int field 
+   maxLength = 100.
+   
+2. The base indentation per level is given by the global private static 
+   int field bi = 2. 
+   
+3. Square brackets ([]) are used only to delimit arrays.
+
+4. Curly brackets ({}) are used  only to delimit maps.
+
+5. Round brackets(()) are used only to delimit collections and objects 
+   of all other types of classes.
+   
+6. Angle brackets (<>) are used only delimit object type parameters.
+
+7. For objects of classes with a superclass that isn't java.lang.Object,
+   their superclass field values are given first within round brackets
+   followed by their class field values within separate round brackets
+   with no space or punctuation between the matching pairs of round
+   brackets.
+   
+8. Except for primitives, directly stringable objects including those of 
+   boxed types and objects of type java.lang.Object and 
+   java.awt.AttributeValue, the string representation of each object begins 
+   with its class name and generic types (if any and  determinable) and if 
+   oneLine is false this will be followed by a new line except in the case of
+   short arrays, collections and maps, where shorts means total line length
+   smaller or equal to maxLength.
+   
+9. In the cases of array objects and those implementing the Collection or
+   Map interfaces, their string representations include only their elements
+   or keys and values in the case of Maps and do not include their class fields 
+   per se, since this is a customary based on the implementations of their
+   their existing toString methods and because it conveys the information that
+   is most often useful. 
+   
+10. In the representations of arrays and collections, their element values are 
+    comma separated. 
+11. In the representations of Maps, key:value pairs are separated with a colon
+    and multiple pairs are separated by commas.
+    
+12. For other types of objects, multiple field values are comma separated.
+
+13. Objects of class Object are represented with Object.toString();
+
+14. Null is represented as the string null without quotes.
+
+15. String are surrounded with double quotes.
+
+16. Chars and Characters surrounded with single quotes.
+
+17. If all elements in an array or Collection are null, its generic type is
+    represented as the fictitious class Null (taking a Scala precedent). This 
+    extends to typing of Maps via their key set and values Collection view 
+    which defaults to Set.
+
+
+Some examples assuming simpleName is true:
+
+1. both int 1 and new Integer(1) are represented as: 1
+
+2. new int[]{1,2,3} is represented as: int[1,2,3]
+
+3. new Integer[]{1,2,3} is represented as Integer[1,2,3]
+
+4. new Employee("Jane",salary=101000.1) is represented as: 
+     Employee(name="Jane",salary=101000.1)
+   (see below for the definition of class Employee)
+
+5. new Manager("Jane",salary=101000.1,23500.67) where Manager  
+   extends Employee is represented as follows when onLine is true:
+     Manager(name="Jane",salary=101000.1)(bonus=23500.67)
+   (see below for the definition of class Manager)
+
+6. given A a1 = new A();
+         B b1 = new B(a1);
+         a1.b = b1;
+   a1 and b1 are circular references and with with oneLine true a1 is 
+   represented as: A(b=B(a=A(b,aid=1),bid=3),aid)
+
+7. new HashSet<Integer>(Arrays.asList(1,2,3) is represented as:
+     "HashSet<Integer>(1,2,3)" 
+   when oneLine is true.
+
+8. new HashMap<Integer,String>(){{put(1,"one");put(2,"two");put(3,"three");}};
+   is represented as :
+     HashMap<Integer,String>{1:"one",2:"two",3:"three"}
+   when oneLine is true.
+
+For other examples run UniversalToString.main(). Inspect the class definitions 
+preceeding it and the object definitions in it for clarification.
