@@ -2,6 +2,10 @@
 
 This is a collection of demo projects for reference.
 
+**UniversalToString** is a Java class with a static universalToString method that works for all Java classes including
+those with cyclic dependendies. Any Java class's toString method can be configured simply to return universalToString(this).
+It's been tested with arrays, collections, enums, maps and user defined classes.
+
 **Java8StreamTest** consists of two Java8 main classes, one for performance testing of IntStream
     and the other to test performance of the imperative for loop. First build the project with
     Maven to generate an executable jar or import it into Eclipse or other compatible IDE and
@@ -37,7 +41,5 @@ This is a collection of demo projects for reference.
 
 **PubmedExampleXML** contains pubmed.xml which is the example used in the XML tutorial at http://www.stat.berkeley.edu/~statcur/Workshop2/Presentations/XML.pdf
 
-**UniversalToString** is a Java class with a static universalToString method that works for all Java classes including
-those with cyclic dependendies. Any Java class's toString method can be configured simply to return universalToString(this).
-It's been tested with arrays, collections, enums, maps and user defined classes.
+
 
