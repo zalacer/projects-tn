@@ -18,8 +18,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.awt.PageAttributes;
 
-// updated 20160213
-
 // This class contains static methods and classes for representing Java
 // primitives and Objects as Strings. It handles circular references and
 // its universalToString() methods can generally be used to produce
@@ -103,7 +101,6 @@ import java.awt.PageAttributes;
 //    represented as the fictitious class Null (taking a Scala precedent). This 
 //    extends to typing of Maps via their key set and values Collection view 
 //    which defaults to Set.
-
 
 // Some examples assuming simpleName is true:
 
@@ -263,6 +260,7 @@ public class UniversalToString {
       }
       // end of enum processing setup
       
+      String uts = "";
       boolean first = true;
            
       for (Field f : tclass.getDeclaredFields()) {
@@ -284,47 +282,48 @@ public class UniversalToString {
             continue;
           }
           if (name.equals("ENUM$VALUES")) {
-            String uts = "";
             try {
               value = f.get(obj);
-              if (Objects.nonNull(value) && value.getClass().isArray()) {
-                elen = ((Object[]) f.get(obj)).length;
-              } else {
-                elen = 0;
-              }
-              if (elen > 0 && c1 == elen) {
-                uts = universalToString4Array(elist.toArray(), simpleName, oneLine, newHashes());
-                // remove quotes placed around elist elements by universalToString4Array 
-                // since they represent enum constants not Strings
-                uts = uts.replaceAll("\"", "");
-                // replace the className assigned by universalToString4Array with the enum's
-                uts = uts.replaceFirst("^[^\\[]*", cname);
-                sb1.append(uts);
-                if (oneLine) {
-                  sb.append(sb1.toString()+",");
-                } else if (i == 0) {
-                  sb.append("\n"+space(indent[0])+sb1.toString()+",");
-                } else {
-                  if (first) { 
-                    sb.append(sb1.toString()+",");
-                    first = false;
-                  } else {
-                    // additional 2 space indent for values elements each on a 
-                    // separate line to minimize horizontal space consumption
-                    sb.append("\n"+space(indent[1])+indent(sb1.toString(),indent[1])+",");
-                  } 
-                }
-              }  
             } catch (IllegalArgumentException | IllegalAccessException e) {
-              isEnum = false;
-              e.printStackTrace();
+              System.out.println("exception when referencing parameter "+name+" "
+                  + "with value of type "+value.getClass().getName()+" in object of "
+                  + obj.getClass().getName());
+              continue;
             }
-            
+            if (Objects.nonNull(value) && value.getClass().isArray()) {
+              elen = ((Object[]) value).length;
+            } else {
+              elen = 0;
+            }
+            if (elen > 0 && c1 == elen) {
+              uts = universalToString4Array(elist.toArray(), simpleName, oneLine, newHashes());
+              // remove quotes placed around elist elements by universalToString4Array 
+              // since they represent enum constants not Strings
+              uts = uts.replaceAll("\"", "");
+              // replace the className assigned by universalToString4Array with the enum's
+              uts = uts.replaceFirst("^[^\\[]*", cname);
+              sb1.append(uts);
+              if (oneLine) {
+                sb.append(sb1.toString()+",");
+              } else if (i == 0) {
+                sb.append("\n"+space(indent[0])+sb1.toString()+",");
+              } else {
+                if (first) { 
+                  sb.append(sb1.toString()+",");
+                  first = false;
+                } else {
+                  // additional indent[1] indentation for values elements if they were 
+                  // put on separate lines to minimize horizontal space consumption
+                  sb.append("\n"+space(indent[1])+indent(sb1.toString(),indent[1])+",");
+                } 
+              }
+            }  
             isEnum = false;
             continue;
           }
         } // end of Enum handling
         
+        boolean utsAssigned = false;
         boolean skipStringMatch= false;
         boolean resolved = false;
         int vhash = 0;
@@ -340,111 +339,96 @@ public class UniversalToString {
         } 
         
         if (Objects.isNull(value)) {
-          value = "null";
+          uts = "null";
+          utsAssigned = true;
           skipStringMatch = true;
         }
         
         vClassName = value.getClass().getName();
         vhash = Objects.hashCode(value);
         
-        // output parameter condensation is substituting just a parameter name for 
+        // Output parameter condensation is substituting just a parameter name for 
         // name=value when it's been previously defined by such (in current object).
-        // for doing this simply with decent accuracy for primitives, boxed types 
-        // and strings, their hashcodes are modified to include a dependence on their 
-        // immediately enclosing object. this procedure could be carried through to
-        // arrays, collections, maps and enums when the need arises and that would 
-        // require another field in the hashes Triple to communicate an object's  
-        // contrived hashcode in function calls such as 
-        //   universalToString4Array(value, simpleName, oneLine, enableSuper, hashes)
-        // an alternative would be to use a global id factory that would produce
-        // monatonically increasing ints or longs as the need arises during a run.
-        
-        // primitives are automatically wrapped by f.get(obj) so
-        // they are not included here
-        
+        // For doing this simply with decent accuracy for boxed types and strings, 
+        // their hashcodes are modified to include a dependence on their immediately 
+        // enclosing object. This procedure could be carried through to arrays, 
+        // collections, maps and enums when the need arises.
+                
         if (vClassName.equals("java.lang.Object")) {
-          value = obj.toString();
+          uts = obj.toString();
+          utsAssigned = true;
         }
         
-        if (vClassName.matches("java.lang.String") && !skipStringMatch)
-          value = "\""+value+"\"";
+        if (vClassName.matches("java.lang.String") && !skipStringMatch) {
+          uts = "\""+value+"\"";
+          utsAssigned = true;
+        }
         
-        if (vClassName.matches("java.lang.Character"))
-          value = "'"+value+"'";
+        if (vClassName.matches("java.lang.Character")) {
+          uts = "'"+value+"'";
+          utsAssigned = true;
+        }
 
         if (isStringable(value)) { // this includes all previous converted to String
-          value = value.toString();
-          vhash = (43 * (37 * (31 + hash) + vhash) + value.hashCode());
+          if (!utsAssigned) uts = value.toString();
+          vhash = (43 * (37 * (31 + hash) + vhash) + uts.hashCode());
           if (hashes.containsKey(vhash)) {
-            hashes.get(vhash).setValue((String)value);
+            hashes.get(vhash).setValue(uts);
             hashes.get(vhash).setCount(hashes.get(vhash).getCount()+1);
             if (Objects.isNull(hashes.get(vhash).getName())) {
               hashes.get(vhash).setName(name);
             }
           } else {
-            hashes.put(vhash, new Triple<Integer,String,String>(1,name,(String)value));
+            hashes.put(vhash, new Triple<Integer,String,String>(1, name, uts));
           }
           resolved = true;
         }
         
-        if (!resolved && value.getClass().isArray()) {
-          if (hashes.containsKey(vhash) && Objects.nonNull(hashes.get(vhash).getValue())) {
-            value = hashes.get(vhash).getValue();
-          } else {
-            value = universalToString4Array(value, simpleName, oneLine, hashes);
+        String vtype = null;
+        
+        if (!resolved) {
+          if (value.getClass().isArray()) vtype = "array";
+          if (value instanceof Collection) vtype = "collection";
+          if (value instanceof Map) vtype = "map";
+          if (value.getClass().isEnum()) vtype = "enum";
+          if (Objects.nonNull(vtype)) {
+            if (hashes.containsKey(vhash) && Objects.nonNull(hashes.get(vhash).getValue())) {
+              uts = hashes.get(vhash).getValue();
+              resolved = true;
+            }
           }
-          hashes.get(vhash).setCount(hashes.get(vhash).getCount()+1);
-          if (Objects.isNull(hashes.get(vhash).getName())) {
-            hashes.get(vhash).setName(name);
+        }
+          
+        if (!resolved && Objects.nonNull(vtype)) {
+          switch (vtype) {
+          case "array"      : uts = universalToString4Array(value, simpleName, oneLine, hashes);
+                              resolved = true;
+                              break;
+          case "collection" : uts = universalToString4Collection(value, simpleName, oneLine, hashes);
+                              resolved = true; 
+                              break;
+          case "map"        : uts = universalToString4Map(value, simpleName, oneLine, hashes);
+                              resolved = true;
+                              break;
+          case "enum"       : uts = _universalToString(value, simpleName, oneLine, hashes);
+                              resolved = true;
+                              break;
           }
-          resolved = true;
         }
         
-        if (!resolved && value instanceof Collection) {
-          if (hashes.containsKey(vhash) && Objects.nonNull(hashes.get(vhash).getValue())) {
-            value = hashes.get(vhash).getValue();
-          } else {
-            value = universalToString4Collection(value, simpleName, oneLine, hashes);
-          }
+        if (resolved && Objects.nonNull(vtype)) {
           hashes.get(vhash).setCount(hashes.get(vhash).getCount()+1);
           if (Objects.isNull(hashes.get(vhash).getName())) {
             hashes.get(vhash).setName(name);
           }
-          resolved = true;
-        }
-        
-        if (!resolved && value.getClass().isEnum()) {
-          if (hashes.containsKey(vhash) && Objects.nonNull(hashes.get(vhash).getValue())) {
-            value = hashes.get(vhash).getValue();
-          } else {
-            value = _universalToString(value, simpleName, oneLine, hashes);
-          }
-          hashes.get(vhash).setCount(hashes.get(vhash).getCount()+1);
-          if (Objects.isNull(hashes.get(vhash).getName())) {
-            hashes.get(vhash).setName(name);
-          }
-          resolved = true;
-        }
-        
-        if (!resolved && value instanceof Map) {
-          if (hashes.containsKey(vhash) && Objects.nonNull(hashes.get(vhash).getValue())) {
-            value = hashes.get(vhash).getValue();
-          } else {
-            value = universalToString4Map(value, simpleName, oneLine, hashes);
-          }
-          hashes.get(vhash).setCount(hashes.get(vhash).getCount()+1);
-          if (Objects.isNull(hashes.get(vhash).getName())) {
-            hashes.get(vhash).setName(name);
-          }
-          resolved = true;
         }
         
         if (resolved) {
           if (hashes.get(vhash).getCount().intValue() > 1) {
             String hname = hashes.get(vhash).getName();
             if (name.equals(hname)) {
-              // append only the parameter name when its value has been 
-              // previously defined and the current parameter has the
+              // append only the parameter name when it has been 
+              // already stored and the current parameter has the
               // same name and vhash 
               if (oneLine) {
                 sb.append(name+",");
@@ -457,6 +441,8 @@ public class UniversalToString {
                 sb.append("\n"+space(indent[i])+name+",");
               }
             } else {
+              // if the parameter's vhash has already been stored with 
+              // another name, hname, append name=hname
               if (oneLine) {
                 sb.append(name+"="+hname+",");
               } else if (i == 0) {
@@ -470,35 +456,32 @@ public class UniversalToString {
             }
           } else {
             if (oneLine) {
-              sb.append(name+"="+value+",");
+              sb.append(name+"="+uts+",");
             } else if (i == 0) {
               sb.append("\n"+space(indent[i])+name+"="
-                  +indent((String) value, indent[i]+name.length()+1)+",");
+                  +indent(uts, indent[i]+name.length()+1)+",");
             } else if (first) { 
-              sb.append(name+"="+indent((String) value, indent[i]+name.length()+2)+",");
+              sb.append(name+"="+indent(uts, indent[i]+name.length()+2)+",");
               first = false;
             } else {
               sb.append("\n"+space(indent[i])+name+"="
-                  +indent((String) value, indent[i]+name.length()+2)+",");
+                  +indent(uts, indent[i]+name.length()+2)+",");
             }
           }
         }
         
-        String uts = null;
         if (!resolved) {
           // When a parameter is first encountered its name and value are
           // saved in the hashes map, so the next time it occurs it's
           // designated in the output with just the parameter name. 
           // In some cases, however, a compound object may contain other  
-          // objects of the same or different classes but with identically
-          // named parameters with different values. In that case all but 
-          // the first occurence of such a parameter name is qualified by 
-          // appending "@"+Integer.toHexString(hash) to it, where hash is 
-          // the int hashcode of the object it references, in order to  
-          // render the resulting name unique in the output string.
-          // Therefore, the following routine renames a parameter that has 
-          // the same name as but different value than one previously 
-          // occurring in the current object.
+          // objects with identically named parameters with different 
+          // values. In that case all but the first occurence of such a 
+          // parameter name is qualified by appending 
+          // "@"+Integer.toHexString(vhash) to it so the resulting name is
+          // unique in the output string. Therefore, the following code 
+          // renames a parameter that has the same name as but different 
+          // value than one previously occurring in the current object.
           if (!hashes.keySet().contains(vhash)) {
             for (Integer j : hashes.keySet()) {
               if (Objects.nonNull(hashes.get(j).getName())) {
@@ -794,7 +777,6 @@ public class UniversalToString {
     Object[] oa = co.keySet().toArray();
     Class<? extends Object> c = obj.getClass();
     className = simpleName ? c.getSimpleName() : c.getName();
-  
     String mapType = getType(obj, simpleName);
     if (oa.length == 0) return className+mapType+"{}";
     pre = className+mapType+"{";
@@ -851,6 +833,8 @@ public class UniversalToString {
         // try with keys in oneLine format and and values in multiline format
         kvsEachOnOneLine = true;
         sb1.delete(0, sb1.length());
+//        int tsMaxLineLength = Integer.MIN_VALUE;
+//        int firstLineLength = 0;
         for(int j = 0; j < oa.length; j++) {
           vo = co.get(oa[j]);
           v = _universalToString(vo, simpleName, false, newHashes());
@@ -938,14 +922,14 @@ public class UniversalToString {
   }
 
   public static final String space(int length) {
-    // create a new String consisting of space repeated length times
+    // create a new String consisting of a space repeated length times
     char[] data = new char[length];
     Arrays.fill(data, ' ');
     return new String(data);
   }
   
   public static String indent(Object o, int i) {
-    // indent components of a string separated by a newline by an offset of i space
+    // indent components of a string separated by a newline by i spaces
     String s = ""+o;
     String q = s.replaceAll("\r\n", "\n");
     q = q.replaceAll("\n", "\n"+space(i));
@@ -1092,7 +1076,7 @@ public class UniversalToString {
     } else if(blen > alen) {
       len = blen;
       a = Arrays.copyOf(a, blen);
-      for (int m = blen; m < alen; m++) {
+      for (int m = alen; m < blen; m++) {
         a[m] = "";
       }
     } else {
