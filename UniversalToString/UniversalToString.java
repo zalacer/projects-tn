@@ -1,4 +1,4 @@
-package tests;
+package uts;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -138,74 +138,75 @@ import java.awt.PageAttributes;
 // preceeding class and object definitions for clarification.
 
 public class UniversalToString {
-  
+
   private static int maxLength = 100; // max line length
   private static int bi = 2; // base indent per level
-  
+
   // user interface and wrapper for _universalToString
   public static String universalToString(Object obj) {
     return _universalToString(obj, true, true);
   }
-  
+
   // user interface and wrapper for _universalToString
   public static String universalToString(Object obj, boolean simpleName) {
     return _universalToString(obj, simpleName, true);
   }
-  
+
   // user interface and wrapper for _universalToString
   public static String universalToString(Object obj, boolean simpleName, boolean oneLine) {
     return _universalToString(obj, simpleName, oneLine);
   }
 
   @SafeVarargs
-  public static String _universalToString(
-      Object obj, boolean simpleName, boolean oneLine,
+  public static String _universalToString(Object obj, boolean simpleName, boolean oneLine,
       Map<Integer, Triple<Integer, String, String>>... h) {
-    
-    if (Objects.isNull(obj)) return "null";
-    
+
+    if (Objects.isNull(obj))
+      return "null";
+
     Class<? extends Object> objClass = obj.getClass();
     String objClassName = objClass.getName();
-    
+
     String cname = simpleName ? objClass.getSimpleName() : objClass.getName();
-    
+
     if (objClassName.equals("java.lang.Object"))
       return obj.toString();
-    
+
     if (objClassName.matches("java.lang.String"))
-      return "\""+obj+"\"";
-    
-    if (objClassName.matches("java.lang.Character")) 
-      return "'"+obj+"'";
-    
+      return "\"" + obj + "\"";
+
+    if (objClassName.matches("java.lang.Character"))
+      return "'" + obj + "'";
+
     if (isStringable(obj)) {
       return obj.toString();
     }
-    
+
     int hash = Objects.hashCode(obj);
     Map<Integer, Triple<Integer, String, String>> hashes = null;
-    
-    if (h.length == 0 ) {
+
+    if (h.length == 0) {
       hashes = new HashMap<Integer, Triple<Integer, String, String>>();
     } else {
       hashes = h[0];
     }
-    
+
     boolean isEnum = false;
-    if (obj.getClass().isEnum()) isEnum = true;
-    
+    if (obj.getClass().isEnum())
+      isEnum = true;
+
     if (objClass.isArray()) {
       return universalToString4Array(obj, simpleName, oneLine);
     }
-    
+
     if (obj instanceof Collection) {
       return universalToString4Collection(obj, simpleName, oneLine);
     }
-    
+
     if (obj instanceof Map) {
       return universalToString4Map(obj, simpleName, oneLine);
     }
-    
+
     List<Class<? extends Object>> il = new ArrayList<>();
     if (!objClass.getSuperclass().getName().equals("java.lang.Object")) {
       il.add(objClass.getSuperclass());
@@ -235,34 +236,34 @@ public class UniversalToString {
         if (oneLine) {
           sb.append("(");
         } else {
-          sb.append("\n"+space(bi)+"(");
+          sb.append("\n" + space(bi) + "(");
         }
-        indent[1] = bi+1;
+        indent[1] = bi + 1;
       }
 
       Class<? extends Object> tclass = il.get(i);
-      
+
       // enum processing setup
       StringBuilder sb1 = null; // for accumulating enum values array elements
       int c1 = 0; // counter for enum values array elements accumulated in sb1
       List<String> elist = null;
       boolean enumActive = false;
-      
+
       if (isEnum) {
         sb1 = new StringBuilder();
         elist = new ArrayList<String>();
         enumActive = true;
       }
-      
+
       if (enumActive && !isEnum) {
         sb1 = null;
         elist = null;
       }
       // end of enum processing setup
-      
+
       String uts = "";
       boolean first = true;
-           
+
       for (Field f : tclass.getDeclaredFields()) {
         f.setAccessible(true);
         String name = f.getName();
@@ -285,9 +286,8 @@ public class UniversalToString {
             try {
               value = f.get(obj);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-              System.out.println("exception when referencing parameter "+name+" "
-                  + "with value of type "+value.getClass().getName()+" in object of "
-                  + obj.getClass().getName());
+              System.out.println("exception when referencing parameter " + name + " " + "with value of type "
+                  + value.getClass().getName() + " in object of " + obj.getClass().getName());
               continue;
             }
             if (Objects.nonNull(value) && value.getClass().isArray()) {
@@ -304,93 +304,97 @@ public class UniversalToString {
               uts = uts.replaceFirst("^[^\\[]*", cname);
               sb1.append(uts);
               if (oneLine) {
-                sb.append(sb1.toString()+",");
+                sb.append(sb1.toString() + ",");
               } else if (i == 0) {
-                sb.append("\n"+space(indent[0])+sb1.toString()+",");
+                sb.append("\n" + space(indent[0]) + sb1.toString() + ",");
               } else {
-                if (first) { 
-                  sb.append(sb1.toString()+",");
+                if (first) {
+                  sb.append(sb1.toString() + ",");
                   first = false;
                 } else {
                   // additional indent[1] indentation for values elements if they were 
                   // put on separate lines to minimize horizontal space consumption
-                  sb.append("\n"+space(indent[1])+indent(sb1.toString(),indent[1])+",");
-                } 
+                  sb.append("\n" + space(indent[1]) + indent(sb1.toString(), indent[1]) + ",");
+                }
               }
-            }  
+            }
             isEnum = false;
             continue;
           }
         } // end of Enum handling
-        
+
         boolean utsAssigned = false;
-        boolean skipStringMatch= false;
+        boolean skipStringMatch = false;
         boolean resolved = false;
         int vhash = 0;
         String vClassName = "";
-        
+
         try {
           value = f.get(obj);
         } catch (IllegalArgumentException | IllegalAccessException e) {
-          System.out.println("exception when referencing parameter "+name+" "
-              + "with value of type "+value.getClass().getName()+" in object of "
-              + obj.getClass().getName());
+          System.out.println("exception when referencing parameter " + name + " " + "with value of type "
+              + value.getClass().getName() + " in object of " + obj.getClass().getName());
           continue;
-        } 
-        
+        }
+
         if (Objects.isNull(value)) {
           uts = "null";
           utsAssigned = true;
           skipStringMatch = true;
         }
-        
+
         vClassName = value.getClass().getName();
         vhash = Objects.hashCode(value);
-        
+
         // Output parameter condensation is substituting just a parameter name for 
         // name=value when it's been previously defined by such (in current object).
         // For doing this simply with decent accuracy for boxed types and strings, 
         // their hashcodes are modified to include a dependence on their immediately 
         // enclosing object. This procedure could be carried through to arrays, 
         // collections, maps and enums when the need arises.
-                
+
         if (vClassName.equals("java.lang.Object")) {
           uts = obj.toString();
           utsAssigned = true;
         }
-        
+
         if (vClassName.matches("java.lang.String") && !skipStringMatch) {
-          uts = "\""+value+"\"";
+          uts = "\"" + value + "\"";
           utsAssigned = true;
         }
-        
+
         if (vClassName.matches("java.lang.Character")) {
-          uts = "'"+value+"'";
+          uts = "'" + value + "'";
           utsAssigned = true;
         }
 
         if (isStringable(value)) { // this includes all previous converted to String
-          if (!utsAssigned) uts = value.toString();
+          if (!utsAssigned)
+            uts = value.toString();
           vhash = (43 * (37 * (31 + hash) + vhash) + uts.hashCode());
           if (hashes.containsKey(vhash)) {
             hashes.get(vhash).setValue(uts);
-            hashes.get(vhash).setCount(hashes.get(vhash).getCount()+1);
+            hashes.get(vhash).setCount(hashes.get(vhash).getCount() + 1);
             if (Objects.isNull(hashes.get(vhash).getName())) {
               hashes.get(vhash).setName(name);
             }
           } else {
-            hashes.put(vhash, new Triple<Integer,String,String>(1, name, uts));
+            hashes.put(vhash, new Triple<Integer, String, String>(1, name, uts));
           }
           resolved = true;
         }
-        
+
         String vtype = null;
-        
+
         if (!resolved) {
-          if (value.getClass().isArray()) vtype = "array";
-          if (value instanceof Collection) vtype = "collection";
-          if (value instanceof Map) vtype = "map";
-          if (value.getClass().isEnum()) vtype = "enum";
+          if (value.getClass().isArray())
+            vtype = "array";
+          if (value instanceof Collection)
+            vtype = "collection";
+          if (value instanceof Map)
+            vtype = "map";
+          if (value.getClass().isEnum())
+            vtype = "enum";
           if (Objects.nonNull(vtype)) {
             if (hashes.containsKey(vhash) && Objects.nonNull(hashes.get(vhash).getValue())) {
               uts = hashes.get(vhash).getValue();
@@ -398,31 +402,35 @@ public class UniversalToString {
             }
           }
         }
-          
+
         if (!resolved && Objects.nonNull(vtype)) {
           switch (vtype) {
-          case "array"      : uts = universalToString4Array(value, simpleName, oneLine, hashes);
-                              resolved = true;
-                              break;
-          case "collection" : uts = universalToString4Collection(value, simpleName, oneLine, hashes);
-                              resolved = true; 
-                              break;
-          case "map"        : uts = universalToString4Map(value, simpleName, oneLine, hashes);
-                              resolved = true;
-                              break;
-          case "enum"       : uts = _universalToString(value, simpleName, oneLine, hashes);
-                              resolved = true;
-                              break;
+          case "array":
+            uts = universalToString4Array(value, simpleName, oneLine, hashes);
+            resolved = true;
+            break;
+          case "collection":
+            uts = universalToString4Collection(value, simpleName, oneLine, hashes);
+            resolved = true;
+            break;
+          case "map":
+            uts = universalToString4Map(value, simpleName, oneLine, hashes);
+            resolved = true;
+            break;
+          case "enum":
+            uts = _universalToString(value, simpleName, oneLine, hashes);
+            resolved = true;
+            break;
           }
         }
-        
+
         if (resolved && Objects.nonNull(vtype)) {
-          hashes.get(vhash).setCount(hashes.get(vhash).getCount()+1);
+          hashes.get(vhash).setCount(hashes.get(vhash).getCount() + 1);
           if (Objects.isNull(hashes.get(vhash).getName())) {
             hashes.get(vhash).setName(name);
           }
         }
-        
+
         if (resolved) {
           if (hashes.get(vhash).getCount().intValue() > 1) {
             String hname = hashes.get(vhash).getName();
@@ -431,45 +439,43 @@ public class UniversalToString {
               // already stored and the current parameter has the
               // same name and vhash 
               if (oneLine) {
-                sb.append(name+",");
+                sb.append(name + ",");
               } else if (i == 0) {
-                sb.append("\n"+space(indent[i])+name+",");
-              } else if (first) { 
-                  sb.append(name+",");
-                  first = false;
+                sb.append("\n" + space(indent[i]) + name + ",");
+              } else if (first) {
+                sb.append(name + ",");
+                first = false;
               } else {
-                sb.append("\n"+space(indent[i])+name+",");
+                sb.append("\n" + space(indent[i]) + name + ",");
               }
             } else {
               // if the parameter's vhash has already been stored with 
               // another name, hname, append name=hname
               if (oneLine) {
-                sb.append(name+"="+hname+",");
+                sb.append(name + "=" + hname + ",");
               } else if (i == 0) {
-                sb.append("\n"+space(indent[i])+name+"="+hname+",");
-              } else if (first) { 
-                sb.append(name+"="+hname+",");
+                sb.append("\n" + space(indent[i]) + name + "=" + hname + ",");
+              } else if (first) {
+                sb.append(name + "=" + hname + ",");
                 first = false;
               } else {
-                sb.append("\n"+space(indent[i])+name+"="+hname+",");
+                sb.append("\n" + space(indent[i]) + name + "=" + hname + ",");
               }
             }
           } else {
             if (oneLine) {
-              sb.append(name+"="+uts+",");
+              sb.append(name + "=" + uts + ",");
             } else if (i == 0) {
-              sb.append("\n"+space(indent[i])+name+"="
-                  +indent(uts, indent[i]+name.length()+1)+",");
-            } else if (first) { 
-              sb.append(name+"="+indent(uts, indent[i]+name.length()+2)+",");
+              sb.append("\n" + space(indent[i]) + name + "=" + indent(uts, indent[i] + name.length() + 1) + ",");
+            } else if (first) {
+              sb.append(name + "=" + indent(uts, indent[i] + name.length() + 2) + ",");
               first = false;
             } else {
-              sb.append("\n"+space(indent[i])+name+"="
-                  +indent(uts, indent[i]+name.length()+2)+",");
+              sb.append("\n" + space(indent[i]) + name + "=" + indent(uts, indent[i] + name.length() + 2) + ",");
             }
           }
         }
-        
+
         if (!resolved) {
           // When a parameter is first encountered its name and value are
           // saved in the hashes map, so the next time it occurs it's
@@ -486,7 +492,7 @@ public class UniversalToString {
             for (Integer j : hashes.keySet()) {
               if (Objects.nonNull(hashes.get(j).getName())) {
                 if (hashes.get(j).getName().equals(name) && j.intValue() != vhash) {
-                  name = name+"@"+Integer.toHexString(vhash);
+                  name = name + "@" + Integer.toHexString(vhash);
                   break;
                 }
               }
@@ -494,8 +500,8 @@ public class UniversalToString {
             hashes.put(vhash, new Triple<Integer, String, String>(1, name, null));
           } else {
             hashes.get(vhash).setCount(hashes.get(vhash).getCount() + 1);
-            if (Objects.isNull(hashes.get(vhash).getName())) {                
-              hashes.get(vhash).setName(name);    
+            if (Objects.isNull(hashes.get(vhash).getName())) {
+              hashes.get(vhash).setName(name);
             }
           }
 
@@ -503,26 +509,26 @@ public class UniversalToString {
             String hname = hashes.get(vhash).getName();
             if (name.equals(hname)) {
               if (oneLine) {
-                sb.append(name+",");
+                sb.append(name + ",");
               } else if (i == 0) {
-                sb.append("\n"+space(indent[i])+name+",");
-              } else if (first) { 
-                sb.append(name+",");
+                sb.append("\n" + space(indent[i]) + name + ",");
+              } else if (first) {
+                sb.append(name + ",");
                 first = false;
               } else {
-                sb.append("\n"+space(indent[i])+name+",");
+                sb.append("\n" + space(indent[i]) + name + ",");
               }
             } else {
-//              System.out.println("name != hname");
+              //              System.out.println("name != hname");
               if (oneLine) {
-                sb.append(name+"="+hname+",");
+                sb.append(name + "=" + hname + ",");
               } else if (i == 0) {
-                sb.append("\n"+space(indent[i])+name+"="+hname+",");
-              } else if (first) { 
-                sb.append(name+"="+hname+",");
+                sb.append("\n" + space(indent[i]) + name + "=" + hname + ",");
+              } else if (first) {
+                sb.append(name + "=" + hname + ",");
                 first = false;
               } else {
-                sb.append("\n"+space(indent[i])+name+"="+hname+",");
+                sb.append("\n" + space(indent[i]) + name + "=" + hname + ",");
               }
             }
           } else {
@@ -534,67 +540,70 @@ public class UniversalToString {
             hashes.get(vhash).setCount(1);
             hashes.get(vhash).setName(name);
             if (oneLine) {
-              sb.append(name+"="+uts+",");
+              sb.append(name + "=" + uts + ",");
             } else if (i == 0) {
-              sb.append("\n"+space(indent[i])+name+"="+indent((String) uts, indent[i])+",");
-            } else if (first) { 
-              sb.append(name+"="+indent((String) value, indent[i]+name.length()+2)+",");
+              sb.append("\n" + space(indent[i]) + name + "=" + indent((String) uts, indent[i]) + ",");
+            } else if (first) {
+              sb.append(name + "=" + indent((String) value, indent[i] + name.length() + 2) + ",");
               first = false;
             } else {
-              sb.append("\n"+space(indent[i])+name+"="
-                  +indent((String) value, indent[i]+name.length()+2)+",");
+              sb.append(
+                  "\n" + space(indent[i]) + name + "=" + indent((String) value, indent[i] + name.length() + 2) + ",");
             }
           }
-          if (Objects.nonNull(uts)) hashes.get(vhash).setValue(uts);
+          if (Objects.nonNull(uts))
+            hashes.get(vhash).setValue(uts);
         }
       }
-      
+
       sbs = sb.toString().replaceFirst(",$", "\\)");
-      if (i < il.size()-1) {
+      if (i < il.size() - 1) {
         sb.delete(0, sb.length());
         sb.append(sbs);
       }
     }
-    
+
     sbs = sb.toString().replaceFirst(",$", "\\)");
     if (oneLine) {
       int sbsMaxlength = Integer.MIN_VALUE;
       String[] sbsa = sbs.split("\n");
       for (int i = 0; i < sbsa.length; i++) {
-         if (sbsa[i].length() > sbsMaxlength) sbsMaxlength = sbsa[i].length();
+        if (sbsa[i].length() > sbsMaxlength)
+          sbsMaxlength = sbsa[i].length();
       }
       if (sbsMaxlength > maxLength)
         return _universalToString(obj, simpleName, false);
     }
-    
+
     hashes.put(hash, new Triple<Integer, String, String>(0, null, sbs));
-    return sbs; 
+    return sbs;
   }
-  
+
   @SafeVarargs
-  public static String universalToString4Array(
-      Object obj, boolean simpleName, boolean oneLine,
+  public static String universalToString4Array(Object obj, boolean simpleName, boolean oneLine,
       Map<Integer, Triple<Integer, String, String>>... h) {
 
-    if (Objects.isNull(obj)) return "null";
+    if (Objects.isNull(obj))
+      return "null";
     if (!obj.getClass().isArray())
       throw new IllegalArgumentException("arg obj is not an array");
-    
+
     int hash = Objects.hashCode(obj);
     Map<Integer, Triple<Integer, String, String>> hashes = null;
-    
-    if (h.length == 0 ) {
+
+    if (h.length == 0) {
       hashes = new HashMap<Integer, Triple<Integer, String, String>>();
     } else {
       hashes = h[0];
-      if (hashes.containsKey(hash) && Objects.nonNull(hashes.get(hash).getValue())) 
+      if (hashes.containsKey(hash) && Objects.nonNull(hashes.get(hash).getValue()))
         return hashes.get(hash).getValue();
     }
 
     Class<?> compType = obj.getClass().getComponentType();
     String name = getType(obj, simpleName);
-    if (Array.getLength(obj) == 0) return name+"[]";
-    String pre = name+"[";
+    if (Array.getLength(obj) == 0)
+      return name + "[]";
+    String pre = name + "[";
     String indent = space(bi);
     String uts = "";
     String sbstring = "";
@@ -602,20 +611,19 @@ public class UniversalToString {
     StringBuilder sb = new StringBuilder();
     StringBuilder sb1 = new StringBuilder();
     sb.append(pre);
-        
+
     for (int i = 0; i < Array.getLength(obj); i++) {
       if (compType.getName().matches("java.lang.String")) {
-        sb1.append("\""+Array.get(obj, i)+"\",");
-      } else if (compType.getName().matches("char") 
-          || compType.getName().matches("java.lang.Character")) {
-        sb1.append("'"+Array.get(obj, i)+"',");
+        sb1.append("\"" + Array.get(obj, i) + "\",");
+      } else if (compType.getName().matches("char") || compType.getName().matches("java.lang.Character")) {
+        sb1.append("'" + Array.get(obj, i) + "',");
       } else {
-        sb1.append(Array.get(obj, i)+",");
+        sb1.append(Array.get(obj, i) + ",");
       }
     }
-      
-    sb1string = sb1.substring(0,sb1.length()-1)+"]";
-    
+
+    sb1string = sb1.substring(0, sb1.length() - 1) + "]";
+
     if (compType.isPrimitive() || isStringable(compType)) {
       // test to see if it can fit in either 1st or 2nd line
       if ((sb1string + pre).length() <= maxLength) {
@@ -626,38 +634,39 @@ public class UniversalToString {
         return sbstring;
       } else if ((sb1string + indent).length() <= maxLength) {
         // put array representation on 2nd line since it fits
-        sbstring = sb.append("\n"+indent+sb1string).toString();
+        sbstring = sb.append("\n" + indent + sb1string).toString();
         hashes.put(hash, new Triple<Integer, String, String>(0, null, sbstring));
         return sbstring;
       } else { // go multiline
         // this is the multiline sink for arrays of primitives or stringables
         for (int i = 0; i < Array.getLength(obj); i++) {
-          if (i == 0) sb.append("\n");
+          if (i == 0)
+            sb.append("\n");
           sb.append(indent);
-          sb.append(indent(Array.get(obj, i), indent.length())+",\n");
+          sb.append(indent(Array.get(obj, i), indent.length()) + ",\n");
         }
-        sbstring = sb.substring(0,sb.length()-2)+"]";
+        sbstring = sb.substring(0, sb.length() - 2) + "]";
         hashes.put(hash, new Triple<Integer, String, String>(0, null, sbstring));
         return sbstring;
       }
     }
-            
+
     if (!(compType.isPrimitive() || isStringable(compType))) {
       // try one line first
       String[] elements = new String[Array.getLength(obj)]; // for full multiline use if needed
       sb1.delete(0, sb1.length());
       for (int i = 0; i < Array.getLength(obj); i++) {
-        uts = _universalToString(Array.get(obj, i), simpleName, true, newHashes()); 
+        uts = _universalToString(Array.get(obj, i), simpleName, true, newHashes());
         elements[i] = uts;
-        sb1.append(uts+",");
+        sb1.append(uts + ",");
       }
-      sb1string = sb1.substring(0, sb1.length()-1)+"]";
+      sb1string = sb1.substring(0, sb1.length() - 1) + "]";
       if ((sb1string + pre).length() <= maxLength) {
         sbstring = sb.append(sb1string).toString();
         hashes.put(hash, new Triple<Integer, String, String>(0, null, sbstring));
         return sbstring;
       } else if ((sb1string + indent).length() <= maxLength) {
-        sbstring = sb.append("\n"+indent+sb1string).toString();
+        sbstring = sb.append("\n" + indent + sb1string).toString();
         hashes.put(hash, new Triple<Integer, String, String>(0, null, sbstring));
         return sbstring;
       }
@@ -665,53 +674,52 @@ public class UniversalToString {
       // first see if each element can fit on one line
       boolean elementsEachOnOneLine = true;
       for (int i = 0; i < elements.length - 1; i++) {
-        if ((elements[i]+1+indent).length() > maxLength) {
+        if ((elements[i] + 1 + indent).length() > maxLength) {
           elementsEachOnOneLine = false;
         }
       }
-      if ((elements[elements.length - 1]+1+indent).length() > maxLength) {
+      if ((elements[elements.length - 1] + 1 + indent).length() > maxLength) {
         elementsEachOnOneLine = false;
       }
-      if (elementsEachOnOneLine) { 
+      if (elementsEachOnOneLine) {
         sb1.delete(0, sb1.length());
         for (int i = 0; i < elements.length; i++) {
-          sb1.append(indent+elements[i]+",\n");
+          sb1.append(indent + elements[i] + ",\n");
         }
-        sb1string = sb1.substring(0, sb1.length()-2)+"]";
-        sbstring = sb.append("\n"+sb1string).toString();
+        sb1string = sb1.substring(0, sb1.length() - 2) + "]";
+        sbstring = sb.append("\n" + sb1string).toString();
         hashes.put(hash, new Triple<Integer, String, String>(0, null, sbstring));
         return sbstring;
       } else {
         // cannot simply use the oneLine==true element strings
         sb1.delete(0, sb1.length());
         for (int i = 0; i < Array.getLength(obj); i++) {
-          uts = _universalToString(Array.get(obj, i), simpleName, false, newHashes()); 
-          sb1.append(indent+indent(uts, bi)+",\n");
+          uts = _universalToString(Array.get(obj, i), simpleName, false, newHashes());
+          sb1.append(indent + indent(uts, bi) + ",\n");
         }
-        sb1string = sb1.substring(0, sb1.length()-2)+"]";
-        sbstring = sb.append("\n"+sb1string).toString();
+        sb1string = sb1.substring(0, sb1.length() - 2) + "]";
+        sbstring = sb.append("\n" + sb1string).toString();
         hashes.put(hash, new Triple<Integer, String, String>(0, null, sbstring));
         return sbstring;
       }
     }
-    
+
     return sbstring;
   }
 
-  
   @SafeVarargs
-  public static String universalToString4Collection(
-      Object obj, boolean simpleName, boolean oneLine,
+  public static String universalToString4Collection(Object obj, boolean simpleName, boolean oneLine,
       Map<Integer, Triple<Integer, String, String>>... h) {
-        
-    if (Objects.isNull(obj)) return "null";
-    if (!(obj instanceof Collection)) 
+
+    if (Objects.isNull(obj))
+      return "null";
+    if (!(obj instanceof Collection))
       throw new IllegalArgumentException("arg obj is not a Collection");
-    
+
     int hash = Objects.hashCode(obj);
     Map<Integer, Triple<Integer, String, String>> hashes = null;
-    
-    if (h.length == 0 ) {
+
+    if (h.length == 0) {
       hashes = new HashMap<Integer, Triple<Integer, String, String>>();
     } else {
       hashes = h[0];
@@ -723,16 +731,17 @@ public class UniversalToString {
     String colClassName = simpleName ? colClass.getSimpleName() : colClass.getName();
     @SuppressWarnings("unchecked")
     Collection<Object> co = (Collection<Object>) obj;
-    Object[] oa = co.toArray(); 
+    Object[] oa = co.toArray();
     String compClassName = getType(obj, simpleName);
-    String fullTypedName = colClassName+compClassName;
-    if (oa.length == 0) return fullTypedName+"()";
+    String fullTypedName = colClassName + compClassName;
+    if (oa.length == 0)
+      return fullTypedName + "()";
     StringBuilder sb = new StringBuilder();
     String sbstring = "";
     String pre = fullTypedName;
     sb.append(pre);
     String uts = universalToString4Array(oa, simpleName, oneLine, newHashes());
-    String utsmod = "("+replaceLast(uts, "\\]$", "\\)").replaceFirst("^[^\\[]+\\[", "");
+    String utsmod = "(" + replaceLast(uts, "\\]$", "\\)").replaceFirst("^[^\\[]+\\[", "");
     if (oneLine) {
       sb.append(utsmod);
       sbstring = sb.toString();
@@ -745,27 +754,27 @@ public class UniversalToString {
     hashes.put(hash, new Triple<Integer, String, String>(0, null, sbstring));
     return sbstring;
   }
-  
+
   @SafeVarargs
-  public static String universalToString4Map(
-      Object obj, boolean simpleName, boolean oneLine,
+  public static String universalToString4Map(Object obj, boolean simpleName, boolean oneLine,
       Map<Integer, Triple<Integer, String, String>>... h) {
 
-    if (Objects.isNull(obj)) return "null";
-    if (!(obj instanceof Map)) 
+    if (Objects.isNull(obj))
+      return "null";
+    if (!(obj instanceof Map))
       throw new IllegalArgumentException("arg obj is not a Map");
-    
+
     int hash = Objects.hashCode(obj);
     Map<Integer, Triple<Integer, String, String>> hashes = null;
-    
-    if (h.length == 0 ) {
+
+    if (h.length == 0) {
       hashes = new HashMap<Integer, Triple<Integer, String, String>>();
     } else {
       hashes = h[0];
       if (hashes.containsKey(hash) && Objects.nonNull(hashes.get(hash).getValue()))
         return hashes.get(hash).getValue();
     }
- 
+
     String className, pre, post, con, k, v;
     Object ko, vo;
     StringBuilder sb = new StringBuilder();
@@ -773,21 +782,22 @@ public class UniversalToString {
     String sbstring = "";
     String sb1string = "";
     @SuppressWarnings("unchecked")
-    Map<Object,Object> co = (Map<Object,Object>) obj;
+    Map<Object, Object> co = (Map<Object, Object>) obj;
     Object[] oa = co.keySet().toArray();
     Class<? extends Object> c = obj.getClass();
     className = simpleName ? c.getSimpleName() : c.getName();
     String mapType = getType(obj, simpleName);
-    if (oa.length == 0) return className+mapType+"{}";
-    pre = className+mapType+"{";
+    if (oa.length == 0)
+      return className + mapType + "{}";
+    pre = className + mapType + "{";
     sb.append(pre);
     post = "}";
     con = ":";
     boolean notOneLine = false;
-  
+
     // do the oneLine==true computation first
-    Map<String,String> tm = new LinkedHashMap<>();
-    for(int j = 0; j < oa.length; j++) {
+    Map<String, String> tm = new LinkedHashMap<>();
+    for (int j = 0; j < oa.length; j++) {
       // key processing
       ko = oa[j];
       k = _universalToString(ko, simpleName, true, newHashes());
@@ -797,9 +807,9 @@ public class UniversalToString {
       tm.put(k, v);
     }
     for (String s : tm.keySet()) {
-      sb1.append(s+con+tm.get(s)+",");
+      sb1.append(s + con + tm.get(s) + ",");
     }
-    sb1string = sb1.substring(0, sb1.length()-1)+post; 
+    sb1string = sb1.substring(0, sb1.length() - 1) + post;
     if ((sb1string + pre).length() > maxLength) {
       notOneLine = true;
     } else {
@@ -808,8 +818,9 @@ public class UniversalToString {
     if (notOneLine) {
       // find maxKeyLength
       int maxKeyLength = Integer.MIN_VALUE;
-      for (String s : tm.keySet()) { 
-        if (s.length() > maxKeyLength) maxKeyLength = s.length();
+      for (String s : tm.keySet()) {
+        if (s.length() > maxKeyLength)
+          maxKeyLength = s.length();
       }
       // determine if key-values can all be formatted on one line
       boolean kvsEachOnOneLine = true;
@@ -817,8 +828,7 @@ public class UniversalToString {
       sb1.delete(0, sb1.length());
       String[] ta = tm.keySet().toArray(new String[tm.size()]);
       for (int i = 0; i < ta.length; i++) {
-        ts = String.format(space(bi)+"%1$"+maxKeyLength+"s"+con+"%2$s,\n", 
-            ta[i], tm.get(ta[i]));
+        ts = String.format(space(bi) + "%1$" + maxKeyLength + "s" + con + "%2$s,\n", ta[i], tm.get(ta[i]));
         if (ts.length() > maxLength) {
           kvsEachOnOneLine = false;
           break;
@@ -827,41 +837,43 @@ public class UniversalToString {
         }
       }
       if (kvsEachOnOneLine) {
-        sb1string = sb1.substring(0, sb1.length() - 2)+post;
-        sbstring = sb.append("\n"+sb1string).toString();
+        sb1string = sb1.substring(0, sb1.length() - 2) + post;
+        sbstring = sb.append("\n" + sb1string).toString();
       } else {
         // try with keys in oneLine format and and values in multiline format
         kvsEachOnOneLine = true;
         sb1.delete(0, sb1.length());
-//        int tsMaxLineLength = Integer.MIN_VALUE;
-//        int firstLineLength = 0;
-        for(int j = 0; j < oa.length; j++) {
+        //        int tsMaxLineLength = Integer.MIN_VALUE;
+        //        int firstLineLength = 0;
+        for (int j = 0; j < oa.length; j++) {
           vo = co.get(oa[j]);
           v = _universalToString(vo, simpleName, false, newHashes());
-          ts = String.format(space(bi)+"%1$"+maxKeyLength+"s"+con+"%2$s,\n", 
-              ta[j], indent(v, bi+maxKeyLength+con.length()));
+          ts = String.format(space(bi) + "%1$" + maxKeyLength + "s" + con + "%2$s,\n", ta[j],
+              indent(v, bi + maxKeyLength + con.length()));
           String[] tsplit = ts.split("\n");
           for (int m = 0; m < tsplit.length; m++) {
             if (tsplit[m].length() > maxLength) {
               kvsEachOnOneLine = false;
               break;
-            } 
+            }
           }
           if (kvsEachOnOneLine) {
             sb1.append(ts);
-          } else break;
+          } else
+            break;
         }
         if (kvsEachOnOneLine) {
-          sb1string = sb1.substring(0, sb1.length() - 2)+post;
-          sbstring = sb.append("\n"+sb1string).toString();
+          sb1string = sb1.substring(0, sb1.length() - 2) + post;
+          sbstring = sb.append("\n" + sb1string).toString();
         } else {
           // multiline format for keys and values
           sb1.delete(0, sb1.length());
           maxKeyLength = Integer.MIN_VALUE;
           List<String[]> kl = new ArrayList<>();
           List<String[]> vl = new ArrayList<>();
-          String[] ksplit = null; String[] vsplit = null;
-          for(int j = 0; j < oa.length; j++) {
+          String[] ksplit = null;
+          String[] vsplit = null;
+          for (int j = 0; j < oa.length; j++) {
             // key multiline resolution
             ko = oa[j];
             k = _universalToString(ko, simpleName, false, newHashes());
@@ -875,7 +887,8 @@ public class UniversalToString {
             kl.add(oar[0]);
             vl.add(oar[1]);
             for (int m = 0; m < ksplit.length; m++) {
-              if (ksplit[m].length() > maxKeyLength) maxKeyLength = ksplit[m].length();
+              if (ksplit[m].length() > maxKeyLength)
+                maxKeyLength = ksplit[m].length();
             }
           }
           Formatter f = new Formatter(sb1, Locale.US);
@@ -883,42 +896,38 @@ public class UniversalToString {
           for (int m = 0; m < kl.size(); m++) {
             for (int n = 0; n < kl.get(m).length; n++) {
               t = kl.get(m)[n];
-              if (Objects.isNull(t)) t = "";
+              if (Objects.isNull(t))
+                t = "";
               if (n == 0) {
-                f.format(space(bi)+"%1$-"+(maxKeyLength+1)+"s"+con+" %2$s\n", 
-                    t, vl.get(m)[n]);
+                f.format(space(bi) + "%1$-" + (maxKeyLength + 1) + "s" + con + " %2$s\n", t, vl.get(m)[n]);
               } else if (n == kl.get(m).length - 1) {
-                f.format(space(bi)+"%1$-"+(maxKeyLength+con.length()+1)+"s"+" %2$s,\n", 
-                    t, vl.get(m)[n]);
+                f.format(space(bi) + "%1$-" + (maxKeyLength + con.length() + 1) + "s" + " %2$s,\n", t, vl.get(m)[n]);
               } else {
-                f.format(space(bi)+"%1$-"+(maxKeyLength+con.length()+1)+"s"+" %2$s\n", 
-                    t, vl.get(m)[n]);
+                f.format(space(bi) + "%1$-" + (maxKeyLength + con.length() + 1) + "s" + " %2$s\n", t, vl.get(m)[n]);
               }
             }
           }
           f.close();
-          sb1string = sb1.substring(0, sb1.length() - 2)+post;
-          sbstring = sb.append("\n"+sb1string).toString();           
+          sb1string = sb1.substring(0, sb1.length() - 2) + post;
+          sbstring = sb.append("\n" + sb1string).toString();
         }
       }
     }
 
     hashes.put(hash, new Triple<Integer, String, String>(0, null, sbstring));
-    return sbstring;   
+    return sbstring;
   }
-  
+
   public static boolean isStringable(Object o) {
- // test if object's class is one known to have a reasonable toString() method
+    // test if object's class is one known to have a reasonable toString() method
     Class<? extends Object> c = o.getClass();
     if (c.getName().matches("java.lang.String|java.lang.Integer|java.lang.Long"
-        + "|java.lang.Double|java.lang.Byte|java.lang.Character|java.lang.Boolean"
-        + "|java.lang.Short|java.lang.Float")
-        || (!c.getName().equals("java.lang.Object") 
-            && Objects.nonNull(c.getSuperclass()) 
+        + "|java.lang.Double|java.lang.Byte|java.lang.Character|java.lang.Boolean" + "|java.lang.Short|java.lang.Float")
+        || (!c.getName().equals("java.lang.Object") && Objects.nonNull(c.getSuperclass())
             && c.getSuperclass().getName().equals("java.awt.AttributeValue"))
-        || c.getName().equals("java.awt.AttributeValue"))    
+        || c.getName().equals("java.awt.AttributeValue"))
       return true;
-    return false; 
+    return false;
   }
 
   public static final String space(int length) {
@@ -927,15 +936,15 @@ public class UniversalToString {
     Arrays.fill(data, ' ');
     return new String(data);
   }
-  
+
   public static String indent(Object o, int i) {
     // indent components of a string separated by a newline by i spaces
-    String s = ""+o;
+    String s = "" + o;
     String q = s.replaceAll("\r\n", "\n");
-    q = q.replaceAll("\n", "\n"+space(i));
+    q = q.replaceAll("\n", "\n" + space(i));
     return q;
   }
-  
+
   public static boolean hasElements(Object o) {
     Class<?> c = o.getClass();
     if (c.isArray() || Iterable.class.isAssignableFrom(c) || Map.class.isAssignableFrom(c)) {
@@ -944,7 +953,7 @@ public class UniversalToString {
       return false;
     }
   }
-  
+
   public static boolean hasElements(Class<?> c) {
     if (c.isArray() || Iterable.class.isAssignableFrom(c) || Map.class.isAssignableFrom(c)) {
       return true;
@@ -952,36 +961,34 @@ public class UniversalToString {
       return false;
     }
   }
-  
+
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  public static String getType(Object o, boolean simpleName, StringBuilder...sbArray) {
+  public static String getType(Object o, boolean simpleName, StringBuilder... sbArray) {
     // Attempts to determine the possible generic type of o by examining the
     // types of its elements, if any, otherwise returns o's class name. 
-    // Provides full type for arrays in the format elementType[], but just 
-    // generic type for Iterable and Map - not including the type of o.
-    // If an object is generically typed but has no subelements, its 
-    // generic type parameters are generally irretrievable, especially after 
-    // having cast it to Object as is done by this method.
-   
+    // If an object is generically typed but has no subelements, its type 
+    // parameters are generally irretrievable, especially after having cast 
+    // it to Object.
+
     StringBuilder sb = null;
     if (sbArray.length > 0) {
       sb = sbArray[0];
     } else {
       sb = new StringBuilder();
     }
-    
+
     Class<?> c = o.getClass();
     Class<?> type = null;
     Iterator oit = null;
     String name = "";
     String name2 = "";
-    Set<Class<?>> cs = new HashSet<Class<?>>();
+    Set<Class<?>> cs = new HashSet<>();
     Iterator csit = null;
     Object tmp = null;
     Object save = null;
     boolean saveDone = false;
     boolean oneNotNull = false;
-    
+
     if (c.isArray()) {
       type = c.getComponentType();
       name = simpleName ? type.getSimpleName() : type.getName();
@@ -998,15 +1005,15 @@ public class UniversalToString {
         }
         if (hasElements(type) && oneNotNull) {
           name2 = getType(tmp, simpleName, new StringBuilder());
-          sb.append(name+name2);
-        } else if (hasElements(type) && !oneNotNull) {
-          sb.append(name+"<Null>");
+          sb.append(name + name2);
+        } else if (hasElements(type) && !oneNotNull && Array.getLength(o) > 0) {
+          sb.append(name + "<Null>");
         } else {
           sb.append(name);
         }
       }
-      
-    } else if (Iterable.class.isAssignableFrom(c)){
+
+    } else if (Iterable.class.isAssignableFrom(c)) {
       cs.clear();
       oit = ((Iterable) o).iterator();
       saveDone = false;
@@ -1015,65 +1022,65 @@ public class UniversalToString {
         tmp = oit.next();
         if (Objects.nonNull(tmp)) {
           cs.add(tmp.getClass());
-        }
-        if (!saveDone) {
-          save = tmp;
-          saveDone = true;
+          if (!saveDone) {
+            save = tmp;
+            saveDone = true;
+          }
         }
       }
       if (cs.size() == 0) {
-        // if all elements have no class return no type information
+        // do nothing 
       } else if (cs.size() == 1) {
         csit = cs.iterator();
         type = (Class<?>) csit.next();
-        name  = simpleName ? type.getSimpleName() : type.getName();
-        sb.append("<"+name);
+        name = simpleName ? type.getSimpleName() : type.getName();
+        sb.append("<" + name);
         if (saveDone && hasElements(save)) {
           name = getType(save, simpleName, new StringBuilder());
-          sb.append(name+">");
+          sb.append(name + ">");
         } else {
           sb.append(">");
         }
       } else if (cs.size() > 1) {
         name = simpleName ? "Object" : "java.lang.Object";
-        sb.append("<"+name+">");
+        sb.append("<" + name + ">");
       }
-      
+
     } else if (Map.class.isAssignableFrom(c)) {
-      Map<Object,Object> map = (Map<Object,Object>) o;
+      Map<Object, Object> map = (Map<Object, Object>) o;
       name = getType(map.keySet(), simpleName, new StringBuilder());
-      sb.append(name.substring(0, name.length()-1)+",");
+      sb.append(name.substring(0, name.length() - 1) + ",");
       name = getType(map.values(), simpleName, new StringBuilder());
       sb.append(name.substring(1, name.length()));
-      
+
     } else {
       name = simpleName ? c.getSimpleName() : c.getName();
       sb.append(name);
     }
-    
+
     return sb.toString();
   }
-  
+
   public static HashMap<Integer, Triple<Integer, String, String>> newHashes() {
-      return new HashMap<Integer, Triple<Integer, String, String>>();
+    return new HashMap<Integer, Triple<Integer, String, String>>();
   }
-  
+
   public static String replaceLast(String text, String regex, String replacement) {
     return text.replaceFirst("(?s)(.*)" + regex, "$1" + replacement);
   }
-  
+
   public static String[][] align(String[] a, String[] b) {
     int alen = a.length;
     int blen = b.length;
     int len = 0;
-   
+
     if (alen > blen) {
       len = alen;
       b = Arrays.copyOf(b, alen);
       for (int m = blen; m < alen; m++) {
         b[m] = "";
       }
-    } else if(blen > alen) {
+    } else if (blen > alen) {
       len = blen;
       a = Arrays.copyOf(a, blen);
       for (int m = alen; m < blen; m++) {
@@ -1082,24 +1089,25 @@ public class UniversalToString {
     } else {
       len = alen;
     }
-    
+
     String[][] r = new String[2][len];
     r[0] = a;
     r[1] = b;
     return r;
   }
-  
-  public static class Triple<R,S,T> {
-    
+
+  public static class Triple<R, S, T> {
+
     private R count;
     private S name;
     private T value;
-   
-    public Triple(){};
 
-    public Triple(R count,S name, T value) {
+    public Triple() {
+    };
+
+    public Triple(R count, S name, T value) {
       this.count = count;
-      this.name  = name;
+      this.name = name;
       this.value = value;
     }
 
@@ -1178,96 +1186,164 @@ public class UniversalToString {
       return builder.toString();
     }
   }
-  
+
   // following are classes for universalToString demos
-  
+
   public static class Atchim {
     public Blygen blygen;
     int atchimId = 1;
-    public Atchim() { super(); }
-    public Atchim(Blygen blygen) { this.blygen = blygen; }
+
+    public Atchim() {
+      super();
+    }
+
+    public Atchim(Blygen blygen) {
+      this.blygen = blygen;
+    }
   }
-  
+
   public static class Blygen {
     public Atchim atchim;
     public int blygenId = 3;
-    public Blygen() { super(); }
-    public Blygen(Atchim atchim) { this.atchim = atchim; }
+
+    public Blygen() {
+      super();
+    }
+
+    public Blygen(Atchim atchim) {
+      this.atchim = atchim;
+    }
   }
-  
-  public static class Cancrán  {
+
+  public static class Cancrán {
     Atchim atchim;
     Blygen blygen;
     int cancránId = 5;
-    public Cancrán () { super(); }
-    public Cancrán (Atchim atchim, Blygen blygen) { 
-      this.atchim = atchim; this.blygen = blygen; 
+
+    public Cancrán() {
+      super();
+    }
+
+    public Cancrán(Atchim atchim, Blygen blygen) {
+      this.atchim = atchim;
+      this.blygen = blygen;
     }
   }
-  
+
   public static class Dumpe {
     Atchim atchim;
     Blygen blygen;
     Cancrán cancrán;
     int dumpeId = 7;
-    public Dumpe() { super(); }
+
+    public Dumpe() {
+      super();
+    }
+
     public Dumpe(Atchim atchim, Blygen blygen, Cancrán cancrán) {
-      this.atchim = atchim; this.blygen = blygen; this.cancrán = cancrán; 
+      this.atchim = atchim;
+      this.blygen = blygen;
+      this.cancrán = cancrán;
     }
   }
 
   public static class A {
     public B b;
     int aid = 1;
-    public A() { super(); }
-    public A(B b) { this.b = b; }
+
+    public A() {
+      super();
+    }
+
+    public A(B b) {
+      this.b = b;
+    }
   }
-  
+
   public static class B {
     public A a;
     public int bid = 3;
-    public B() { super(); }
-    public B(A a) { this.a = a; }
+
+    public B() {
+      super();
+    }
+
+    public B(A a) {
+      this.a = a;
+    }
   }
-  
+
   public static class C {
     A a;
     B b;
     int cid = 5;
-    public C() { super(); }
-    public C(A a, B b) { this.a = a; this.b = b; }
+
+    public C() {
+      super();
+    }
+
+    public C(A a, B b) {
+      this.a = a;
+      this.b = b;
+    }
   }
-  
+
   public static class D {
     A a;
     B b;
     C c;
     int did = 7;
-    public D() { super(); }
-    public D(A a, B b, C c) { this.a = a; this.b = b; this.c = c; }
+
+    public D() {
+      super();
+    }
+
+    public D(A a, B b, C c) {
+      this.a = a;
+      this.b = b;
+      this.c = c;
+    }
   }
-  
+
   public static class A2 {
     public B2 x;
     public int a2id = 2;
-    public A2() { super(); }
-    public A2(B2 b) { this.x = b; }
+
+    public A2() {
+      super();
+    }
+
+    public A2(B2 b) {
+      this.x = b;
+    }
   }
- 
 
   public static class B2 {
     public A2 y;
     public int b2id = 4;
-    public B2() { super(); }
-    public B2(A2 a) { this.y = a; }
+
+    public B2() {
+      super();
+    }
+
+    public B2(A2 a) {
+      this.y = a;
+    }
   }
-  
+
   public static class C2 {
     A2 x;
     B2 y;
     int c2id = 6;
-    public C2() { super(); }
-    public C2(A2 a, B2 b) { this.x = a; this.y = b; }
+
+    public C2() {
+      super();
+    }
+
+    public C2(A2 a, B2 b) {
+      this.x = a;
+      this.y = b;
+    }
   }
 
   public static class D2 {
@@ -1275,29 +1351,55 @@ public class UniversalToString {
     B2 y;
     C2 z;
     int d2id = 8;
-    public D2() { super(); }
-    public D2(A2 a, B2 b, C2 c) { this.x = a; this.y = b; this.z = c; }
+
+    public D2() {
+      super();
+    }
+
+    public D2(A2 a, B2 b, C2 c) {
+      this.x = a;
+      this.y = b;
+      this.z = c;
+    }
   }
- 
+
   public static class F {
     G g;
     int fid = 9;
-    public F() { super(); }
-    public F(G g) { this.g = g; }
+
+    public F() {
+      super();
+    }
+
+    public F(G g) {
+      this.g = g;
+    }
   }
 
   public static class G {
     H h;
     int gid = 10;
-    public G() { super(); }
-    public G(H h) { this.h = h; }
+
+    public G() {
+      super();
+    }
+
+    public G(H h) {
+      this.h = h;
+    }
   }
 
   public static class H {
     F f;
     int hid = 11;
-    public H() { super(); }
-    public H(F f) { this.f = f; }
+
+    public H() {
+      super();
+    }
+
+    public H(F f) {
+      this.f = f;
+    }
   }
 
   public static class Employee {
@@ -1311,7 +1413,7 @@ public class UniversalToString {
 
     public void raiseSalary(double byPercent) {
       double raise = salary * byPercent / 100;
-      salary += raise;    
+      salary += raise;
     }
 
     public final String getName() {
@@ -1323,7 +1425,9 @@ public class UniversalToString {
     }
 
     @Override
-    public String toString() { return universalToString(this, true, true); }
+    public String toString() {
+      return universalToString(this, true, true);
+    }
   }
 
   public static class Manager extends Employee {
@@ -1339,7 +1443,6 @@ public class UniversalToString {
       this.bonus = bonus;
     }
 
-    
     public void setBonus(double bonus) {
       this.bonus = bonus;
     }
@@ -1349,22 +1452,32 @@ public class UniversalToString {
     }
 
     @Override
-    public String toString() { return universalToString(this, true, true); }
+    public String toString() {
+      return universalToString(this, true, true);
+    }
   }
 
   public static class ArrayListSubClass extends ArrayList<Object> {
     private static final long serialVersionUID = 1L;
     int alscid = 9;
-    public ArrayListSubClass() { super(); }
-    public ArrayListSubClass(Collection<? extends Object> c) { super(c); }
+
+    public ArrayListSubClass() {
+      super();
+    }
+
+    public ArrayListSubClass(Collection<? extends Object> c) {
+      super(c);
+    }
+
     @Override
-    public String toString() { return universalToString(this, false, true); }
+    public String toString() {
+      return universalToString(this, false, true);
+    }
   }
 
   public enum PaperSize {
-    ISO_4A0 ("ISO 216 4A0", "mm", 1632, 2378),
-    ISO_2A0 ("ISO 216 2A0", "mm", 1189, 1682),
-    ISO_A0 ("ISO 216 A0", "mm", 841, 1189);
+    ISO_4A0("ISO 216 4A0", "mm", 1632, 2378), ISO_2A0("ISO 216 2A0", "mm", 1189, 1682), ISO_A0("ISO 216 A0", "mm", 841,
+        1189);
     final String info;
     final String unit;
     final double width;
@@ -1417,9 +1530,9 @@ public class UniversalToString {
     PaperSize ps4a0Enum = PaperSize.ISO_4A0;
     PaperSize ps2a0Enum = PaperSize.ISO_2A0;
     PaperSize psa0Enum = PaperSize.ISO_A0;
-    PaperSize[] psa = new PaperSize[]{ps4a0Enum,ps2a0Enum,psa0Enum};
-    List<PaperSize> psl = new ArrayList<>(Arrays.asList(ps4a0Enum,ps2a0Enum,psa0Enum));
-    Map<String,PaperSize> psm = new LinkedHashMap<>();
+    PaperSize[] psa = new PaperSize[] { ps4a0Enum, ps2a0Enum, psa0Enum };
+    List<PaperSize> psl = new ArrayList<>(Arrays.asList(ps4a0Enum, ps2a0Enum, psa0Enum));
+    Map<String, PaperSize> psm = new LinkedHashMap<>();
     psm.put("ps4a0", ps4a0Enum);
     psm.put("ps2a0", ps2a0Enum);
     psm.put("psa0", psa0Enum);
@@ -1431,35 +1544,25 @@ public class UniversalToString {
     map2.put('x', a1);
     map2.put('y', b1);
     map2.put('z', c1);
-    String[] rs = new String[]{
-        "VGQ7GN2QcQ7e09e5D43joG3Heed",
-        "s4s4l1cr9abNBhJhkCm6f84r9d7",
-        "CDVV3Jl5sCaDTBe071KGtM6S65G",
-        "D760cu2GpAQbaSKKN1mGlTcF8F1",
-        "Ld856j49EANHi0891EK2QQsi19V",
-        "Ja84eo0t1RKjKT18H84heJD3P6j",
-        "mg16dL2mb3Pcqg4jK7R9fnvV0p3",
-        "2QKvEcR3FjLDFsBfl3hrihaIpFl",
-        "0ad6Dn2Ar11J1AMvVhMGi7rMQ49",
-        "Kf9Q1f60SD19p3FpcKtH4bnCb7R",
-        "Oo3iI26SvFoHjakbup18nTT7Ue2",
-        "GL8uBr5veMMQaQl0c0EdFHP45U4",
-        "9695MBGcDOqR0Nc4EvJcoCVE9o9",
-        "sC4P3ne8rU5jI9qA5JNiVVumG1N",
-        "2nbeATbbrPPC00L00GjfVtRIE1R"}; 
-    List<String> l1 = new ArrayList<>(Arrays.asList(rs[0],rs[1],rs[2],rs[3],rs[4]));
-    List<String> l2 = new ArrayList<>(Arrays.asList(rs[5],rs[6],rs[7],rs[8],rs[9]));
-    List<String> l3 = new ArrayList<>(Arrays.asList(rs[10],rs[11],rs[12],rs[13],rs[14]));
-    Map<List<String>,PaperSize> map3 = new HashMap<>();
+    String[] rs = new String[] { "VGQ7GN2QcQ7e09e5D43joG3Heed", "s4s4l1cr9abNBhJhkCm6f84r9d7",
+        "CDVV3Jl5sCaDTBe071KGtM6S65G", "D760cu2GpAQbaSKKN1mGlTcF8F1", "Ld856j49EANHi0891EK2QQsi19V",
+        "Ja84eo0t1RKjKT18H84heJD3P6j", "mg16dL2mb3Pcqg4jK7R9fnvV0p3", "2QKvEcR3FjLDFsBfl3hrihaIpFl",
+        "0ad6Dn2Ar11J1AMvVhMGi7rMQ49", "Kf9Q1f60SD19p3FpcKtH4bnCb7R", "Oo3iI26SvFoHjakbup18nTT7Ue2",
+        "GL8uBr5veMMQaQl0c0EdFHP45U4", "9695MBGcDOqR0Nc4EvJcoCVE9o9", "sC4P3ne8rU5jI9qA5JNiVVumG1N",
+        "2nbeATbbrPPC00L00GjfVtRIE1R" };
+    List<String> l1 = new ArrayList<>(Arrays.asList(rs[0], rs[1], rs[2], rs[3], rs[4]));
+    List<String> l2 = new ArrayList<>(Arrays.asList(rs[5], rs[6], rs[7], rs[8], rs[9]));
+    List<String> l3 = new ArrayList<>(Arrays.asList(rs[10], rs[11], rs[12], rs[13], rs[14]));
+    Map<List<String>, PaperSize> map3 = new HashMap<>();
     map3.put(l1, psa0Enum);
     map3.put(l2, ps2a0Enum);
     map3.put(l3, ps4a0Enum);
-    Map<PaperSize,List<String>> map4 = new HashMap<>();
+    Map<PaperSize, List<String>> map4 = new HashMap<>();
     map4.put(psa0Enum, l1);
     map4.put(ps2a0Enum, l2);
     map4.put(ps4a0Enum, l3);
     PageAttributes pa1 = new PageAttributes();
-    
+
     System.out.println("universalToString(new Object(), true, true):");
     System.out.println("// An object obj of class Object is represented by obj.toString()");
     System.out.println(universalToString(new Object(), true, true) + "\n");
@@ -1469,44 +1572,42 @@ public class UniversalToString {
     System.out.println("// null is represented as the string \"null\" without quotes.");
     System.out.println(universalToString(null, true, true) + "\n");
     //  null    
-    
-    
+
     System.out.println("universalToString(\"hello\", true, true):");
     System.out.println("// Representations of all other Strings are double quoted.");
     System.out.println(universalToString("hello", true, true) + "\n");
     //  "hello"
-    
+
     System.out.println("universalToString('a', true, true):");
     System.out.println("// Representations of chars and Characters are single quoted.");
     System.out.println(universalToString('a', true, true) + "\n");
     //  'a'
-    
+
     System.out.println("universalToString(1, true, true):");
     System.out.println("// The representation of any number is just its value.");
     System.out.println(universalToString(1, true, true) + "\n");
     //  1
-    
+
     System.out.println("universalToString(new Integer(5), true, true):");
     System.out.println(universalToString(new Integer(5), true, true) + "\n");
     //  5
-    
+
     System.out.println("universalToString(new Double(3.14159), true, true):");
     System.out.println(universalToString(new Double(3.14159), true, true) + "\n");
     //  3.14159
-    
+
     System.out.println("universalToString(0xa31.0p-3F, true, true):");
     System.out.println("// This demonstrates a floating point literal in hexadecimal.");
     System.out.println(universalToString(0xa31.0p-3F, true, true) + "\n");
     //  326.125
-    
+
     System.out.println("universalToString(new Float(1.23456792E8F), true, true):");
     System.out.println(universalToString(new Float(1.23456792E8F), true, true) + "\n");
     //  1.23456792E8
-   
+
     System.out.println("universalToString(new int[0], true, true):");
     System.out.println("// The representation of an array with class name className has the"
-        + "\n// format className[e0, e1, e2,...] where e0, e1, e2... are the"
-        + "\n// representations of its elements");
+        + "\n// format className[e0, e1, e2,...] where e0, e1, e2... are the" + "\n// representations of its elements");
     System.out.println(universalToString(new int[0], true, true) + "\n");
     //  int[]
 
@@ -1517,17 +1618,16 @@ public class UniversalToString {
     System.out.println("universalToString(new int[] { 1, 2, 3 }, true, false):");
     System.out.println("// The representation of an array, collection or map is formatted on"
         + "\n// a single line when its total length <= maxLength");
-    System.out.println(universalToString(new int[] { 1, 2, 3 }, true, false)+ "\n");
+    System.out.println(universalToString(new int[] { 1, 2, 3 }, true, false) + "\n");
     //  int[1,2,3]  
 
-    System.out.println("universalToString(new int[] { \n" + 
-        "        1000000000, 1100000000, 1110000000, 1111000000, 1111100000, 1111110000, \n" + 
-        "        1111111000, 1111111100, 1111111110, 1111111111}, false, true):");
+    System.out.println("universalToString(new int[] { \n"
+        + "        1000000000, 1100000000, 1110000000, 1111000000, 1111100000, 1111110000, \n"
+        + "        1111111000, 1111111100, 1111111110, 1111111111}, false, true):");
     System.out.println("// The representation of an array, collection or map is formatted on"
         + "\n// multiple lines when its total length > maxLength");
-    System.out.println(universalToString(new int[] { 
-        1000000000, 1100000000, 1110000000, 1111000000, 1111100000, 1111110000, 
-        1111111000, 1111111100, 1111111110, 1111111111}, true, true)+ "\n");
+    System.out.println(universalToString(new int[] { 1000000000, 1100000000, 1110000000, 1111000000, 1111100000,
+        1111110000, 1111111000, 1111111100, 1111111110, 1111111111 }, true, true) + "\n");
     //  int[1000000000,
     //      1100000000,
     //      1110000000,
@@ -1570,12 +1670,13 @@ public class UniversalToString {
     System.out.println("universalToString(new Character[] { 'a', 'b', 'c' }, true, true):");
     System.out.println(universalToString(new Character[] { 'a', 'b', 'c' }, true, true) + "\n");
     //  Character['a','b','c']
-    
+
     System.out.println("universalToString(new String[] { \"one\", \"two\", \"three\" }, true, true):");
     System.out.println(universalToString(new String[] { "one", "two", "three" }, true, true) + "\n");
     //  String["one","two","three"]
 
-    System.out.println("universalToString(new Integer[] { new Integer(1), new Integer(2), new Integer(3) }, true, true):");
+    System.out
+        .println("universalToString(new Integer[] { new Integer(1), new Integer(2), new Integer(3) }, true, true):");
     System.out.println(
         universalToString(new Integer[] { new Integer(1), new Integer(2), new Integer(3) }, true, true) + "\n");
     //  Integer[1,2,3]   
@@ -1589,7 +1690,7 @@ public class UniversalToString {
     //  Employee(
     //      name="Joe",
     //      salary=81000.09)
-    
+
     System.out.println("universalToString(m1, true, true):");
     System.out.println(universalToString(m1, true, true) + "\n");
     //  Manager(name="Jane",salary=101000.1)(bonus=23500.67)
@@ -1608,34 +1709,33 @@ public class UniversalToString {
     //    Employee(name="Joe",salary=81000.09),
     //    Employee(name="Ivy",salary=91000.02),
     //    Employee(name="May",salary=81000.09)]
-    
+
     System.out.println("universalToString(new ArrayList<Employee>(Arrays.asList(e1, e2, e3)), true, true):");
-    System.out.println(universalToString(
-        new ArrayList<Employee>(Arrays.asList(e1, e2, e3)), true, true) + "\n");
+    System.out.println(universalToString(new ArrayList<Employee>(Arrays.asList(e1, e2, e3)), true, true) + "\n");
     //  ArrayList<Employee>(
     //      Employee(name="Joe",salary=81000.09),
     //      Employee(name="Ivy",salary=91000.02),
     //      Employee(name="May",salary=81000.09))
-    
+
     System.out.println("universalToString(new Manager[] { m1, m2, m3 }, true, true):");
-    System.out.println("// Manager extends Employee so Employee fields are printed within\n"
+    System.out.println("// Manager extends Employee so Employee fields are printed within"
         + "\n// first set of parentheses and Manager fields in the second");
     System.out.println(universalToString(new Manager[] { m1, m2, m3 }, true, true) + "\n");
     //  Manager[
     //          Manager(name="Jane",salary=101000.1)(bonus=23500.67),
     //          Manager(name="Zack",salary=115000.5)(bonus=59430.0),
     //          Manager(name="Elise",salary=124998.5)(bonus=36100.19)]               
-    
+
     System.out.println("universalToString(a1, true, true):");
     System.out.println("// This shows field \"condensation\": after defining b, its next occurrence is just"
         + "\n// its name, which bounds the representation of circular references in a finite span."
         + "\n// aid is similarly condensed although its not a circular reference.");
     System.out.println(universalToString(a1, true, true) + "\n");
     //  A(b=B(a=A(b,aid=1),bid=3),aid)    
-    
+
     System.out.println("universalToString(atchim1, true, false):");
-    System.out.println("// This must be run with oneLine false to be formatted on multiple lines"
-        + "\n// given maxLength==100");
+    System.out.println(
+        "// This must be run with oneLine false to be formatted on multiple lines" + "\n// given maxLength==100");
     System.out.println(universalToString(atchim1, true, false) + "\n");
     //  Atchim(
     //    blygen=Blygen(
@@ -1646,8 +1746,8 @@ public class UniversalToString {
     //    atchimId)
 
     System.out.println("universalToString(dumpe1, true, true):");
-    System.out.println("// This is auto-formatted on multiple lines when oneLine is true"
-        + "\n// provided maxLength < 125");
+    System.out
+        .println("// This is auto-formatted on multiple lines when oneLine is true" + "\n// provided maxLength < 125");
     System.out.println(universalToString(dumpe1, true, true) + "\n");
     //  Dumpe(
     //    atchim=Atchim(
@@ -1699,7 +1799,7 @@ public class UniversalToString {
     System.out.println("universalToString(f, true, true):");
     System.out.println(universalToString(f, true, true) + "\n");
     //  F(g=G(h=H(f=F(g,fid=9),hid=11),gid=10),fid)
-    
+
     System.out.println("universalToString(g, true, true):");
     System.out.println(universalToString(g, true, true) + "\n");
     //  G(h=H(f=F(g=G(h,gid=10),fid=9),hid=11),gid)
@@ -1709,17 +1809,16 @@ public class UniversalToString {
     //  H(f=F(g=G(h=H(f,hid=11),gid=10),fid=9),hid)
 
     System.out.println("universalToString(new Object[]{f, g, h}, true, false):");
-    System.out.println("// Array types are guessed by congruence of element types or"
-        + "\n// are resolved to Object");
-    System.out.println(universalToString(new Object[]{f, g, h}, true, false) + "\n");
+    System.out.println("// Array types are guessed by congruence of element types or" + "\n// are resolved to Object");
+    System.out.println(universalToString(new Object[] { f, g, h }, true, false) + "\n");
     //  Object[
     //    F(g=G(h=H(f=F(g,fid=9),hid=11),gid=10),fid),
     //    G(h=H(f=F(g=G(h,gid=10),fid=9),hid=11),gid),
     //    H(f=F(g=G(h=H(f,hid=11),gid=10),fid=9),hid)]
 
     System.out.println("universalToString(arrayListObjects, true, false):");
-    System.out.println("// Generic types are guessed by congruence of element types or"
-        + "\n// are resolved to Object");
+    System.out
+        .println("// Generic types are guessed by congruence of element types or" + "\n// are resolved to Object");
     System.out.println(universalToString(arrayListObjects, true, false) + "\n");
     //  ArrayList<Object>(
     //    F(g=G(h=H(f=F(g,fid=9),hid=11),gid=10),fid),
@@ -1732,7 +1831,7 @@ public class UniversalToString {
     //    F(g=G(h=H(f=F(g,fid=9),hid=11),gid=10),fid),
     //    G(h=H(f=F(g=G(h,gid=10),fid=9),hid=11),gid),
     //    H(f=F(g=G(h=H(f,hid=11),gid=10),fid=9),hid))
-    
+
     System.out.println("arrayListSubClassObjects.toString():");
     System.out.println("// This demonstrates multiline format with simpleName false and"
         + "\n// use of universalToString in a class's toString method.");
@@ -1767,8 +1866,7 @@ public class UniversalToString {
     //      hid))
 
     System.out.println("universalToString(setIntegers, true, false):");
-    System.out.println("// Another example of auto-formatting on one line, this time for"
-        + "\n// a Collection");
+    System.out.println("// Another example of auto-formatting on one line, this time for" + "\n// a Collection");
     System.out.println(universalToString(setIntegers, true, false) + "\n");
     //  HashSet<Integer>(1,2,3)
 
@@ -1779,9 +1877,9 @@ public class UniversalToString {
     //    B(a=A(b=B(a,bid=3),aid=1),bid),
     //    C(a=A(b=B(a,bid=3),aid=1),b,cid=5),
     //    D(a=A(b=B(a,bid=3),aid=1),b,c=C(a,b,cid=5),did=7))
-    
+
     System.out.println("universalToString(ps4a0Enum, true, true):");
-    System.out.println("// Another example of auto-formatting on multiple lines, this time for an"   
+    System.out.println("// Another example of auto-formatting on multiple lines, this time for an"
         + "\n// Enum. Multiline formatting of arrays, Collections and Maps attemps to"
         + "\n// to fit each element or key-value pair on a single line if possible."
         + "\n// That's why the values array is printed on one line.");
@@ -1794,7 +1892,7 @@ public class UniversalToString {
     //     width=1632.0,
     //     height=2378.0,
     //     values=PaperSize[ISO_4A0,ISO_2A0,ISO_A0])
-    
+
     System.out.println("universalToString(map1, true, true):");
     System.out.println("// Key-value pairs of a Map are separated with a colon.");
     System.out.println(universalToString(map1, true, true) + "\n");
@@ -1806,10 +1904,10 @@ public class UniversalToString {
     //    'x':A(b=B(a=A(b,aid=1),bid=3),aid),
     //    'y':B(a=A(b=B(a,bid=3),aid=1),bid),
     //    'z':C(a=A(b=B(a,bid=3),aid=1),b,cid=5)}
-    
+
     System.out.println("universalToString(psa, true, false):");
     System.out.println("// An example of an array of Enums.");
-    System.out.println(universalToString(psa, true, false) + "\n");  
+    System.out.println(universalToString(psa, true, false) + "\n");
     //  PaperSize[
     //    PaperSize(
     //      name="ISO_4A0",
@@ -1835,7 +1933,7 @@ public class UniversalToString {
     //       width=841.0,
     //       height=1189.0,
     //       values=PaperSize[ISO_4A0,ISO_2A0,ISO_A0])]
-    
+
     System.out.println("universalToString(psl, true, false):");
     System.out.println("// A collection of Enums.");
     System.out.println(universalToString(psl, true, false) + "\n");
@@ -1864,7 +1962,7 @@ public class UniversalToString {
     //       width=841.0,
     //       height=1189.0,
     //       values=PaperSize[ISO_4A0,ISO_2A0,ISO_A0]))        
-    
+
     maxLength = 100;
     System.out.println("universalToString(psm, true, true):");
     System.out.println("// With maxLength==100 this shows auto-formatting on multiple lines but with"
@@ -1895,10 +1993,10 @@ public class UniversalToString {
     //               width=841.0,
     //               height=1189.0,
     //               values=PaperSize[ISO_4A0,ISO_2A0,ISO_A0])}
-    
+
     maxLength = 30;
     System.out.println("universalToString(psm, true, true):");
-    System.out.println("// With maxLength==30 the values array fields have also been multilined," 
+    System.out.println("// With maxLength==30 the values array fields have also been multilined,"
         + "\n// however some line lengths still exceed 30 since they aren't suitable for compression");
     System.out.println(universalToString(psm, true, true) + "\n");
     //  LinkedHashMap<String,PaperSize>{
@@ -1935,11 +2033,11 @@ public class UniversalToString {
     //                   ISO_4A0,
     //                   ISO_2A0,
     //                   ISO_A0])}
-    
+
     maxLength = 100;
     System.out.println("universalToString(map3, true, true):");
     System.out.println("// A more complex map example with Collection keys and Enum values."
-        + "The point is to demonstrate alignment when both have multiple lines.");
+        + "\n// The point is to demonstrate alignment when both have multiple lines.");
     System.out.println(universalToString(map3, true, true) + "\n");
     //  HashMap<ArrayList<String>,PaperSize>{
     //    ArrayList<String>(               : PaperSize(
@@ -2000,7 +2098,7 @@ public class UniversalToString {
     System.out.println("// This provides content identical to (new java.awt.PageAttributes()).toString(),"
         + "\n// but not using that method and with a PageAttributes prefix and auto-formatting"
         + "\n// on multiple lines.");
-    System.out.println(universalToString(pa1, true, true)+"\n");
+    System.out.println(universalToString(pa1, true, true) + "\n");
     //  PageAttributes(
     //    color=monochrome,
     //    media=na-letter,
@@ -2009,11 +2107,10 @@ public class UniversalToString {
     //    printQuality=normal,
     //    printerResolution=int[72,72,3])
     //    
-    System.out.println("// Output of (new java.awt.PageAttributes()).toString() for comparison."); 
+    System.out.println("// Output of (new java.awt.PageAttributes()).toString() for comparison.");
     System.out.println(pa1.toString());
     //  color=monochrome,media=na-letter,orientation-requested=portrait,origin=physical,print-quality=normal,printer-resolution=[72,72,3]
 
   }
 
 }
-
