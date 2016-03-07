@@ -519,7 +519,6 @@ public class UniversalToString {
                 sb.append("\n" + space(indent[i]) + name + ",");
               }
             } else {
-              //              System.out.println("name != hname");
               if (oneLine) {
                 sb.append(name + "=" + hname + ",");
               } else if (i == 0) {
