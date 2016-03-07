@@ -4,7 +4,7 @@
 UniversalToString README
 
 UniversalToString contains static methods and classes for representing 
-Java primitives and Objects as Strings. It handles circular references 
+Java primitives and objects as Strings. It handles circular references 
 and its universalToString() methods can generally be used to produce
 toString() output for arbitrary Java objects. There is a series of 
 these methods with varying number of argument parameters. All of them 
@@ -88,7 +88,8 @@ Regarding output format:
    is most often useful. 
    
 10. In the representations of arrays and collections, their element values are 
-    comma separated. 
+    comma separated.
+    
 11. In the representations of Maps, key:value pairs are separated with a colon
     and multiple pairs are separated by commas.
     
@@ -104,9 +105,7 @@ Regarding output format:
 
 17. If all elements in an array or Collection are null, its generic type is
     represented as the fictitious class Null (taking a Scala precedent). This 
-    extends to typing of Maps via their key set and values Collection view 
-    which defaults to Set.
-
+    extends to typing of Maps via their key Set and values Collection view.
 
 Some examples assuming simpleName is true:
 
