@@ -1029,7 +1029,7 @@ public class UniversalToString {
         }
       }
       if (cs.size() == 0) {
-        // do nothing 
+        return simpleName ? c.getSimpleName() : c.getName();
       } else if (cs.size() == 1) {
         csit = cs.iterator();
         type = (Class<?>) csit.next();
@@ -1048,6 +1048,8 @@ public class UniversalToString {
 
     } else if (Map.class.isAssignableFrom(c)) {
       Map<Object, Object> map = (Map<Object, Object>) o;
+      if (map.keySet().size() == 0 || map.values().size() == 0) 
+        return simpleName ? c.getSimpleName() : c.getName();
       name = getType(map.keySet(), simpleName, new StringBuilder());
       sb.append(name.substring(0, name.length() - 1) + ",");
       name = getType(map.values(), simpleName, new StringBuilder());
