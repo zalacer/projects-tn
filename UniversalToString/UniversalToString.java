@@ -1,4 +1,4 @@
-package uts;
+package tests;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.awt.PageAttributes;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 // This class contains static methods and classes for representing Java
 // primitives and Objects as Strings. It handles circular references and
@@ -99,8 +101,7 @@ import java.awt.PageAttributes;
 //16. Chars and Characters surrounded with single quotes.
 //17. If all elements in an array or Collection are null, its generic type is
 //    represented as the fictitious class Null (taking a Scala precedent). This 
-//    extends to typing of Maps via their key set and values Collection view 
-//    which defaults to Set.
+//    extends to typing of Maps via their key set and values Collection view. 
 
 // Some examples assuming simpleName is true:
 
@@ -118,6 +119,9 @@ import java.awt.PageAttributes;
 // extends Employee is represented as follows when onLine is true:
 //   Manager(name="Jane",salary=101000.1)(bonus=23500.67)
 // (see below for the definition of class Manager)
+
+// given public static class Z { public Z z = this; }
+// new Z() is represented as: Z(z=Z(z))
 
 // given A a1 = new A();
 //       B b1 = new B(a1);
@@ -268,8 +272,9 @@ public class UniversalToString {
         f.setAccessible(true);
         String name = f.getName();
         Class<?> fclass = f.getType();
+        String fclassName = fclass.getName();
         Object value = null;
-
+        
         // handling of Enum values array, i.e. ENUM$VALUES
         if (isEnum) {
           int elen = 0;
@@ -290,7 +295,7 @@ public class UniversalToString {
                   + value.getClass().getName() + " in object of " + obj.getClass().getName());
               continue;
             }
-            if (Objects.nonNull(value) && value.getClass().isArray()) {
+            if (Objects.nonNull(value) && fclass.isArray()) {
               elen = ((Object[]) value).length;
             } else {
               elen = 0;
@@ -327,7 +332,6 @@ public class UniversalToString {
         boolean skipStringMatch = false;
         boolean resolved = false;
         int vhash = 0;
-        String vClassName = "";
 
         try {
           value = f.get(obj);
@@ -341,9 +345,8 @@ public class UniversalToString {
           uts = "null";
           utsAssigned = true;
           skipStringMatch = true;
-        }
-
-        vClassName = value.getClass().getName();
+        } 
+        
         vhash = Objects.hashCode(value);
 
         // Output parameter condensation is substituting just a parameter name for 
@@ -353,22 +356,22 @@ public class UniversalToString {
         // enclosing object. This procedure could be carried through to arrays, 
         // collections, maps and enums when the need arises.
 
-        if (vClassName.equals("java.lang.Object")) {
+        if (fclassName.equals("java.lang.Object")) {
           uts = obj.toString();
           utsAssigned = true;
         }
 
-        if (vClassName.matches("java.lang.String") && !skipStringMatch) {
+        if (fclassName.matches("java.lang.String") && !skipStringMatch) {
           uts = "\"" + value + "\"";
           utsAssigned = true;
         }
 
-        if (vClassName.matches("java.lang.Character")) {
+        if (fclassName.matches("java.lang.Character")) {
           uts = "'" + value + "'";
           utsAssigned = true;
         }
 
-        if (isStringable(value)) { // this includes all previous converted to String
+        if (isStringable(fclassName)) { // this includes all previous converted to String
           if (!utsAssigned)
             uts = value.toString();
           vhash = (43 * (37 * (31 + hash) + vhash) + uts.hashCode());
@@ -387,13 +390,13 @@ public class UniversalToString {
         String vtype = null;
 
         if (!resolved) {
-          if (value.getClass().isArray())
+          if (fclass.isArray())
             vtype = "array";
-          if (value instanceof Collection)
+          if (getAllInterfaces(fclassName).contains("java.util.Collection"))
             vtype = "collection";
-          if (value instanceof Map)
+          if (getAllInterfaces(fclassName).contains("java.util.Map"))
             vtype = "map";
-          if (value.getClass().isEnum())
+          if (fclass.isEnum())
             vtype = "enum";
           if (Objects.nonNull(vtype)) {
             if (hashes.containsKey(vhash) && Objects.nonNull(hashes.get(vhash).getValue())) {
@@ -921,7 +924,8 @@ public class UniversalToString {
     // test if object's class is one known to have a reasonable toString() method
     Class<? extends Object> c = o.getClass();
     if (c.getName().matches("java.lang.String|java.lang.Integer|java.lang.Long"
-        + "|java.lang.Double|java.lang.Byte|java.lang.Character|java.lang.Boolean" + "|java.lang.Short|java.lang.Float")
+        + "|java.lang.Double|java.lang.Byte|java.lang.Character|java.lang.Boolean" 
+        + "|java.lang.Short|java.lang.Float")
         || (!c.getName().equals("java.lang.Object") && Objects.nonNull(c.getSuperclass())
             && c.getSuperclass().getName().equals("java.awt.AttributeValue"))
         || c.getName().equals("java.awt.AttributeValue"))
@@ -929,6 +933,74 @@ public class UniversalToString {
     return false;
   }
 
+  public static boolean isStringable(String s) {
+    
+    if (s.matches("int|long|double|byte|char|boolean|short|float"
+        + "java.lang.String|java.lang.Integer|java.lang.Long"
+        + "|java.lang.Double|java.lang.Byte|java.lang.Character|java.lang.Boolean" 
+        + "|java.lang.Short|java.lang.Float")) {
+      return true;
+    } 
+
+    Class<?> c = null;
+    try {
+      c = Class.forName(s);
+    } catch (ClassNotFoundException e) {
+      System.err.println("isStringable(String): cannot find class for "+s
+          +"\n"+shortenedStackTrace(e, 1));
+    }
+    
+    if (Objects.nonNull(c)) {
+      if ((!c.getName().equals("java.lang.Object") && Objects.nonNull(c.getSuperclass())
+          && c.getSuperclass().getName().equals("java.awt.AttributeValue"))
+          || c.getName().equals("java.awt.AttributeValue")) {
+        return true;
+      }
+    }
+  
+    return false;
+  }
+  
+  public static List<String> getAllInterfaces(String s) {
+    if (Objects.isNull(s)) {
+      throw new IllegalArgumentException("getAllInterfaces: s is null");
+    }
+    
+    if (s.length() == 0) {
+      throw new IllegalArgumentException("getAllInterfaces: s is empty");
+    }
+
+    Class<?> c = null;
+    try {
+      c = Class.forName(s);
+    } catch (ClassNotFoundException e) {
+      System.err.println("getAllInterfaces: cannot get class for name "+s
+          + "\n"+shortenedStackTrace(e, 1));
+    }
+    
+    Set<String> z = new HashSet<>();
+
+    while (c != null) {
+      Class<?>[] itfs = c.getInterfaces();
+      for (Class<?> x : itfs) z.add(x.getName());
+      c = c.getSuperclass();
+    }
+
+    return new ArrayList<String>(z);
+  }
+  
+  public static String shortenedStackTrace(Throwable t, int maxLines) {
+    StringWriter writer = new StringWriter();
+    t.printStackTrace(new PrintWriter(writer));
+    String[] lines = writer.toString().split("\n");
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < Math.min(lines.length, maxLines); i++) {
+      sb.append(lines[i]).append("\n");
+    }
+
+    return sb.toString();
+  }
+  
   public static final String space(int length) {
     // create a new String consisting of a space repeated length times
     char[] data = new char[length];
@@ -1189,6 +1261,10 @@ public class UniversalToString {
   }
 
   // following are classes for universalToString demos
+  
+  public static class Z {
+    public Z z = this;  
+  }
 
   public static class Atchim {
     public Blygen blygen;
@@ -1503,6 +1579,7 @@ public class UniversalToString {
     m1.setBonus(23500.67);
     m2.setBonus(59430.00);
     m3.setBonus(36100.19);
+    Z z = new Z();
     A a1 = new A();
     B b1 = new B(a1);
     a1.b = b1;
@@ -1725,7 +1802,12 @@ public class UniversalToString {
     //  Manager[
     //          Manager(name="Jane",salary=101000.1)(bonus=23500.67),
     //          Manager(name="Zack",salary=115000.5)(bonus=59430.0),
-    //          Manager(name="Elise",salary=124998.5)(bonus=36100.19)]               
+    //          Manager(name="Elise",salary=124998.5)(bonus=36100.19)]   
+    
+    System.out.println("universalToString(z, true, true):");
+    System.out.println("// This ia boundary test of handling circular references for a class which"
+        + "\n// contains itself as the value of its only field.");
+    System.out.println(universalToString(z, true, true) + "\n");
 
     System.out.println("universalToString(a1, true, true):");
     System.out.println("// This shows field \"condensation\": after defining b, its next occurrence is just"
