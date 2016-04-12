@@ -2,6 +2,9 @@
 
 This is a collection of demo projects for reference.
 
+**CoreJavaForTheImpatient** is an Eclipse project featuring solutions for the 209 exercises in Cay S. Horstmann's book
+Core Java® for the Impatient.
+
 **UniversalToString** is a Java class with a static universalToString method that works for all Java classes including
 those with cyclic dependendies. Any Java class's toString method can be configured simply to return universalToString(this).
 It's been tested with arrays, collections, enums, maps and user defined classes.

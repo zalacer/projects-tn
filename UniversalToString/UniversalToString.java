@@ -936,7 +936,7 @@ public class UniversalToString {
   public static boolean isStringable(String s) {
     
     if (s.matches("int|long|double|byte|char|boolean|short|float"
-        + "java.lang.String|java.lang.Integer|java.lang.Long"
+        + "|java.lang.String|java.lang.Integer|java.lang.Long"
         + "|java.lang.Double|java.lang.Byte|java.lang.Character|java.lang.Boolean" 
         + "|java.lang.Short|java.lang.Float")) {
       return true;
