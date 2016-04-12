@@ -1,0 +1,8 @@
+20151228
+
+TestCaseAnnotationProcessor.java generated MyMathTest.java from
+    MyMath.java per exercise instructions
+
+TestCaseFactorialAnnotationProcessor.java generated FactorialTest.java
+    from Factorial.java using special processing for generating
+    multiple assertion tests from a single @TestCase

@@ -1,0 +1,325 @@
+C:\jsrc\com\sun\corba\se\impl\io\ObjectStreamClass.java: 
+                      continue nextsrc;
+
+C:\jsrc\com\sun\imageio\plugins\png\PNGImageReader.java: 
+                      break loop;
+
+C:\jsrc\com\sun\jmx\mbeanserver\DefaultMXBeanMappingFactory.java: 
+                          break find;
+
+C:\jsrc\com\sun\jmx\mbeanserver\MXBeanSupport.java: 
+                          continue reduce;
+
+C:\jsrc\com\sun\jmx\remote\util\EnvHelp.java: 
+                  continue keys;
+                      continue keys;
+
+C:\jsrc\com\sun\jmx\snmp\IPAcl\ParserTokenManager.java: 
+     catch (java.io.IOException e1) { continue EOFLoop; }
+           continue EOFLoop;
+
+C:\jsrc\com\sun\org\apache\bcel\internal\classfile\Utility.java: 
+          break loop;
+
+C:\jsrc\com\sun\org\apache\regexp\internal\RECompiler.java: 
+                              break switchOnCharacter;
+                              break atomLoop;
+                      break atomLoop;
+                      break atomLoop;
+                              break atomLoop;
+
+C:\jsrc\com\sun\org\apache\regexp\internal\REProgram.java: 
+                          break BackrefScanLoop;
+
+C:\jsrc\com\sun\org\apache\xerces\internal\impl\dtd\XMLDTDProcessor.java: 
+                                  break outer;
+
+C:\jsrc\com\sun\org\apache\xerces\internal\impl\XML11EntityScanner.java: 
+                                  break OUTER;
+                                  break OUTER;
+
+C:\jsrc\com\sun\org\apache\xerces\internal\impl\XMLEntityScanner.java: 
+                              break OUTER;
+
+C:\jsrc\com\sun\org\apache\xerces\internal\impl\xs\traversers\StAXSchemaParser.java: 
+                          break loop;
+                          break loop;
+
+C:\jsrc\com\sun\org\apache\xerces\internal\impl\xs\XMLSchemaValidator.java: 
+                          continue LOOP;
+                              continue LOOP;
+                                  continue INNER;
+                                      continue INNER;
+                          continue OUTER;
+
+C:\jsrc\com\sun\org\apache\xerces\internal\impl\xs\XSAttributeGroupDecl.java: 
+  //                        continue OUTER;
+
+C:\jsrc\com\sun\org\apache\xerces\internal\impl\xs\XSConstraints.java: 
+                      continue label;
+                      continue label;
+                      continue label;
+                      continue label;
+
+C:\jsrc\com\sun\org\apache\xerces\internal\util\SymbolTable.java: 
+                          continue OUTER;
+                          continue OUTER;
+                          continue OUTER;
+
+C:\jsrc\com\sun\org\apache\xml\internal\security\signature\Manifest.java: 
+                                      break findManifest;
+
+C:\jsrc\com\sun\org\apache\xml\internal\security\signature\Reference.java: 
+                          break doTransforms;
+                          break doTransforms;
+
+C:\jsrc\com\sun\org\apache\xpath\internal\objects\XNumber.java: 
+  //        break findStart;
+  //        break findEnd;
+
+C:\jsrc\java\awt\font\TextLine.java: 
+                          break loop;
+                          break loop;
+                          break loop;
+                          break loop;
+
+C:\jsrc\java\awt\geom\Path2D.java: 
+                      break loop;
+                      break PATHDONE;
+
+C:\jsrc\java\io\BufferedReader.java: 
+                          break charLoop;
+
+C:\jsrc\java\io\DataInputStream.java: 
+                  break loop;
+                  break loop;
+
+C:\jsrc\java\lang\invoke\LambdaForm.java: 
+                          continue eachArg;
+                                  continue eachArg;
+                              continue eachArg;
+
+C:\jsrc\java\lang\String.java: 
+                      continue startSearchForLastChar;
+                          break scan;
+                          break scan;
+                      break scan;
+
+C:\jsrc\java\security\AccessControlContext.java: 
+                          continue outer;
+
+C:\jsrc\java\text\PatternEntry.java: 
+                  case '=': if (newStrength != UNSET) break mainLoop;
+                  case ',': if (newStrength != UNSET) break mainLoop;
+                  case ';': if (newStrength != UNSET) break mainLoop;
+                  case '<': if (newStrength != UNSET) break mainLoop;
+                  case '&': if (newStrength != UNSET) break mainLoop;
+
+C:\jsrc\java\text\SimpleDateFormat.java: 
+                  break parse;
+                      break parse;
+                  break parse;
+                          break parse;
+                      break parse;
+                      break parse;
+                      break parse;
+                          break parsing;
+                          break parsing;
+                  break parsing;
+                  break parsing;
+                          break parsing;
+                  break parsing;
+                  break parsing;
+                          break parsing;
+                  break parsing;
+                          break parsing;
+                          break parsing;
+                  break parsing;
+                          break parsing;
+                  break parsing;
+
+C:\jsrc\java\time\format\Parsed.java: 
+                              continue outer;  // have to restart to avoid concurrent modification
+                              continue outer;  // have to restart to avoid concurrent modification
+                              continue outer;  // have to restart to avoid concurrent modification
+                          continue outer;  // have to restart to avoid concurrent modification
+
+C:\jsrc\java\util\ArrayPrefixHelpers.java: 
+                              break outer;                      // already done
+                              break outer;
+                              break outer;                      // sib not ready
+                              break outer;                      // already done
+                              break outer;
+                              break outer;                      // sib not ready
+                              break outer;                      // already done
+                              break outer;
+                              break outer;                      // sib not ready
+                              break outer;                      // already done
+                              break outer;
+                              break outer;                      // sib not ready
+
+C:\jsrc\java\util\Collections.java: 
+                          continue nextCand;  // Element mismatch, try next cand
+                          continue nextCand;
+                          continue nextCand;  // Element mismatch, try next cand
+                          continue nextCand;
+
+C:\jsrc\java\util\ComparableTimSort.java: 
+                          break outer;
+                          break outer;
+                          break outer;
+                      break outer;
+                          break outer;
+                      break outer;
+                          break outer;
+                          break outer;
+                          break outer;
+                      break outer;
+                          break outer; // len2 == 1 || len2 == 0
+                      break outer;
+
+C:\jsrc\java\util\concurrent\CompletableFuture.java: 
+                      break tryComplete;
+                      break tryComplete;
+                      break tryComplete;
+                      break tryComplete;
+                      break tryComplete;
+                      break tryComplete;
+                      break tryComplete;
+                          break tryComplete;
+                          break tryComplete;
+
+C:\jsrc\java\util\concurrent\ConcurrentHashMap.java: 
+                              continue outer;
+
+C:\jsrc\java\util\concurrent\ConcurrentLinkedDeque.java: 
+                      continue restartFromHead;
+                      continue restartFromTail;
+                          continue restartFromHead;
+                      continue restartFromHead;
+                          continue restartFromTail;
+                      continue restartFromTail;
+                      break findActive;
+                          continue whileActive;
+                      break findActive;
+                      continue whileActive;
+                      break findActive;
+                          continue whileActive;
+                      break findActive;
+                      continue whileActive;
+                      continue restartFromHead;
+                      continue restartFromTail;
+                      continue restartFromTail;
+
+C:\jsrc\java\util\concurrent\ConcurrentLinkedQueue.java: 
+                      continue restartFromHead;
+                      continue restartFromHead;
+                      continue restartFromHead;
+
+C:\jsrc\java\util\concurrent\ConcurrentSkipListMap.java: 
+                      break outer;
+                      break outer;
+                      break outer;
+                      break outer;
+                  break outer;
+                          break splice;
+                              break splice;
+                              break splice;
+                      break outer;
+                      break outer;
+                      break outer;
+
+C:\jsrc\java\util\concurrent\CopyOnWriteArrayList.java: 
+                          break findIndex;
+                      break findIndex;
+
+C:\jsrc\java\util\concurrent\CopyOnWriteArraySet.java: 
+                      continue outer;
+
+C:\jsrc\java\util\concurrent\ForkJoinPool.java: 
+                              break descent;
+                              break descent;
+                                  break descent;
+                                  break descent;
+
+C:\jsrc\java\util\concurrent\FutureTask.java: 
+                              continue retry;
+                          continue retry;
+
+C:\jsrc\java\util\concurrent\LinkedTransferQueue.java: 
+                      continue retry;           // lost race vs opposite mode
+
+C:\jsrc\java\util\concurrent\ThreadPoolExecutor.java: 
+                      break retry;
+                      continue retry;
+
+C:\jsrc\java\util\Date.java: 
+                  break syntax;
+                              break syntax;
+                              break syntax;
+                              break syntax;
+                              break syntax;
+                              break syntax;
+                          break syntax;
+                          break syntax;
+                          break syntax;
+                                          break syntax;
+                                          break syntax;
+                                          break syntax;
+                          break syntax;
+                  break syntax;
+
+C:\jsrc\java\util\DualPivotQuicksort.java: 
+                              break outer;
+                                  break outer;
+                              break outer;
+                                  break outer;
+                              break outer;
+                                  break outer;
+                              break outer;
+                                  break outer;
+                              break outer;
+                                  break outer;
+                              break outer;
+                                  break outer;
+
+C:\jsrc\java\util\GregorianCalendar.java: 
+                      break calculateFixedDate;
+                      break calculateFixedDate;
+                      break calculateFixedDate;
+                      break calculateFixedDate;
+
+C:\jsrc\java\util\IdentityHashMap.java: 
+                  continue retryAfterResize;
+
+C:\jsrc\java\util\jar\JarFile.java: 
+                      continue next;
+
+C:\jsrc\java\util\regex\Pattern.java: 
+                      continue loop;
+                  break LOOP;
+                      break LOOP;
+                          continue NEXT;
+                          continue NEXT;
+                          continue NEXT;
+
+C:\jsrc\java\util\SimpleTimeZone.java: 
+                          break computeOffset;
+
+C:\jsrc\java\util\TimSort.java: 
+                          break outer;
+                          break outer;
+                          break outer;
+                      break outer;
+                          break outer;
+                      break outer;
+                          break outer;
+                          break outer;
+                          break outer;
+                      break outer;
+                          break outer;
+                      break outer;
+
+C:\jsrc\javax\xml\soap\MimeHeaders.java: 
+                              continue next;
+

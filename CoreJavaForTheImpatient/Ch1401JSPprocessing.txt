@@ -1,0 +1,5 @@
+<ul>
+<% for (int i = 10; i >= 0; i--) { %>
+    <li><%= i %></li>
+<% } %>
+<p>Liftoff!</p>

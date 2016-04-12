@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="ch10/concurrency/Ch1022SynchronizedReentrantLockNoNo.java" kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/tn/Documents/vulab/java/jar/opencsv-3.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tn/Documents/vulab/java/jar/juniversalchardet-1.0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tn/Documents/vulab/java/jar/json-io-4.3.0.jar" sourcepath="C:/Users/tn/.m2/repository/com/cedarsoftware/json-io/4.3.0/json-io-4.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tn/Documents/vulab/java/jar/javaparser-core-2.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tn/Documents/vulab/java/jar/commons-lang3-3.4.jar" sourcepath="C:/Users/tn/.m2/repository/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tn/Documents/vulab/java/jar/jscheme-7.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tn/Documents/vulab/java/jar/kawa-2.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
