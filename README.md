@@ -7,7 +7,10 @@ Core Java® for the Impatient.
 
 **UniversalToString** is a Java class with a static universalToString method that works for all Java classes including
 those with cyclic dependendies. Any Java class's toString method can be configured simply to return universalToString(this).
-It's been tested with arrays, collections, enums, maps and user defined classes.
+It's been tested with arrays, collections, enums, maps and custom classes.
+
+**DijkstrasAlgorithm** is a Java implementation of Dijkstra's shortest paths algorithm using a metaphor of a network of 
+cities connected by roads.
 
 **Java8StreamTest** consists of two Java8 main classes, one for performance testing of IntStream
     and the other to test performance of the imperative for loop. First build the project with
@@ -23,10 +26,8 @@ It's been tested with arrays, collections, enums, maps and user defined classes.
 **FactorialTailCall** is a Scala sbt project illustrating how a non tail recursive function can
     be converted into one that is for compiler optimization to avoid a StackOverflowError exception.
     It also demonstrates the ease of using Scala BigInt and sbt project configuration with a .scala
-    configuration file and the git assembly plugin. After building the assembly jar, running it on
-    my laptop computed the factorial of 100K in 5 seconds (with output redirected to a file). This
-    project is configured for Scala 2.10.4 and sbt 0.13.7 and should work with later versions of
-    scala and some earlier versions of sbt.
+    configuration file and the git assembly plugin. This project is configured for Scala 2.10.4 and 
+    sbt 0.13.7.
     
 **JAX-RSdemo1** is a demo RESTful web service project implemented using JAX-RS and Apache CXF. This is
     a Maven Java project exported from Eclipse. A review of RESTful web services and instructions for
