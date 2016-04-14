@@ -1,7 +1,5 @@
 ##projects-tn
 
-This is a collection of demo projects for reference.
-
 **CoreJavaForTheImpatient** is an Eclipse project featuring solutions for the 209 exercises in Cay S. Horstmann's book
 Core Java® for the Impatient.
 
