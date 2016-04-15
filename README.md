@@ -1,14 +1,17 @@
 ##projects-tn
 
-**CoreJavaForTheImpatient** is an Eclipse project featuring solutions for the 209 exercises in Cay S. Horstmann's book
-Core Java® for the Impatient.
+**CoreJavaForTheImpatient** features solutions for the 209 exercises in Cay S. Horstmann's book Core Java® for the Impatient and is packaged as an Eclipse project.
+
+**EverydayJavaSerialization** is Java Serialization system for a code based tutorial and is packaged as an Eclipse project.
 
 **UniversalToString** is a Java class with a static universalToString method that works for all Java classes including
 those with cyclic dependendies. Any Java class's toString method can be configured simply to return universalToString(this).
 It's been tested with arrays, collections, enums, maps and custom classes.
 
 **DijkstrasAlgorithm** is a Java implementation of Dijkstra's shortest paths algorithm using a metaphor of a network of 
-cities connected by roads.
+cities connected by roads and consists of one outer Java class in one file.
+
+**InvertImageAkka** is an Akka/Scala example of parallel image processing and is packaged as an sbt project.
 
 **Java8StreamTest** consists of two Java8 main classes, one for performance testing of IntStream
     and the other to test performance of the imperative for loop. First build the project with
@@ -41,7 +44,6 @@ cities connected by roads.
 
 **ReduceSideJoinTest** is another implementation of MapReduce reduce side join using distributed cache, but  written with several customized data classes and using the String concatenation operator (+) instead of StringBuilder in the reducer as was used in ReduceSideJoinDistCache. It was written for performance comparison with the latter. The conclusion is that ReduceSideJoinDistCache significantly outperforms ReduceSideJoinTest, because StringBuilder is faster with less overhead than String concatenation with "+" and customized Writable/WritableComparable data types with fields having unwrapped types such as int and String are more efficient for small datasets compared to wrapped types like IntWritable and Text. Even for large datasets, use of Text objects still incurs String creation overhead when they are reused and their values change, because that requires creating new Strings. However, reuse of numeric Writable and WritableComparable objects reduces object creation since they wrap primitive Java numeric types.
 
-**PubmedExampleXML** contains pubmed.xml which is the example used in the XML tutorial at http://www.stat.berkeley.edu/~statcur/Workshop2/Presentations/XML.pdf
 
 
 
