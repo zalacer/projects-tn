@@ -1,9 +1,9 @@
 
-This project is in Eclipse Java Project format and requires Java 8. 
+This project features solutions for the 209 exercises in Core Java® for the Impatient by
+Cay S. Horstmann. It is in Eclipse Java Project format and requires Java 8. 
 
-Some exercise solutions require a 3rd party library. Jars for these 
-dependencies are available in the 3rdPartyDependencies folder and are 
-available for download from external websites as follows:
+Some exercise solutions require a 3rd party library. Jars for these dependencies are in the
+3rdPartyDependencies folder and are available for download from external websites as follows:
 
 1. Apache Commons Lang 3.4
    http://mvnrepository.com/artifact/org.apache.commons/commons-lang3/3.4
