@@ -17,6 +17,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -188,6 +189,8 @@ public class Serialization {
     if (isMap(oclass)) return serializeMap(o, oclassName);
     if (isBitSet(oclass)) return serializeBitSet((BitSet) o);
     if (isAttributesName(oclass)) return serializeAttributesName((Attributes.Name) o);
+    if (oclass.getName().equals("java.math.BigInteger")) 
+      return serializeBigInteger((BigInteger) o);
 
     imap.put(o, ++oc);
 
@@ -553,6 +556,7 @@ public class Serialization {
     if (r[0].equals("map")) return deserializeMap(s);
     if (r[0].replaceAll("&.*", "").equals("java.util.BitSet")) return deserializeBitSet(s);
     if (r[0].equals("java.util.jar.Attributes.Name")) return deserializeAttributesName(s);
+    if (r[0].equals("java.math.BigInteger")) return deserializeBigInteger(s);
     
     oc++;
     rimap = invert(imap);
@@ -1328,6 +1332,73 @@ public class Serialization {
     imap.put(x, oc);
     return x;
   }
+  
+  private final String serializeBigInteger(BigInteger v) {
+    if (Objects.isNull(v))
+      return serializeNull();
+
+    Class<?> type = v.getClass();
+    if (!type.getName().equals("java.math.BigInteger"))
+      throw new IllegalArgumentException("serializeBigInteger: v is not a java.math.BigInteger");
+
+    ByteArrayOutputStream bout = new ByteArrayOutputStream(1000);
+    DataOutputStream dout = new DataOutputStream(bout);
+
+    imap.put(v, ++oc);
+    writeString(v.toString(), dout);
+    byte[] oBytes = null;
+
+    try {
+      dout.flush();
+      bout.flush();
+      oBytes = bout.toByteArray();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    
+    
+    String obstring = toB64String(oBytes);
+    String out = "java.math.BigInteger^" + obstring;
+    return out;
+  }
+
+  private final BigInteger deserializeBigInteger(String s) {
+    if (Objects.isNull(s))
+      throw new IllegalArgumentException("deserializeBigInteger: s is null");
+    if (s.length() == 0)
+      throw new IllegalArgumentException("deserializeBigInteger: s is empty");
+    
+    oc++;
+    rimap = invert(imap);
+    if (rmap.containsKey(oc) && rimap.containsKey(rmap.get(oc))) {
+      return (BigInteger) rimap.get(rmap.get(oc));
+    }
+    
+    String[] r = s.split("\\^");
+    int rlength = r.length;
+    if (rlength == 1) {
+      if (s.equals("Null"))
+        return null;
+      throw new IllegalArgumentException("deserializeBigInteger: String s has one " 
+          + "component but isn't \"Null\"");
+    }
+    if (rlength != 2)
+      throw new IllegalArgumentException("deserializeBigInteger: String s has " + rlength 
+          + " components but should have 1 or 2");
+    if (!r[0].matches("java.math.BigInteger"))
+      throw new DataContentException(
+          "deserializeString: s doesn't begin with java.math.BigInteger");
+    if (r[1].equals("Null"))
+      return null;
+
+    byte[] data = toByteArray(r[1]);
+    ByteArrayInputStream bin = new ByteArrayInputStream(data);
+    DataInputStream din = new DataInputStream(bin);
+    String x = readString(din);
+    imap.put(x, oc);
+    return new java.math.BigInteger(x);
+  }
+
 
   private final String serializeArray(Object v) {
     if (Objects.isNull(v)) return serializeNull();
@@ -1426,6 +1497,16 @@ public class Serialization {
               writeString(ser, dout);
             }
           }
+        } else if (componentTypeName.equals("java.math.BigInteger")) {
+          for (int i = 0; i < length; i++) {
+            o = Array.get(v, i);
+            if (imap.containsKey(o)) {
+              rmap.put(++oc, imap.get(o));
+            } else {
+              ser = serializeBigInteger((BigInteger) o);
+              writeString(ser, dout);
+            }
+          }  
         } else {
           for (int i = 0; i < length; i++) {
             o = Array.get(v, i);
@@ -1588,6 +1669,8 @@ public class Serialization {
               x = deserializePrimitiveOrBoxed(readString(din));
             } else if (isString(componentType)) {
               x = deserializeString(readString(din));
+            } else if (componentTypeName.equals("java.math.BigInteger")) {
+              x = deserializeBigInteger(readString(din));  
             } else {
               x = deserialize(readString(din));
             }
@@ -2294,11 +2377,9 @@ public class Serialization {
   }
 
   public static final String gzip(String data) {
-    while (data.length() % 2 == 0 && data.matches("\\p{XDigit}+"))
-      data = new String(toByteArray(data));
     ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length());
-    try (GZIPOutputStream gzip = new GZIPOutputStream(bos)) {
-      gzip.write(data.getBytes());
+    try (GZIPOutputStream gzipos = new GZIPOutputStream(bos)) {
+      gzipos.write(data.getBytes());
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -2306,31 +2387,11 @@ public class Serialization {
   }
 
   public static final String gunzip(String compressed) {
-    // Test if compressed is a lexicalXSDBase64Binary String
-    // and if so parse it to a byte[] or use String.getBytes().
-    // Then test the byte array for the GZIP_MAGIC header and
-    // return compressed as is if it has it, otherwise decompress
-    // it by running the byte[] through a GZIPInputStream layered
-    // on a ByteArrayInputStream initialized with that byte[].
-    // Layer a BufferedReader on an InputStreamReader over the
-    // GZIPInputStream to allow specification of the input  
-    // encoding and for use of readLine() which can read an  
-    // entire serialized string.
 
-    byte[] ba = null;
+    byte[] ba = toByteArray(compressed);
 
-    // if compressed is a hex string parse it to a byte[]
-    if (compressed.length() % 2 == 0 && compressed.matches("\\p{XDigit}+")) {
-      ba = toByteArray(compressed);
-    } else { // use String.getBytes()
-      ba = compressed.getBytes(UTF_8);
-    }
+    if (!isGzip(ba)) return compressed;
 
-    // test for the GZIP_MAGIC header 
-    if (!isGzip(ba))
-      return compressed;
-
-    // otherwise decompress it with GZIPInputStream
     ByteArrayInputStream bis = new ByteArrayInputStream(ba);
     StringBuilder sb = new StringBuilder();
     String line = null;
@@ -2343,7 +2404,7 @@ public class Serialization {
     }
     return sb.toString();
   }
-
+  
   public static final void gzipString2File(String s, String pathName) {
     Path p = Paths.get(pathName);
     if (Files.exists(p)) {
