@@ -69,7 +69,7 @@ public class SerializationTest {
   }
   
   public static final Object des (String s) {
-    return serialization.ser(s);
+    return serialization.des(s);
   }
   
   public static final Object serdes(Object o) {
