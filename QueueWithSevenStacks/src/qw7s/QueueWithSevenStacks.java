@@ -19,10 +19,10 @@ import java.util.NoSuchElementException;
 // or update process relatively evenly over a number of dequeue and enqueue operations
 // so they individually take a constant worst case number of stack operations independent
 // of the size of the queue. This can be useful in real time settings because it enables 
-// better performance predictability  by enforcing an O(1) upper bound on the time 
+// better performance predictability by enforcing an O(1) upper bound on the time 
 // required for a queue operation, which may be desirable even though that bound could be 
-// higher than the amortized operation cost of other queue implementations.
-// a way of implementing such an update process that solves this problem is as follows.
+// higher than the amortized operation cost of other queue implementations. A way of 
+// implementing such an update process that solves this problem is as follows.
 //
 // Implementation of the update process
 // ------------------------------------
@@ -75,15 +75,22 @@ import java.util.NoSuchElementException;
 
 // QueueWithSevenStacks method implementation analysis in terms of Stack operations:
 // ---------------------------------------------------------------------------------
-// By inspection of the code of its methods below:
-// 1. isEmpty() takes at most two Stack operations.
-// 2. size() takes two Stack operations.
-// 3. clear() takes seven Stack operations.
-// 3. peek() takes one Stack operation.
-// 4. enqueue takes at most 25 Stack operations 
-//   (6 push(), 4 pop(), 2 peek(), 6 isEmpty(), 4 clear(), 3 size())  
-// 5. dequeue takes at most 25 Stack operations. 
-//   (6 push(), 4 pop(), 2 peek(), 6 isEmpty(), 4 clear(), 3 size())  
+// By inspection of the code below and where N is the size of the queue:
+// method      max#stack ops  min#stack ops
+// ----------  -------------  -------------
+// isEmpty     20             2
+// size        20             2
+// clear        7             7
+// peek        20             2
+// enqueue     28             3
+// dequeue     30             5
+// iterator    18             0
+// toArray     N+18           N
+// toString    N+18           N
+// hashCode     0             0
+// equals       0             0
+// All other methods are for doing updates and factored in or for debugging.
+
 
 public class QueueWithSevenStacks<Item> implements Iterable<Item> {
   // for this queue enqueueing is done to a rear stack and dequeueing is from the 
@@ -198,6 +205,7 @@ public class QueueWithSevenStacks<Item> implements Iterable<Item> {
 
   public boolean isEmpty() {
     // return true only if r1 and s1 are empty else return false
+    if (update) update();
     return r1.isEmpty() && s1.isEmpty();
   }
 
@@ -208,6 +216,10 @@ public class QueueWithSevenStacks<Item> implements Iterable<Item> {
   }
   
   public void clear() {
+    updateinit = false;
+    update = false;
+    update1 = false;
+    update2 = false;
     s1.clear();
     s2.clear();
     s3.clear();
@@ -217,10 +229,6 @@ public class QueueWithSevenStacks<Item> implements Iterable<Item> {
     r3.clear();
     rtmp = null;
     s3sync = true;
-    updateinit = false;
-    update = false;
-    update1 = false;
-    update2 = false;
     remaining = 0;
     itmp = null;
   }
@@ -228,6 +236,7 @@ public class QueueWithSevenStacks<Item> implements Iterable<Item> {
   public Item peek() {
     // return the head of s1 without popping it
     // in this queue design s1 is never empty unless the queue is empty
+    if (update) update();
     if (isEmpty()) throw new NoSuchElementException("Queue underflow");
     return s1.peek();
   }
@@ -256,6 +265,7 @@ public class QueueWithSevenStacks<Item> implements Iterable<Item> {
   }
   
   public Iterator<Item> iterator() {
+    if (update) update();
     return new ArrayIterator();
   }
   
@@ -314,11 +324,13 @@ public class QueueWithSevenStacks<Item> implements Iterable<Item> {
   }
   
   public Object[] toArray() {
+    if (update) update();
     return append(s1.toArray(), reverse(r1.toArray()));
   }
   
   @SafeVarargs
   public final Item[] toArray(Item...items) {
+    if (update) update();
     return append(s1.toArray(items), reverse(r1.toArray(items)));
   }
 
@@ -501,115 +513,115 @@ public class QueueWithSevenStacks<Item> implements Iterable<Item> {
     pa(q.r3a());
     System.out.println(q.updateLevel());
     
-//    q = new QueueWithSevenStacks<Integer>();
-//    System.out.println(q);
-//    q.enqueue(1); //  q.enqueue(3);
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
-//    q.enqueue(2);
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
-//    q.enqueue(3);
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
-//    
-//    q =  new QueueWithSevenStacks<Integer>(1,2,3,4,5);
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
-//    q.enqueue(6); q.enqueue(7);
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
-//    q.enqueue(8);q.enqueue(9);q.enqueue(10);
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
-//    q.enqueue(11);
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
-//    System.out.println(q);
-//    pa(q.s1a());
-//    pa(q.s2a());
-//    pa(q.s3a());
-//    pa(q.s4a());
-//    pa(q.r1a());
-//    pa(q.r2a());
-//    pa(q.r3a());
-//    System.out.println(q.updateLevel());
+    q = new QueueWithSevenStacks<Integer>();
+    System.out.println(q);
+    q.enqueue(1); //  q.enqueue(3);
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
+    q.enqueue(2);
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
+    q.enqueue(3);
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
+    
+    q =  new QueueWithSevenStacks<Integer>(1,2,3,4,5);
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
+    q.enqueue(6); q.enqueue(7);
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
+    q.enqueue(8);q.enqueue(9);q.enqueue(10);
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
+    q.enqueue(11);
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
+    System.out.println(q);
+    pa(q.s1a());
+    pa(q.s2a());
+    pa(q.s3a());
+    pa(q.s4a());
+    pa(q.r1a());
+    pa(q.r2a());
+    pa(q.r3a());
+    System.out.println(q.updateLevel());
   }
 }
 
