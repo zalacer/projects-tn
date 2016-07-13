@@ -2,7 +2,7 @@ package qw7s;
 
 import static qw7s.Utils.getCloneMethod;
 import static qw7s.Utils.ofDim;
-import static qw7s.Utils.pa;
+//import static qw7s.Utils.pa;
 import static qw7s.Utils.reverse;
 
 import java.lang.reflect.InvocationTargetException;
@@ -16,7 +16,7 @@ public class Stack<Item> implements Iterable<Item> {
   private Node first; // top of stack (most recently added node)
   private int N; // number of items
   private Class<?> iclass = null; // to be set to Item.class when possible
-  private int opcount; // counter for pop and push ops for fail fast iteration (text 1.3.50 p171)
+  private int opcount; // counter for pop and push ops for fail fast iteration
 
   public Stack(){};
 
@@ -32,9 +32,9 @@ public class Stack<Item> implements Iterable<Item> {
 
   @SuppressWarnings("unchecked")
   public Stack(Stack<Item> s2) {
-    if (s2 == null) return;
+    if (s2 == null) return; // create a new empty stack
     if (s2.isEmpty()) return; // create a new empty stack
-    iclass = s2.iclass(); // this means all s2's elements, if any, are null
+    iclass = s2.iclass(); // if this is null then all s2's elements, if any, are null
     Item[] ia = (Item[]) new Object[s2.size()];
     int c = s2.size() - 1;
     if (iclass != null) {
@@ -267,43 +267,5 @@ public class Stack<Item> implements Iterable<Item> {
     return new Stack<T>();
   }
   
-  public static void main(String[] args) {
-
-    //    Stack<Integer> s = new Stack<Integer>(1,2,3,4,5);
-    //    System.out.println(s);
-    //    for (Integer i : s) System.out.print(i+" "); System.out.println();
-
-    Stack<Integer> s1 = new Stack<Integer>(3,2,1); //1,2,3
-    System.out.println(s1); //Stack(1,2,3)
-    System.out.println(s1.size()); //3
-    int s = s1.size();
-    for (int i = 0; i < s; i++) s1.pop();
-    System.out.println(s1.isEmpty()); //true
-    System.out.println(s1);
-    System.out.println("s1="+s1.toString()); //s1=Stack(1,2,3)
-    Stack<Integer> s2 = new Stack<Integer>();  
-    Stack<Integer> s3 = new Stack<Integer>(4,5,6); // 6 5 4
-    System.out.println("s3="+s3.toString()); //s3=Stack(6,5,4)
-
-    // get all items in s1 in reverse stack order
-    //    while (!s1.isEmpty()) s2.push(s1.pop());
-    //    while (!s3.isEmpty()) s1.push(s3.pop());
-    //    while (!s2.isEmpty()) s1.push(s2.pop());   
-    //    System.out.println("s1="+s1.toString()); //s1=Stack(1,2,3,4,5,6)
-    //    System.out.println(s1.pop()); //1
-
-    // get all items in s3 in stack order
-    while (!s3.isEmpty()) s2.push(s3.pop());
-    while (!s1.isEmpty()) s3.push(s1.pop());
-    while (!s2.isEmpty()) s3.push(s2.pop());   
-    System.out.println("s3="+s3.toString()); //s3=Stack(6,5,4,3,2,1)
-      System.out.println(s3.pop()); //6
-      
-    s1 = new Stack<Integer>();
-    System.out.println(s1);
-    pa(s1.toArray());
-
-  }
-
 }
 
