@@ -1,5 +1,7 @@
 ##projects-tn
 
+**QueueWithSevenStacks** is a stack based queue implementation with a constant worst case number of stack operations per queue operation.
+
 **CoreJavaForTheImpatient** features solutions for the 209 exercises in Cay S. Horstmann's book Core Java® for the Impatient and is packaged as an Eclipse project.
 
 **EverydayJavaSerialization** is Java Serialization system for a code based tutorial and is packaged as an Eclipse project.
