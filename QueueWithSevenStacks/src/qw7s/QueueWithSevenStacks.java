@@ -5,81 +5,91 @@ import static qw7s.Utils.*;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-//QueueWithSevenStacks is based on the description of a six list queue  lisp implementation 
-//by Hood and Melville at 
-//https://ecommons.cornell.edu/bitstream/handle/1813/6273/80-433.pdf?sequence=1&isAllowed=y.
+// QueueWithSevenStacks is based on the description of a six list queue lisp implementation 
+// by Hood and Melville at 
+// https://ecommons.cornell.edu/bitstream/handle/1813/6273/80-433.pdf?sequence=1&isAllowed=y.
 //
-//The goal of QueueWithSevenStacks is to achieve constant worst case performance
-//of queue operations in terms of stack operations. This is easily done for isEmpty()
-//and size(), at least for linked list implementations. an issue arises, however,
-//particularly for the dequeue operation when the front stack is empty in a dual stack
-//implementation, because that requires transferring the reversed contents of the rear 
-//stack to the front taking amortized O(1) stack operations but possibly 0(N) for a 
-//single qeueue operation. The problem then is how to distribute this transferral 
-//or update process relatively evenly over a number of dequeue and enqueue operations
-//so they individually take a constant worst case number of stack operations independent
-//of the size of the queue. This can be useful in real time settings because it enables 
-//better performance predictability  by enforcing an O(1) upper bound on the time 
-//required for a queue operation, which may be desirable even though that bound could be 
-//higher than the amortized operation cost of other queue implementations.
-//a way of implementing such an update process that solves this problem is as follows:
-//Given stacks s1, s2, s3, s4, r1, r2, r3 where s1 is the front stack, r1 is the rear
-//stack and the remaining stacks are used to transfer the items in r1 to s1 when 
-//s1.size()+1 = r1.size() over a consecutive sequence of 2N+1 steps, where N is s1.size() 
-//just prior to beginning the transfer process and s3 is maintained as a copy of s1 
-//before and after but not during transfer:
-//1. When s1.size()+1 = r1().size the current enqueue or dequeue operation initializes
-// an update process by calling updateinit() which does:
-// a. s2.clear()  
-// b. s4.clear()
-// c. r2.clear()
-// d. r3.clear()
-// e. freeze s3 (disable synchronization of it with s1 by setting s3sync = false)
-// f. set remaining = s1.size(). for each delete operation remaining is decremented by 
-//    one and it's used to define the end of step 3 below.
-// g. rtmp = r1; r1 = r3; r3 = rtmp (interchange r1 and r3)
-// h. if r3 isn't empty run s4.push(r3.peek()); s2.push(r3.pop()); twice.
-// i.  if s3 isn't empty run r2.push(s3.pop()); twice
-// j: set various boolean control variable such as updateinit, update, update1...
-//2. After update initialization, during each enqueue and dequeue operation until r3 and
-// s3 are empty if update1 do:
-// a. s4.push(r3.peek()); s2.push(r3.pop()); (done twice)
-//    r2.push(s3.pop()); (done twice)
-//3. After the update1 phase has completed, during each enqueue and dequeue operation if 
-// update2 and until remaining==0 or r2.isEmpty() do:
-// a. s4.push(r2.peek()); s2.push(r2.pop()); remaining--; (done twice)
-//4. In the update2 phase, when remaining == 0 do:
-// a. set update = false; update1 = false; update2 = false;
-// b. s1 = s2; s2 = Stack.getStack();
-// c. s3 = s4; s4 = Stack.getStack();
-// d. s3sync = true;
-// e. r2.clear();
+// The goal of QueueWithSevenStacks is to achieve constant worst case performance
+// of queue operations in terms of stack operations. This is easily done for isEmpty()
+// and size(), at least for linked list implementations. An issue arises, however,
+// particularly for the dequeue operation when the front stack is empty in a dual stack
+// implementation, because that requires transferring the reversed contents of the rear 
+// stack to the front taking amortized O(1) stack operations but possibly 0(N) for a 
+// single qeueue operation. The problem then is how to distribute this transferral 
+// or update process relatively evenly over a number of dequeue and enqueue operations
+// so they individually take a constant worst case number of stack operations independent
+// of the size of the queue. This can be useful in real time settings because it enables 
+// better performance predictability  by enforcing an O(1) upper bound on the time 
+// required for a queue operation, which may be desirable even though that bound could be 
+// higher than the amortized operation cost of other queue implementations.
+// a way of implementing such an update process that solves this problem is as follows.
 //
-//Proof that the update process as outlined above results in stack1.size >= rstack1.size:
-//Suppose initially s1.size = n and r1.size = n+1. Disregarding 1.a-g as one time
-//setup per update process, the operation in 1.h and 2.a is executed n+1 times and that in 1.i
-//and 2.b is executed n times, but they are done in the same step which overall is done n+1
-//times in n+1 queue operations. During this phase there may be a1 additions and d1 deletions
-//such that a1+d1 <= n+1. Then step 3.a is done n times within n queue operations during which 
-//at most a2 addition and d2 deletion operations may occur such that a2+d2 <= n. After the
-//update is done stack1.size = 2n+1-d1-d2 and rstack1.size = a1+a2. Since 2n+1 >= a1+d1+a2+d2, 
-//2n+1-d1-d2 >= a1+a2, proving that after the update stack1.size >= rstack1.size.
+// Implementation of the update process
+// ------------------------------------
+// Given stacks s1, s2, s3, s4, r1, r2, r3 where s1 is the front stack, r1 is the rear
+// stack and the remaining stacks are used to transfer the items in r1 to s1 when 
+// s1.size()+1 = r1.size() over a consecutive sequence of 2N+1 steps, where N is s1.size() 
+// just prior to beginning the transfer process and s3 is maintained as a copy of s1 
+// before and after but not during transfer:
+//
+// 1. When s1.size()+1 = r1().size the current enqueue or dequeue operation initializes
+//    an update process by calling updateinit() which does:
+//    a. s2.clear()  
+//    b. s4.clear()
+//    c. r2.clear()
+//    d. r3.clear()
+//    e. freeze s3 (disable synchronization of it with s1 by setting s3sync = false)
+//    f. set remaining = s1.size(). for each delete operation remaining is decremented by 
+//       one and it's used to define the end of step 3 below.
+//    g. rtmp = r1; r1 = r3; r3 = rtmp (interchange r1 and r3)
+//    h. if r3 isn't empty run s4.push(r3.peek()); s2.push(r3.pop()); twice.
+//    i. if s3 isn't empty run r2.push(s3.pop()); twice
+//    j: set various boolean control variable such as updateinit, update, update1...
+//
+// 2. After update initialization, during each enqueue and dequeue operation until r3 and
+//    s3 are empty if update1 do:
+//    a. s4.push(r3.peek()); s2.push(r3.pop()); (done twice)
+//       r2.push(s3.pop()); (done twice)
+//
+// 3. After the update1 phase has completed, during each enqueue and dequeue operation if 
+//    update2 and until remaining==0 or r2.isEmpty() do:
+//    a. s4.push(r2.peek()); s2.push(r2.pop()); remaining--; (done twice)
+//
+// 4. In the update2 phase, when remaining == 0 do:
+//    a. set update = false; update1 = false; update2 = false;
+//    b. s1 = s2; s2 = Stack.getStack();
+//    c. s3 = s4; s4 = Stack.getStack();
+//    d. s3sync = true;
+//    e. r2.clear();
+//
+// Proof that the update process as outlined above results in s1.size >= r1.size
+// -----------------------------------------------------------------------------
+// Suppose initially s1.size = n and r1.size = n+1. Disregarding 1.a-g as one time
+// setup per update process, the operation in 1.h and 2.a is executed n+1 times and that in 1.i
+// and 2.b is executed n times, but they are done in the same step which overall is done n+1
+// times in n+1 queue operations. During this phase there may be a1 additions and d1 deletions
+// such that a1+d1 <= n+1. Then step 3.a is done n times within n queue operations during which 
+// at most a2 addition and d2 deletion operations may occur such that a2+d2 <= n. After the
+// update is done stack1.size = 2n+1-d1-d2 and rstack1.size = a1+a2. Since 2n+1 >= a1+d1+a2+d2, 
+// 2n+1-d1-d2 >= a1+a2, proving that after the update stack1.size >= rstack1.size.
 
-//QueueWithSevenStacks method implementation analysis in terms of Stack operations:
-//---------------------------------------------------------------------------------
-//By inspection of the code of its methods below:
-//1. isEmpty() takes at most two Stack operations.
-//2. size() takes two Stack operations.
-//3. clear() takes seven Stack operations.
-//3. peek() takes one Stack operation.
-//4. enqueue takes at most 25 Stack operations (6 push, 4 pop, 2 peek, 6 isEmpty, 4 clear, 3 size)  
-//5. dequeue takes at most 25 Stack operations. (6 push, 4 pop, 2 peek, 6 isEmpty, 4 clear, 3 size)
+// QueueWithSevenStacks method implementation analysis in terms of Stack operations:
+// ---------------------------------------------------------------------------------
+// By inspection of the code of its methods below:
+// 1. isEmpty() takes at most two Stack operations.
+// 2. size() takes two Stack operations.
+// 3. clear() takes seven Stack operations.
+// 3. peek() takes one Stack operation.
+// 4. enqueue takes at most 25 Stack operations 
+//   (6 push(), 4 pop(), 2 peek(), 6 isEmpty(), 4 clear(), 3 size())  
+// 5. dequeue takes at most 25 Stack operations. 
+//   (6 push(), 4 pop(), 2 peek(), 6 isEmpty(), 4 clear(), 3 size())  
 
 public class QueueWithSevenStacks<Item> implements Iterable<Item> {
   // for this queue enqueueing is done to a rear stack and dequeueing is from the 
   // front stack, since whenever the queue isn't empty there is always an item in 
   // the front due to an update process that transfers the contents of the rear to
-  // the front, whenever it becomes longer than the front, with constant worst case 
+  // the front, when it becomes longer than the front, with constant worst case 
   // number of stack operations for each dequeue and enqueue operation.  
   private Stack<Item> s1; // front of queue
   private Stack<Item> s2; // built to be the new s1 during update
@@ -225,10 +235,7 @@ public class QueueWithSevenStacks<Item> implements Iterable<Item> {
   public void enqueue(Item item) {
     // push item to the top of r1
     r1.push(item);
-//    System.out.println("s1.size="+s1.size());
-//    System.out.println("r1.size="+r1.size());
     if (r1.size() > s1.size() && !update) {
-//      System.out.println("updating");
       updateinit();
     } else if (update) update();
   }
@@ -237,7 +244,6 @@ public class QueueWithSevenStacks<Item> implements Iterable<Item> {
     // remove and return the head of s1, i.e. pop s1 
     // with this queue design s1 is never empty unless the queue is empty
     if (isEmpty()) throw new NoSuchElementException("Queue underflow");
-//    if (front.isEmpty()) moveToFront();
     itmp = s1.pop(); 
     if (s3sync) s3.pop();
     if (r1.size() > s1.size() && !update) {
