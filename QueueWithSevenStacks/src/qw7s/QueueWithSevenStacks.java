@@ -6,7 +6,7 @@ import static qw7s.Utils.reverse;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
+/*
   QueueWithSevenStacks is based on the description of a six list queue lisp implementation 
   by Hood and Melville at 
   https://ecommons.cornell.edu/bitstream/handle/1813/6273/80-433.pdf?sequence=1&isAllowed=y.
