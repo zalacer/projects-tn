@@ -1,5 +1,7 @@
 ##projects-tn
 
+**Algorithms4edCh1** contains solutions to exercises in chapter 1 of Algorithms 4ed by Sedgewick and Wayne.
+
 **QueueWithSevenStacks** is a stack based queue implementation with a constant worst case number of stack operations per queue operation.
 
 **CoreJavaForTheImpatient** features solutions for the 209 exercises in Cay S. Horstmann's book Core Java® for the Impatient and is packaged as an Eclipse project.
