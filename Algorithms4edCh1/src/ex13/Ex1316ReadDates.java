@@ -42,7 +42,7 @@ public class Ex1316ReadDates {
       String dateString = in.readString();
       if (isValidDateString(dateString)) q.enqueue(new Date(dateString));
     }
-    return q.toArray(Date.getInstance());
+    return q.toArray(Date.getInstance("5/5/2016"));
   }
 
   public static void main(String[] args) {

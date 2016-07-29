@@ -92,11 +92,9 @@ public class Date implements Comparable<Date> {
     if (this.day   > that.day)   return +1;
     return 0;
   }
-
-  
-  public static Date getInstance() {
-    return new Date("5/5/2016");
-
+ 
+   public static Date getInstance(int m, int d, int y) {
+    return new Date(m, d, y);
   }
   
   public String dayOfTheWeek() {

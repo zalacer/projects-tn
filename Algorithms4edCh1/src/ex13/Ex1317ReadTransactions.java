@@ -44,7 +44,7 @@ public class Ex1317ReadTransactions {
       String dateString = in.readString();
       if (isValidDateString(dateString)) q.enqueue(new Date(dateString));
     }
-    return q.toArray(Date.getInstance());
+    return q.toArray(Date.getInstance("5/5/2016"));
   }
   
   public static Transaction[] readTransactions(String name) {
