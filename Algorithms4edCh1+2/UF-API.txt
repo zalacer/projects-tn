@@ -1,0 +1,22 @@
+p216-217
+"is connected to" is an equivalance relation which is a binary relation ~ on a
+set that is reflexive, symmetric and transitive.
+
+For a set X of sites (represented by ints) partitioned by an "is connected to"
+equivilance relation:
+  a connection is a pair of sites that are in the same equivalence class in X
+  a component is an equivilance class in X
+
+UF API (p219)
+--------------------------------------------------------------------------------
+public class UF
+
+UF(int N): initialize N sites with integer names (0 to  N-1)
+
+void union(int p, int q): add a connection between p and q
+
+int find(int p): return the component identifier for p (0 to  N-1)
+
+boolean connected(int p, int q): return true if p and q are in the same component else false
+
+int count(): return the number of components
