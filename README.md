@@ -1,6 +1,6 @@
 ##projects-tn
 
-**Algorithms4edCh1** contains solutions to the 179 exercises in chapter 1 of Algorithms 4ed by Sedgewick and Wayne.
+**Algorithms4edCh1+Ch2** contains solutions to the 343 exercises in chapters 1 and 2 of Algorithms 4ed by Sedgewick and Wayne.
 
 **QueueWithSevenStacks** is a stack based queue implementation with a constant worst case number of stack operations per queue operation.
 
