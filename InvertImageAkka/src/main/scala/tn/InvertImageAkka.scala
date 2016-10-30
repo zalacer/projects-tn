@@ -158,7 +158,7 @@ object InvertImageAkka extends App {
 
   var imagein = ""
   var imageout = ""
-  var ncores = 0
+  var ncores = 8
   checkArgs
   process(ncores)
 
