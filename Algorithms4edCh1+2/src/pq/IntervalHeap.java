@@ -446,6 +446,45 @@ public class IntervalHeap<K extends Comparable<K>> implements Iterable<K> {
     }
   }
 
+  public static void main(String[] args) {
+    
+    IntervalHeap<Integer> h;
+    Integer[] a = rangeInteger(1,33);
+    h = new IntervalHeap<>(a);
+    int c = 0;
+    System.out.println("alternating delMin() and delMax() output:");
+    while(!h.isEmpty()) {
+      c++;
+      if (c%2==0) System.out.print(h.delMax()+" ");
+      else System.out.print(h.delMin()+" ");
+    }
+    System.out.println("\nisEmpty="+h.isEmpty());
+    System.out.println("capacity="+h.capacity());
+    for (int i : a) h.insert(i);
+    System.out.println("isFull="+h.isFull());
+    if (h.isFull()) { h.resizeOneTime(); h.insert(33); }
+    System.out.println("capacity="+h.capacity());
+    System.out.println("running delMax() and delMin() 7 times each with no output");
+    for (int i = 0; i < 7; i++) {h.delMax(); h.delMin(); }
+    System.out.println("max="+h.max());
+    System.out.println("min="+h.min());
+    System.out.println("show() output showing the intervals:");
+    h.show();
+    System.out.println("toArray() output:");
+    par(h.toArray());
+    System.out.println("toMinMaxArrays() output:");
+    par(h.toMinMaxArrays());
+    System.out.println(h.toOrderedString());
+    System.out.println("delMin"); Integer x = h.delMin();
+    System.out.println(h.toOrderedString());
+    System.out.println(h.contains(19));
+    System.out.println(h.contains(26));
+    h.clear();
+    System.out.println(h.toOrderedString());
+    for (int i : a) System.out.print(i+" "); System.out.println();
+    for (int i : a) h.insert(i);
+    System.out.println(h.toOrderedString());
+    par(h.toOrderedArray());
+  }
+
 }
-
-
