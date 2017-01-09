@@ -9,7 +9,7 @@ import java.util.Objects;
 import analysis.Timer;
 
 // based on http://www.mhhe.com/engcs/compsci/sahni/enrich/c9/interval.pdf
-// which is locally available at IntervalHeaps.pdf.
+// that's locally available at IntervalHeaps.pdf.
 @SuppressWarnings("unused")
 public class IntervalHeap<K extends Comparable<K>> implements Iterable<K> {
   public static final int DEFAULTCAPACITY = 9;
