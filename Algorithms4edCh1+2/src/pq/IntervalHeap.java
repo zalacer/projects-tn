@@ -1,41 +1,47 @@
 package pq;
 
-import static v.ArrayUtils.ofDim;
-import static v.ArrayUtils.par;
-import static v.ArrayUtils.rangeInteger;
+import static v.ArrayUtils.*;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Objects;
+
+import analysis.Timer;
 
 // based on http://www.mhhe.com/engcs/compsci/sahni/enrich/c9/interval.pdf
 // which is locally available at IntervalHeaps.pdf.
-public class IntervalHeap<K extends Comparable<K>> {
-
+@SuppressWarnings("unused")
+public class IntervalHeap<K extends Comparable<K>> implements Iterable<K> {
+  public static final int DEFAULTCAPACITY = 9;
   private int CurrentSize;  // number of keys of type K
   private int MaxSize;      // max number of keys of type K
   private int N;            // length of heap = 1 + max number of intervals
   private Interval<K,K>[] heap;
   private Class<?> kclass = null;
-  private boolean resizeable = false;
-  private boolean oneTime = false; // enable resizeable for one resizing
+  private boolean resizable = false;
+  private boolean oneTime = false; // enable resizable for one resizing
+  
+  public IntervalHeap() { this(DEFAULTCAPACITY); }
 
   public IntervalHeap(int capacity) {
     if (capacity < 1) throw new IllegalArgumentException("capacity must be  > 0");
     MaxSize = capacity; // max # elements
     N = MaxSize / 2 + MaxSize % 2 + 1;
-    System.out.println("N="+N);
     heap = ofDim(Interval.class, N);
+    for (int i = 0; i < N; i++)  heap[i] = new Interval<K,K>();
     CurrentSize = 0;
   }
 
-  public IntervalHeap(int capacity, boolean resizeable) {
+  public IntervalHeap(int capacity, boolean resizable) {
     if (capacity < 1) throw new IllegalArgumentException(
         "capacity must be  > 0");
     MaxSize = capacity; // max # elements
     N = MaxSize / 2 + MaxSize % 2 + 1;
     System.out.println("N="+N);
     heap = ofDim(Interval.class, N);
+    for (int i = 0; i < N; i++)  heap[i] = new Interval<K,K>();
     CurrentSize = 0;
-    if (resizeable) this.resizeable = true;
+    if (resizable) this.resizable = true;
   }
 
   @SafeVarargs
@@ -53,18 +59,39 @@ public class IntervalHeap<K extends Comparable<K>> {
   }
 
   @SafeVarargs
-  public IntervalHeap(boolean resizeable, K...z) {
+  public IntervalHeap(boolean resizable, K...z) {
     if (z == null || z.length < 1) throw new IllegalArgumentException(
         "IntervalHeap(K[] z): z must not be non null and have length > 0");
     MaxSize = z.length;
     N = MaxSize / 2 + MaxSize % 2 + 1;
+    if (resizable) this.resizable = true;
     heap = ofDim(Interval.class, N);
     for (int i = 1; i < N; i++) heap[i] = new Interval<K,K>();
     for (int i = 0; i < MaxSize; i++) {
       if (z[i] == null) continue;
       insert(z[i]);
     }
-    if (resizeable) this.resizeable = true;
+  }
+  
+  public IntervalHeap(IntervalHeap<K> h) {
+    if (h == null) {
+      MaxSize = DEFAULTCAPACITY-1;
+      N = MaxSize / 2 + MaxSize % 2 + 1;
+      heap = ofDim(Interval.class, N);
+      for (int i = 0; i < N; i++)  heap[i] = new Interval<K,K>();
+      CurrentSize = 0;
+      return;
+    }
+    K[] z = h.toArray();
+    MaxSize = z.length;
+    N = MaxSize / 2 + MaxSize % 2 + 1;
+    if (h.resizable) this.resizable = true;
+    heap = ofDim(Interval.class, N);
+    for (int i = 1; i < N; i++) heap[i] = new Interval<K,K>();
+    for (int i = 0; i < MaxSize; i++) {
+      if (z[i] == null) continue;
+      insert(z[i]);
+    }  
   }
 
   public boolean isEmpty() {
@@ -74,18 +101,27 @@ public class IntervalHeap<K extends Comparable<K>> {
   public boolean isFull() {
     return CurrentSize == MaxSize;
   }
-
-  public int size() {
-    return CurrentSize;
+  
+  public boolean isResizable() { return resizable; }
+  
+  public void clear() {
+    for (int i = 0; i < heap.length; i++) heap[i] = new Interval<K,K>();
+    CurrentSize = 0;
+  }
+  
+  public boolean contains(K k) {
+    if (isEmpty() || k.compareTo(min()) < 0 || k.compareTo(max()) > 0) return false;
+    for (int i = 0; i < heap.length; i++) 
+      if (heap[i] != null && (heap[i].left != null && k.equals(heap[i].left)
+           || heap[i].right != null && k.equals(heap[i].right))) return true;
+    return false;
   }
 
-  public int capacity() {
-    return MaxSize;
-  }
+  public int size() { return CurrentSize; }
 
-  public int maxSize() {
-    return MaxSize;
-  }
+  public int capacity() { return MaxSize; }
+
+  public int maxSize() { return MaxSize; }
 
   public K min() {
     if (CurrentSize == 0) {
@@ -105,7 +141,7 @@ public class IntervalHeap<K extends Comparable<K>> {
     if (x == null) return false;
     if (kclass == null) kclass = x.getClass();
     if (CurrentSize == MaxSize) {
-      if (resizeable) { 
+      if (resizable) { 
         resize(MaxSize*2);
         if (oneTime) resizeOff();
       }
@@ -181,20 +217,21 @@ public class IntervalHeap<K extends Comparable<K>> {
   }
 
   private void resize(int capacity) {
-    assert capacity > MaxSize;
+    assert capacity > CurrentSize;
     MaxSize = capacity;
     N = MaxSize / 2 + MaxSize % 2 + 1;
     Interval<K,K>[] temp = ofDim(Interval.class, N);
     int len = CurrentSize / 2 + CurrentSize % 2;
     for (int i = 1; i <= len; i++) temp[i] = heap[i];
+    for (int i = len+1; i < temp.length; i++) temp[i] = new Interval<K,K>();
     heap = temp;
   }
 
-  public void resizeOn() { resizeable = true; }
+  public void resizeOn() { resizable = true; }
 
-  public void resizeOneTime() { resizeable = true; oneTime = true; }
+  public void resizeOneTime() { resizable = true; oneTime = true; }
 
-  public void resizeOff() { resizeable = false; }
+  public void resizeOff() { resizable = false; }
 
   public K delMin() {
     // Set x to min element and delete
@@ -237,6 +274,10 @@ public class IntervalHeap<K extends Comparable<K>> {
     }
     //    show();
     if(CurrentSize > 1) heap[i].left = y;
+    if (resizable && CurrentSize > 0 && CurrentSize == MaxSize/4) {
+      resize(MaxSize/2+1); 
+      if (oneTime) resizeOff();
+    }
     return x;
   }
 
@@ -276,8 +317,14 @@ public class IntervalHeap<K extends Comparable<K>> {
       ci *= 2;
     }
     if(CurrentSize > 1) heap[i].right = y;
+    if (resizable && CurrentSize > 0 && CurrentSize == MaxSize/4) {
+      resize(MaxSize/2+1); 
+      if (oneTime) resizeOff();
+    }
     return x;    
   }
+  
+  public IntervalHeap<K> clone() { return new IntervalHeap<K>(this); }
 
   // private methods
 
@@ -310,9 +357,13 @@ public class IntervalHeap<K extends Comparable<K>> {
     return z;
   }
   
-  public Interval<K,K>[] toIntervalArray() {
-    return heap;
-  }
+  public K[] toOrderedArray() { K[] a = toArray(); Arrays.sort(a); return a; }
+  
+  public Iterator<K> iterator() { return v.ArrayUtils.iterator(toOrderedArray()); }
+  
+  public Iterable<K> iterable = () -> iterator();
+  
+  public Interval<K,K>[] toIntervalArray() { return heap.clone(); }
   
   @SuppressWarnings("unchecked")
   public K[][] toMinMaxArrays() {
@@ -330,6 +381,10 @@ public class IntervalHeap<K extends Comparable<K>> {
       System.out.print(heap[i]+" ");
     System.out.println();
   }
+  
+  public void showOrdered() {
+    for (K k : this) System.out.print(k+" "); System.out.println();
+  }
 
   public void showAll() {
     for (int i = 0; i < heap.length; i++)
@@ -339,11 +394,20 @@ public class IntervalHeap<K extends Comparable<K>> {
   
   @Override
   public String toString() {
+    if (isEmpty()) return "";
     StringBuilder sb = new StringBuilder();
     sb.append("("); int i;
     for (i = 1; i <= CurrentSize/2+CurrentSize%2-1; i++) sb.append(heap[i]+",");
     sb.append(heap[i]+")");
     return sb.toString();
+  }
+  
+  public String toOrderedString() {
+    if (isEmpty()) return "";
+    StringBuilder sb = new StringBuilder();
+    sb.append("(");
+    for (K k : this) sb.append(k+",");
+    return sb.replace(sb.length()-1, sb.length(), ")").toString();
   }
   
   private final class Interval<L,R> {
@@ -381,39 +445,5 @@ public class IntervalHeap<K extends Comparable<K>> {
       return IntervalHeap.this;
     }
   }
-
-  public static void main(String[] args) {
-
-    IntervalHeap<Integer> h;
-    Integer[] a = rangeInteger(1,33);
-    h = new IntervalHeap<>(a);
-    int c = 0;
-    System.out.println("alternating delMin() and delMax() output:");
-    while(!h.isEmpty()) {
-      c++;
-      if (c%2==0) System.out.print(h.delMax()+" ");
-      else System.out.print(h.delMin()+" ");
-    }
-    System.out.println("\nisEmpty="+h.isEmpty());
-    System.out.println("capacity="+h.capacity());
-    for (int i : a) h.insert(i);
-    System.out.println("isFull="+h.isFull());
-    if (h.isFull()) { h.resizeOneTime(); h.insert(33); }
-    System.out.println("capacity="+h.capacity());
-    System.out.println("running delMax() and delMin() 7 times each with no output");
-    for (int i = 0; i < 7; i++) {h.delMax(); h.delMin(); }
-    System.out.println("max="+h.max());
-    System.out.println("min="+h.min());
-    System.out.println("show() output showing the intervals:");
-    h.show();
-    System.out.println("toArray() output:");
-    par(h.toArray());
-    System.out.println("toMinMaxArrays() output:");
-    par(h.toMinMaxArrays());
-    System.out.println("toString() output:");
-    System.out.println(h);
-    Integer x = h.delMin();
-    if (x != null) ;
-  }
-
 }
+
