@@ -565,7 +565,7 @@ public class Seq<T> extends AbstractList<T>
     T t = (T) a[i];
     a[i] = null;
     int j = i;
-    while (j < N) a[j] = a[++j];
+    while (j < N-1) a[j] = a[++j];
     N--;
     if (N > 0 && N == a.length/4) resize(a.length/2); 
     return t;
