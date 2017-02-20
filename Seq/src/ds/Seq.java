@@ -160,7 +160,7 @@ public class Seq<T> extends AbstractList<T>
   public void add(int index, T t) { 
     // inserts t at index
     if (index < 0) throw new IllegalArgumentException("add: index < 0");
-    if (index > N-1) throw new IndexOutOfBoundsException("add: index > N-1");
+    if (index > N) throw new IndexOutOfBoundsException("add: index > N");
     if (N == a.length) resize(2*a.length);
     if (N == 0) { add(t); return; }
     if (t != null && tclass == null) {
