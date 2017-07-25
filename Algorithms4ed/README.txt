@@ -26,4 +26,4 @@ commons-math3-3.6.1.jar https://mvnrepository.com/artifact/org.apache.commons/co
 guava-20.0.jar          https://mvnrepository.com/artifact/com.google.guava/guava/20.0
 hamcrest-all-1.3.jar    https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all/1.3
 Jama-1.0.3.jar          https://mvnrepository.com/artifact/gov.nist.math/jama/1.0.3
-junit-4.12.jar          https://mvnrepository.com/artifact/junit/junit/4.12)
+junit-4.12.jar          https://mvnrepository.com/artifact/junit/junit/4.12
