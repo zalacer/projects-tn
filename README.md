@@ -1,8 +1,9 @@
 ##projects-tn
 
-**Seq** is a Java array wrapper extending java.util.ArrayList with most scala.Array methods and additional methods for conversions between between arrays and Seqs of any dimensionality/nesting.
+**Algorithms4ed** contains solutions to exercises in chapters 1-4 of Algorithms 4ed by Sedgewick and Wayne.
+Exercises sections titled "Experiments" are mostly exluded.
 
-**Algorithms4edCh1+Ch2** contains solutions to the 343 exercises in chapters 1 and 2 of Algorithms 4ed by Sedgewick and Wayne.
+**Seq** is a Java array wrapper extending java.util.ArrayList with most scala.Array methods and additional methods for conversions between between arrays and Seqs of any dimensionality/nesting.
 
 **QueueWithSevenStacks** is a stack based queue implementation with a constant worst case number of stack operations per queue operation.
 
