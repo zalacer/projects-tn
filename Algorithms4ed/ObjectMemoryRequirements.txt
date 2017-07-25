@@ -1,0 +1,46 @@
+
+
+  for 64bit platform from p200 and Ex1413ObjectMemoryRequirements p209
+  type          bytes
+  references    8
+  object overhead 16
+  padding       multiple of 8
+  boolean       1
+  byte          1
+  char          2
+  int           4
+  float         4
+  long          8
+  double        8
+  Integer       24
+  Double        24
+  Date(p91)     32
+  Counter(p89)  32
+  Accumulator   32
+  Transaction   80
+  Point2D       32
+  Interval1D    32
+  Interval2D    80
+  
+  Node(p142)    40 (including Item and Node next references (8 each)
+  String(p202)  40 (not including including chars in its array since these are shared) 
+  Array primitive(p202)  24 + N*X (24 header = 16 (Ooverhead) + 4(length) + 4 (padding)
+  Array object(p202)     24 + N*8 (references) + N*X + padding
+  
+  1GB ~= 32M ints || 16M doubles
+  
+  for 32bit platform from p200 and Ex1433MemoryRequirementsOn32BitMachine p212
+  type              bytes
+  references        4
+  object overhead   8 bytes
+  padding           multiple of 4
+  Integer           4 for one int + 8 overhead = 12 (vs 24 on 64bit)
+  Date              8 overhead + 4*3 for 3 ints  = 20 (vs 32 for 64bit
+  Counter           8 overhead + 4 string reference + 4 int = 16 (vs 32 for 64bit)
+  Node              8 overhead + 2*4 references  = 16 (vs 40 for 64bit)
+  int[]             8 overhead + 4 length + length*4 = 12 + length*4 (vs 24+length*4 for 64bit)
+  double[]:         8 overhead + 4 length + length*8 = 12 * length*8
+  double[][]        8 overhead + 4 length + length*12 + totalLengthOfAllRows*8
+  Stack             8 overhead + 16*#nodes + ItemSize*#nodes + 4 int instance variable
+  
+  

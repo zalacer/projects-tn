@@ -1,0 +1,4 @@
+ch1 179 exercises
+ch2 173 (38+29+31+42+33)
+
+estimate 175*5 = 875 total 5 chapters
