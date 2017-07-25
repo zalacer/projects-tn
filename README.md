@@ -1,7 +1,7 @@
 ##projects-tn
 
 **Algorithms4ed** contains solutions to exercises in chapters 1-4 of Algorithms 4ed by Sedgewick and Wayne.
-Exercises sections titled "Experiments" are mostly exluded.
+Exercise sections titled "Experiments" are mostly excluded.
 
 **Seq** is a Java array wrapper extending java.util.ArrayList with most scala.Array methods and additional methods for conversions between between arrays and Seqs of any dimensionality/nesting.
 
