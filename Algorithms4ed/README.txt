@@ -1,17 +1,14 @@
 
-This project includes solutions for exercises in chapters 1-4 of Algorithms 4ed by Sedgewick 
-and Wayne excluding sections on Experiments. The solutions are developed or sometimes just 
-presented with Java 8.
+This Eclipse Java project includes solutions for exercises in chapters 1-4 of Algorithms 4ed 
+by Sedgewick and Wayne mostly excluding sections titled "Experiments". The solutions are developed 
+with Java 8 or sometimes just text.
 
-Most data structures of significance are in the ds, graph, pq and sort packages with some that
-are more algorithms than structures in the analysis package.
+Most data structures of significance are in the ds, graph, pq and sort packages. with some that
 
-The annotations, exceptions, ejs and io packages are part of EverydayJavaSerialization that is 
-used only for exercise 1.1.19. 
+Tools for analysis are in the analysis package.
 
 The v package contains array utilities and classes supporting them. Some of them are used 
-frequently in exercise solutions. v.ArrayUtils contains hundreds of static methods for Java 
-primitive and generic arrays. 
+frequently in exercise solutions. 
 
 The utils package contains several classes with additional static methods used in exercise solutions. 
 
