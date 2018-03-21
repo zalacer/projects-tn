@@ -49,6 +49,8 @@ cities connected by roads and consists of one outer Java class in one file.
 
 **ReduceSideJoinTest** is another implementation of MapReduce reduce side join using distributed cache, but  written with several customized data classes and using the String concatenation operator (+) instead of StringBuilder in the reducer as was used in ReduceSideJoinDistCache. It was written for performance comparison with the latter. The conclusion is that ReduceSideJoinDistCache significantly outperforms ReduceSideJoinTest, because StringBuilder is faster with less overhead than String concatenation with "+" and customized Writable/WritableComparable data types with fields having unwrapped types such as int and String are more efficient for small datasets compared to wrapped types like IntWritable and Text. Even for large datasets, use of Text objects still incurs String creation overhead when they are reused and their values change, because that requires creating new Strings. However, reuse of numeric Writable and WritableComparable objects reduces object creation since they wrap primitive Java numeric types.
 
+**MarginOfSafety** files for Margin Of Safety
+
 
 
 
